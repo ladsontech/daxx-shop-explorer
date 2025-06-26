@@ -10,6 +10,7 @@ import { useProperties } from '../hooks/useProperties';
 import { Link } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 const Index = () => {
+  
   const {
     data: allProducts,
     isLoading: productsLoading
@@ -101,7 +102,7 @@ const Index = () => {
                       <p className="text-sm text-gray-600 mb-2 line-clamp-2">
                         {item.description}
                       </p>
-                      <div className="text-lg md:text-xl font-bold text-gray-900">
+                      <div className="text-sm font-bold text-gray-900">
                         UGX {item.price.toLocaleString()}
                       </div>
                     </div>
