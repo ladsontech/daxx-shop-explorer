@@ -59,11 +59,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 <span className="text-xs md:text-sm text-gray-500 line-through">UGX {originalPrice.toLocaleString()}</span>
               )}
             </div>
-            <span className={`text-xs px-1.5 py-0.5 md:px-2 md:py-1 rounded-full ${
-              inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-            }`}>
-              {inStock ? 'In Stock' : 'Out of Stock'}
-            </span>
           </div>
           
           <button 

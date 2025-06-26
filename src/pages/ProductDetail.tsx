@@ -133,12 +133,6 @@ const ProductDetail = () => {
                   </span>
                 )}
               </div>
-              
-              <div className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${
-                product.inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-              }`}>
-                {product.inStock ? 'In Stock' : 'Out of Stock'}
-              </div>
             </div>
 
             {/* Description */}
