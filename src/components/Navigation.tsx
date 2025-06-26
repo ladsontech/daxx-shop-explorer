@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Search, ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Shirt, Building, Settings } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Shirt, Building } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import Cart from './Cart';
@@ -74,9 +74,6 @@ const Navigation = () => {
               <button className="p-2 text-gray-700 hover:text-blue-600 transition-colors">
                 <User className="h-6 w-6" />
               </button>
-              <Link to="/admin" className="p-2 text-gray-700 hover:text-blue-600 transition-colors">
-                <Settings className="h-6 w-6" />
-              </Link>
 
               {/* Mobile menu button */}
               <button
