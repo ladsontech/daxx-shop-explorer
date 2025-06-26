@@ -25,7 +25,7 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {[...gadgets.slice(0, 2), ...fashion.slice(0, 2)].map((item) => (
               <Link key={item.id} to={`/product/${item.id}`} className="block">
                 <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">

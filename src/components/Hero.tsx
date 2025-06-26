@@ -1,54 +1,128 @@
 
-import React from 'react';
-import { ArrowRight, Smartphone, Laptop, ShirtIcon, Home } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Hero = () => {
-  const categories = [
-    { name: 'Gadgets', icon: Smartphone, color: 'bg-blue-500', link: '#gadgets' },
-    { name: 'Fashion', icon: ShirtIcon, color: 'bg-pink-500', link: '#fashion' },
-    { name: 'Accessories', icon: Laptop, color: 'bg-green-500', link: '#accessories' },
-    { name: 'Property', icon: Home, color: 'bg-orange-500', link: '#property' }
+  const [currentSlide, setCurrentSlide] = useState(0);
+  
+  const advertisements = [
+    {
+      id: 1,
+      title: "Black Friday Sale",
+      subtitle: "Up to 70% OFF on Electronics",
+      description: "Don't miss out on the biggest deals of the year!",
+      image: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&h=400&fit=crop",
+      backgroundColor: "bg-gradient-to-r from-red-600 to-pink-600"
+    },
+    {
+      id: 2,
+      title: "New iPhone Collection",
+      subtitle: "Latest Models Available Now",
+      description: "Experience the future with our newest smartphone lineup",
+      image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=800&h=400&fit=crop",
+      backgroundColor: "bg-gradient-to-r from-blue-600 to-purple-600"
+    },
+    {
+      id: 3,
+      title: "Fashion Week Special",
+      subtitle: "Trendy Styles & Premium Quality",
+      description: "Discover the latest fashion trends at unbeatable prices",
+      image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=400&fit=crop",
+      backgroundColor: "bg-gradient-to-r from-green-600 to-teal-600"
+    },
+    {
+      id: 4,
+      title: "Property Deals",
+      subtitle: "Prime Locations Available",
+      description: "Find your dream home with exclusive property offers",
+      image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=400&fit=crop",
+      backgroundColor: "bg-gradient-to-r from-orange-600 to-yellow-600"
+    }
   ];
 
-  return (
-    <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Welcome to{' '}
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Daxx Shop
-            </span>
-          </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Your one-stop marketplace for gadgets, fashion, accessories, and property. 
-            Discover amazing deals and premium quality products.
-          </p>
-          <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center space-x-2">
-            <span>Start Shopping</span>
-            <ArrowRight className="h-5 w-5" />
-          </button>
-        </div>
+  const nextSlide = () => {
+    setCurrentSlide((prevSlide) => (prevSlide + 1) % advertisements.length);
+  };
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {categories.map((category) => {
-            const IconComponent = category.icon;
-            return (
-              <a
-                key={category.name}
-                href={category.link}
-                className="group bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 text-center"
-              >
-                <div className={`${category.color} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <IconComponent className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
-                  {category.name}
-                </h3>
-              </a>
-            );
-          })}
+  const prevSlide = () => {
+    setCurrentSlide((prevSlide) => (prevSlide - 1 + advertisements.length) % advertisements.length);
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
+
+  // Auto-scroll functionality
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="relative h-64 md:h-96 overflow-hidden">
+      {advertisements.map((ad, index) => (
+        <div
+          key={ad.id}
+          className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
+            index === currentSlide ? 'translate-x-0' : 
+            index < currentSlide ? '-translate-x-full' : 'translate-x-full'
+          }`}
+        >
+          <div className={`${ad.backgroundColor} h-full flex items-center justify-between px-4 md:px-8`}>
+            <div className="flex-1 text-white z-10">
+              <h1 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4">
+                {ad.title}
+              </h1>
+              <h2 className="text-lg md:text-2xl font-semibold mb-2 md:mb-4">
+                {ad.subtitle}
+              </h2>
+              <p className="text-sm md:text-lg mb-4 md:mb-6 opacity-90">
+                {ad.description}
+              </p>
+              <button className="bg-white text-gray-800 px-4 md:px-6 py-2 md:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                Shop Now
+              </button>
+            </div>
+            <div className="flex-1 flex justify-end">
+              <img
+                src={ad.image}
+                alt={ad.title}
+                className="h-32 md:h-64 w-32 md:w-64 object-cover rounded-lg shadow-lg"
+              />
+            </div>
+          </div>
         </div>
+      ))}
+
+      {/* Navigation Buttons */}
+      <button
+        onClick={prevSlide}
+        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all"
+      >
+        <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
+      </button>
+      
+      <button
+        onClick={nextSlide}
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all"
+      >
+        <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
+      </button>
+
+      {/* Dots Indicator */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        {advertisements.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToSlide(index)}
+            className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all ${
+              index === currentSlide ? 'bg-white' : 'bg-white bg-opacity-50'
+            }`}
+          />
+        ))}
       </div>
     </div>
   );
