@@ -1,8 +1,9 @@
 
 import React from 'react';
-import { X, Plus, Minus, ShoppingCart } from 'lucide-react';
+import { X, Plus, Minus, ShoppingCart, AlertTriangle } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { Button } from './ui/button';
+import { Alert, AlertDescription } from './ui/alert';
 
 interface CartProps {
   isOpen: boolean;
@@ -12,8 +13,33 @@ interface CartProps {
 const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
   const { items, updateQuantity, removeFromCart, getTotalPrice, clearCart } = useCart();
 
+  // Check if cart contains mixed categories that require different WhatsApp numbers
+  const getCartCategories = () => {
+    const categories = [...new Set(items.map(item => item.category))];
+    return categories;
+  };
+
+  const hasMixedCategories = () => {
+    const categories = getCartCategories();
+    const fashionCategories = ['fashion'];
+    const otherCategories = ['gadgets', 'accessories', 'property'];
+    
+    const hasFashion = categories.some(cat => fashionCategories.includes(cat));
+    const hasOthers = categories.some(cat => otherCategories.includes(cat));
+    
+    return hasFashion && hasOthers;
+  };
+
   const handleWhatsAppCheckout = () => {
-    const phoneNumber = "+256751173504";
+    if (hasMixedCategories()) {
+      return; // Don't proceed with checkout
+    }
+
+    const categories = getCartCategories();
+    const isFashionOrder = categories.includes('fashion');
+    
+    // Use different phone numbers based on category
+    const phoneNumber = isFashionOrder ? "+256740657694" : "+256751173504";
     const baseUrl = window.location.origin;
     
     let message = "Hello! I'd like to place an order for the following items:\n\n";
@@ -58,6 +84,16 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
         ) : (
           <>
             <div className="p-4 space-y-4">
+              {/* Mixed Categories Warning */}
+              {hasMixedCategories() && (
+                <Alert variant="destructive">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription>
+                    You can't order fashion items together with other categories as they go to different WhatsApp numbers. Please checkout separately or remove items from different categories.
+                  </AlertDescription>
+                </Alert>
+              )}
+
               {items.map((item) => (
                 <div key={item.id} className="flex items-center space-x-3 bg-gray-50 p-3 rounded-lg">
                   <img
@@ -102,7 +138,12 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
               </div>
               <Button
                 onClick={handleWhatsAppCheckout}
-                className="w-full bg-green-600 hover:bg-green-700 text-white"
+                disabled={hasMixedCategories()}
+                className={`w-full ${
+                  hasMixedCategories() 
+                    ? 'bg-gray-400 cursor-not-allowed' 
+                    : 'bg-green-600 hover:bg-green-700'
+                } text-white`}
               >
                 Checkout via WhatsApp
               </Button>
