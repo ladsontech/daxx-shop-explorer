@@ -2,10 +2,13 @@
 import React, { useState } from 'react';
 import { Search, ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Shirt, Building, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useCart } from '../contexts/CartContext';
+import Cart from './Cart';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cartCount] = useState(3);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { getTotalItems } = useCart();
 
   const navLinks = [
     { name: 'Home', href: '/', icon: Home },
@@ -57,11 +60,14 @@ const Navigation = () => {
 
             {/* Right Icons */}
             <div className="flex items-center space-x-4">
-              <button className="relative p-2 text-gray-700 hover:text-blue-600 transition-colors">
+              <button 
+                onClick={() => setIsCartOpen(true)}
+                className="relative p-2 text-gray-700 hover:text-blue-600 transition-colors"
+              >
                 <ShoppingCart className="h-6 w-6" />
-                {cartCount > 0 && (
+                {getTotalItems() > 0 && (
                   <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                    {cartCount}
+                    {getTotalItems()}
                   </span>
                 )}
               </button>
@@ -117,6 +123,9 @@ const Navigation = () => {
           })}
         </div>
       </div>
+
+      {/* Cart Sidebar */}
+      <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>
   );
 };

@@ -5,12 +5,44 @@ import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { useProductById } from '../hooks/useProducts';
 import { Loader2 } from 'lucide-react';
+import { useCart } from '../contexts/CartContext';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { addToCart } = useCart();
   
   const { data: product, isLoading, error } = useProductById(id || '');
+
+  const handleAddToCart = () => {
+    if (product && product.in_stock) {
+      addToCart({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        images: product.images || [],
+        category: product.category
+      });
+    }
+  };
+
+  const handleBuyNow = () => {
+    if (product && product.in_stock) {
+      const phoneNumber = "+256751173504";
+      const baseUrl = window.location.origin;
+      const productUrl = `${baseUrl}/product/${product.id}`;
+      
+      const message = `Hello! I'd like to buy this product:\n\n` +
+        `${product.title}\n` +
+        `Price: UGX ${product.price.toLocaleString()}\n` +
+        `Category: ${product.category}\n` +
+        `Link: ${productUrl}\n\n` +
+        `Please confirm availability and delivery details. Thank you!`;
+      
+      const whatsappUrl = `https://wa.me/${phoneNumber.replace('+', '')}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    }
+  };
 
   if (isLoading) {
     return (
@@ -158,6 +190,7 @@ const ProductDetail = () => {
             {/* Add to Cart Button */}
             <div className="space-y-4">
               <button
+                onClick={handleAddToCart}
                 className={`w-full py-3 px-6 rounded-lg font-semibold text-lg transition-all duration-200 flex items-center justify-center space-x-2 ${
                   product.in_stock
                     ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl'
@@ -170,8 +203,11 @@ const ProductDetail = () => {
               </button>
               
               {product.in_stock && (
-                <button className="w-full py-3 px-6 rounded-lg font-semibold text-lg border-2 border-blue-600 text-blue-600 hover:bg-blue-50 transition-all duration-200">
-                  Buy Now
+                <button 
+                  onClick={handleBuyNow}
+                  className="w-full py-3 px-6 rounded-lg font-semibold text-lg bg-green-600 hover:bg-green-700 text-white transition-all duration-200"
+                >
+                  Buy Now via WhatsApp
                 </button>
               )}
             </div>

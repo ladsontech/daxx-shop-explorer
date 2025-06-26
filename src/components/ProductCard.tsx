@@ -2,6 +2,7 @@
 import React from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useCart } from '../contexts/CartContext';
 
 interface ProductCardProps {
   id: string;
@@ -24,7 +25,23 @@ const ProductCard: React.FC<ProductCardProps> = ({
   description,
   inStock = true
 }) => {
+  const { addToCart } = useCart();
   const displayImage = images && images.length > 0 ? images[0] : '/placeholder.svg';
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (inStock) {
+      addToCart({
+        id,
+        title,
+        price,
+        images,
+        category
+      });
+    }
+  };
 
   return (
     <Link to={`/product/${id}`} className="block">
@@ -70,7 +87,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
             disabled={!inStock}
-            onClick={(e) => e.preventDefault()}
+            onClick={handleAddToCart}
           >
             <ShoppingCart className="h-3 w-3 md:h-4 md:w-4" />
             <span>{inStock ? 'Add to Cart' : 'Out of Stock'}</span>
