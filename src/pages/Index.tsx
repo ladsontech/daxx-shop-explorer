@@ -4,6 +4,7 @@ import Navigation from '../components/Navigation';
 import Hero from '../components/Hero';
 import CategorySection from '../components/CategorySection';
 import Footer from '../components/Footer';
+import WhatsAppButton from '../components/WhatsAppButton';
 import { useProducts } from '../hooks/useProducts';
 import { useProperties } from '../hooks/useProperties';
 import { Link } from 'react-router-dom';
@@ -147,6 +148,7 @@ const Index = () => {
       />
 
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 };
