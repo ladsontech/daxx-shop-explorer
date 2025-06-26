@@ -27,6 +27,17 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   phone
 }) => {
   const displayImage = images && images.length > 0 ? images[0] : '/placeholder.svg';
+  const contactPhone = "+256751173504";
+
+  const handleCall = () => {
+    window.location.href = `tel:${contactPhone}`;
+  };
+
+  const handleWhatsApp = () => {
+    const message = `Hello! I'm interested in this property: ${title} in ${location} for UGX ${price.toLocaleString()}. Could you please provide more details?`;
+    const whatsappUrl = `https://wa.me/${contactPhone.replace('+', '')}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
@@ -81,11 +92,17 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         )}
         
         <div className="flex space-x-2">
-          <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center justify-center space-x-1">
+          <button 
+            onClick={handleCall}
+            className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center justify-center space-x-1"
+          >
             <Phone className="h-4 w-4" />
             <span>Call</span>
           </button>
-          <button className="flex-1 bg-green-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors flex items-center justify-center space-x-1">
+          <button 
+            onClick={handleWhatsApp}
+            className="flex-1 bg-green-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors flex items-center justify-center space-x-1"
+          >
             <MessageCircle className="h-4 w-4" />
             <span>WhatsApp</span>
           </button>
