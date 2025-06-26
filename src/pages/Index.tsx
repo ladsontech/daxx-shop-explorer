@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Navigation from '../components/Navigation';
 import Hero from '../components/Hero';
@@ -116,7 +117,7 @@ const Index = () => {
                     <p className="text-sm text-gray-600 mb-2 line-clamp-2">
                       {item.description}
                     </p>
-                    <div className="text-xl font-bold text-gray-900">
+                    <div className="text-lg md:text-xl font-bold text-gray-900">
                       UGX {item.price.toLocaleString()}
                     </div>
                   </div>
