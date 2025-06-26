@@ -132,7 +132,6 @@ export const properties = [
     bedrooms: 4,
     bathrooms: 3,
     area: 2500,
-    agent: "Sarah Johnson",
     phone: "+1 (555) 123-4567"
   },
   {
@@ -145,7 +144,6 @@ export const properties = [
     bedrooms: 2,
     bathrooms: 2,
     area: 1200,
-    agent: "Mike Chen",
     phone: "+1 (555) 987-6543"
   },
   {
@@ -158,7 +156,6 @@ export const properties = [
     bedrooms: 5,
     bathrooms: 4,
     area: 3200,
-    agent: "Emily Rodriguez",
     phone: "+1 (555) 456-7890"
   }
 ];
