@@ -26,7 +26,12 @@ const Navigation = () => {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex-shrink-0">
-              <Link to="/">
+              <Link to="/" className="flex items-center space-x-3">
+                <img 
+                  src="/images/logo.png" 
+                  alt="Daxx Shop Logo" 
+                  className="h-10 w-10 animate-[shake_3s_ease-in-out_infinite]"
+                />
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   Daxx Shop
                 </h1>
