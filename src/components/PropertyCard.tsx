@@ -34,7 +34,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         <img
           src={image}
           alt={title}
-          className="w-full h-48 object-cover"
+          className="w-full aspect-square object-cover"
         />
         <div className={`absolute top-2 left-2 px-3 py-1 rounded-full text-white text-sm font-semibold ${
           type === 'sale' ? 'bg-green-500' : 'bg-blue-500'
@@ -54,7 +54,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         </div>
         
         <div className="text-2xl font-bold text-blue-600 mb-3">
-          ${price.toLocaleString()}{type === 'rent' && '/month'}
+          UGX {price.toLocaleString()}{type === 'rent' && '/month'}
         </div>
         
         {(bedrooms || bathrooms || area) && (

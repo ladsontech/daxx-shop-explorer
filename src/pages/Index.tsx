@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pb-16 md:pb-0">
       <Navigation />
       <Hero />
       
@@ -33,7 +33,7 @@ const Index = () => {
                     <img
                       src={item.image}
                       alt={item.title}
-                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-md text-xs font-semibold">
                       FEATURED
@@ -47,7 +47,7 @@ const Index = () => {
                       {item.description}
                     </p>
                     <div className="text-xl font-bold text-gray-900">
-                      ${item.price}
+                      UGX {item.price.toLocaleString()}
                     </div>
                   </div>
                 </div>

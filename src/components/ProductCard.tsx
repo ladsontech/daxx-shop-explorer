@@ -31,7 +31,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <img
             src={image}
             alt={title}
-            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300"
           />
           {originalPrice && (
             <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-md text-xs font-semibold">
@@ -54,9 +54,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
           
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-2">
-              <span className="text-xl font-bold text-gray-900">${price}</span>
+              <span className="text-xl font-bold text-gray-900">UGX {price.toLocaleString()}</span>
               {originalPrice && (
-                <span className="text-sm text-gray-500 line-through">${originalPrice}</span>
+                <span className="text-sm text-gray-500 line-through">UGX {originalPrice.toLocaleString()}</span>
               )}
             </div>
             <span className={`text-sm px-2 py-1 rounded-full ${

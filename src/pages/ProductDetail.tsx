@@ -16,7 +16,7 @@ const ProductDetail = () => {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white pb-16 md:pb-0">
         <Navigation />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
@@ -63,7 +63,7 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pb-16 md:pb-0">
       <Navigation />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -123,13 +123,13 @@ const ProductDetail = () => {
               </h1>
               
               <div className="flex items-center space-x-3 mb-4">
-                <span className="text-3xl font-bold text-gray-900">${product.price}</span>
+                <span className="text-3xl font-bold text-gray-900">UGX {product.price.toLocaleString()}</span>
                 {product.originalPrice && (
-                  <span className="text-xl text-gray-500 line-through">${product.originalPrice}</span>
+                  <span className="text-xl text-gray-500 line-through">UGX {product.originalPrice.toLocaleString()}</span>
                 )}
                 {product.originalPrice && (
                   <span className="bg-red-100 text-red-800 px-2 py-1 rounded-md text-sm font-semibold">
-                    Save ${product.originalPrice - product.price}
+                    Save UGX {(product.originalPrice - product.price).toLocaleString()}
                   </span>
                 )}
               </div>
