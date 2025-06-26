@@ -43,23 +43,23 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </div>
         </div>
         
-        <div className="p-4">
-          <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+        <div className="p-3 md:p-4">
+          <h3 className="text-sm md:text-lg font-semibold text-gray-800 mb-1 md:mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
             {title}
           </h3>
           
-          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+          <p className="text-xs md:text-sm text-gray-600 mb-2 md:mb-3 line-clamp-2">
             {description}
           </p>
           
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-2">
-              <span className="text-xl font-bold text-gray-900">UGX {price.toLocaleString()}</span>
+          <div className="flex items-center justify-between mb-2 md:mb-3">
+            <div className="flex items-center space-x-1 md:space-x-2">
+              <span className="text-sm md:text-xl font-bold text-gray-900">UGX {price.toLocaleString()}</span>
               {originalPrice && (
-                <span className="text-sm text-gray-500 line-through">UGX {originalPrice.toLocaleString()}</span>
+                <span className="text-xs md:text-sm text-gray-500 line-through">UGX {originalPrice.toLocaleString()}</span>
               )}
             </div>
-            <span className={`text-sm px-2 py-1 rounded-full ${
+            <span className={`text-xs px-1.5 py-0.5 md:px-2 md:py-1 rounded-full ${
               inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
             }`}>
               {inStock ? 'In Stock' : 'Out of Stock'}
@@ -67,7 +67,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </div>
           
           <button 
-            className={`w-full py-2 px-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 ${
+            className={`w-full py-1.5 md:py-2 px-3 md:px-4 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-1 md:space-x-2 ${
               inStock 
                 ? 'bg-blue-600 hover:bg-blue-700 text-white' 
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -75,7 +75,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             disabled={!inStock}
             onClick={(e) => e.preventDefault()}
           >
-            <ShoppingCart className="h-4 w-4" />
+            <ShoppingCart className="h-3 w-3 md:h-4 md:w-4" />
             <span>{inStock ? 'Add to Cart' : 'Out of Stock'}</span>
           </button>
         </div>

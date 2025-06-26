@@ -17,7 +17,7 @@ const Navigation = () => {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="bg-white shadow-md sticky top-0 z-50">
+      <nav className="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -46,7 +46,7 @@ const Navigation = () => {
                 <input
                   type="text"
                   placeholder="Search products..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300/50 rounded-lg bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
               </div>
@@ -78,13 +78,13 @@ const Navigation = () => {
 
           {/* Mobile Navigation Overlay */}
           {isMenuOpen && (
-            <div className="md:hidden border-t border-gray-200">
+            <div className="md:hidden border-t border-gray-200/50">
               <div className="px-2 pt-2 pb-3 space-y-1">
                 <div className="pb-2">
                   <input
                     type="text"
                     placeholder="Search products..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300/50 rounded-lg bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -94,7 +94,7 @@ const Navigation = () => {
       </nav>
 
       {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-200/50 z-50">
         <div className="flex justify-around items-center py-2">
           {navLinks.map((link) => {
             const Icon = link.icon;
