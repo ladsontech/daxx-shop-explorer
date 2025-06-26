@@ -10,7 +10,7 @@ export interface Product {
   original_price: number | null;
   category: string;
   section: string;
-  image_url: string;
+  images: string[];
   in_stock: boolean;
   created_at: string;
   updated_at: string;

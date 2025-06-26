@@ -19,7 +19,7 @@ const Index = () => {
   const formatProductsForComponent = (products: any[]) => {
     return products?.map(product => ({
       id: product.id,
-      image: product.image_url,
+      images: product.images || [],
       title: product.title,
       price: product.price,
       originalPrice: product.original_price,
@@ -32,7 +32,7 @@ const Index = () => {
   const formatPropertiesForComponent = (properties: any[]) => {
     return properties?.map(property => ({
       id: property.id,
-      image: property.image_url,
+      images: property.images || [],
       title: property.title,
       price: property.price,
       location: property.location,
@@ -88,7 +88,7 @@ const Index = () => {
                 <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">
                   <div className="relative">
                     <img
-                      src={item.image}
+                      src={item.images && item.images.length > 0 ? item.images[0] : '/placeholder.svg'}
                       alt={item.title}
                       className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300"
                     />

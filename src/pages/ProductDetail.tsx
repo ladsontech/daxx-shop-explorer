@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart, Share2 } from 'lucide-react';
@@ -45,12 +44,9 @@ const ProductDetail = () => {
     );
   }
 
-  // For demo purposes, create multiple images from the single image
-  const productImages = [
-    product.image_url,
-    product.image_url + '?variant=2',
-    product.image_url + '?variant=3'
-  ];
+  const productImages = product.images && product.images.length > 0 
+    ? product.images 
+    : ['/placeholder.svg'];
 
   const handleShare = async () => {
     const shareData = {
@@ -99,23 +95,25 @@ const ProductDetail = () => {
             </div>
             
             {/* Thumbnail Images */}
-            <div className="flex space-x-2">
-              {productImages.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentImageIndex(index)}
-                  className={`w-20 h-20 rounded-lg overflow-hidden border-2 ${
-                    currentImageIndex === index ? 'border-blue-500' : 'border-gray-200'
-                  }`}
-                >
-                  <img
-                    src={image}
-                    alt={`${product.title} ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </button>
-              ))}
-            </div>
+            {productImages.length > 1 && (
+              <div className="flex space-x-2">
+                {productImages.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentImageIndex(index)}
+                    className={`w-20 h-20 rounded-lg overflow-hidden border-2 ${
+                      currentImageIndex === index ? 'border-blue-500' : 'border-gray-200'
+                    }`}
+                  >
+                    <img
+                      src={image}
+                      alt={`${product.title} ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Product Info */}

@@ -15,7 +15,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
-          image_url: string
+          images: string[] | null
           in_stock: boolean | null
           original_price: number | null
           price: number
@@ -28,7 +28,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
-          image_url: string
+          images?: string[] | null
           in_stock?: boolean | null
           original_price?: number | null
           price: number
@@ -41,7 +41,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
-          image_url?: string
+          images?: string[] | null
           in_stock?: boolean | null
           original_price?: number | null
           price?: number
@@ -58,7 +58,7 @@ export type Database = {
           bedrooms: number | null
           created_at: string
           id: string
-          image_url: string
+          images: string[] | null
           location: string
           price: number
           title: string
@@ -71,7 +71,7 @@ export type Database = {
           bedrooms?: number | null
           created_at?: string
           id?: string
-          image_url: string
+          images?: string[] | null
           location: string
           price: number
           title: string
@@ -84,7 +84,7 @@ export type Database = {
           bedrooms?: number | null
           created_at?: string
           id?: string
-          image_url?: string
+          images?: string[] | null
           location?: string
           price?: number
           title?: string

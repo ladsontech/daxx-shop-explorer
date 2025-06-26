@@ -3,8 +3,8 @@ import React from 'react';
 import { MapPin, Bed, Bath, Square, Phone, MessageCircle } from 'lucide-react';
 
 interface PropertyCardProps {
-  id: number;
-  image: string;
+  id: string;
+  images: string[];
   title: string;
   price: number;
   location: string;
@@ -16,7 +16,7 @@ interface PropertyCardProps {
 }
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
-  image,
+  images,
   title,
   price,
   location,
@@ -26,11 +26,13 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   area,
   phone
 }) => {
+  const displayImage = images && images.length > 0 ? images[0] : '/placeholder.svg';
+
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
       <div className="relative">
         <img
-          src={image}
+          src={displayImage}
           alt={title}
           className="w-full aspect-square object-cover"
         />

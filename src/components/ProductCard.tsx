@@ -4,8 +4,8 @@ import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface ProductCardProps {
-  id: number;
-  image: string;
+  id: string;
+  images: string[];
   title: string;
   price: number;
   originalPrice?: number;
@@ -16,7 +16,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({
   id,
-  image,
+  images,
   title,
   price,
   originalPrice,
@@ -24,12 +24,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
   description,
   inStock = true
 }) => {
+  const displayImage = images && images.length > 0 ? images[0] : '/placeholder.svg';
+
   return (
     <Link to={`/product/${id}`} className="block">
       <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">
         <div className="relative">
           <img
-            src={image}
+            src={displayImage}
             alt={title}
             className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300"
           />

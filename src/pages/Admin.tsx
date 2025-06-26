@@ -11,7 +11,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useProducts } from '@/hooks/useProducts';
 import { useProperties } from '@/hooks/useProperties';
 import { toast } from 'sonner';
-import { Trash2, Edit, Plus } from 'lucide-react';
+import { Trash2, Plus } from 'lucide-react';
+import ImageUpload from '@/components/ImageUpload';
 
 const Admin = () => {
   const [productForm, setProductForm] = useState({
@@ -21,7 +22,7 @@ const Admin = () => {
     original_price: '',
     category: '',
     section: '',
-    image_url: '',
+    images: [] as string[],
     in_stock: true
   });
 
@@ -33,7 +34,7 @@ const Admin = () => {
     bedrooms: '',
     bathrooms: '',
     area: '',
-    image_url: ''
+    images: [] as string[]
   });
 
   const { data: products, refetch: refetchProducts } = useProducts();
@@ -42,6 +43,11 @@ const Admin = () => {
   const handleProductSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (productForm.images.length === 0) {
+      toast.error('Please upload at least one image');
+      return;
+    }
+
     const { error } = await supabase.from('products').insert([{
       title: productForm.title,
       description: productForm.description || null,
@@ -49,7 +55,7 @@ const Admin = () => {
       original_price: productForm.original_price ? parseFloat(productForm.original_price) : null,
       category: productForm.category,
       section: productForm.section,
-      image_url: productForm.image_url,
+      images: productForm.images,
       in_stock: productForm.in_stock
     }]);
 
@@ -59,7 +65,7 @@ const Admin = () => {
       toast.success('Product added successfully!');
       setProductForm({
         title: '', description: '', price: '', original_price: '',
-        category: '', section: '', image_url: '', in_stock: true
+        category: '', section: '', images: [], in_stock: true
       });
       refetchProducts();
     }
@@ -68,6 +74,11 @@ const Admin = () => {
   const handlePropertySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (propertyForm.images.length === 0) {
+      toast.error('Please upload at least one image');
+      return;
+    }
+
     const { error } = await supabase.from('properties').insert([{
       title: propertyForm.title,
       price: parseFloat(propertyForm.price),
@@ -76,7 +87,7 @@ const Admin = () => {
       bedrooms: propertyForm.bedrooms ? parseInt(propertyForm.bedrooms) : null,
       bathrooms: propertyForm.bathrooms ? parseInt(propertyForm.bathrooms) : null,
       area: propertyForm.area ? parseInt(propertyForm.area) : null,
-      image_url: propertyForm.image_url
+      images: propertyForm.images
     }]);
 
     if (error) {
@@ -85,7 +96,7 @@ const Admin = () => {
       toast.success('Property added successfully!');
       setPropertyForm({
         title: '', price: '', location: '', type: 'sale',
-        bedrooms: '', bathrooms: '', area: '', image_url: ''
+        bedrooms: '', bathrooms: '', area: '', images: []
       });
       refetchProperties();
     }
@@ -174,7 +185,7 @@ const Admin = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div>
+                  <div className="md:col-span-2">
                     <Label htmlFor="category">Category</Label>
                     <Select value={productForm.category} onValueChange={(value) => setProductForm({...productForm, category: value})}>
                       <SelectTrigger>
@@ -196,16 +207,8 @@ const Admin = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div>
-                    <Label htmlFor="image_url">Image URL</Label>
-                    <Input
-                      id="image_url"
-                      value={productForm.image_url}
-                      onChange={(e) => setProductForm({...productForm, image_url: e.target.value})}
-                      required
-                    />
-                  </div>
                 </div>
+                
                 <div>
                   <Label htmlFor="description">Description</Label>
                   <Textarea
@@ -215,6 +218,14 @@ const Admin = () => {
                     rows={3}
                   />
                 </div>
+
+                <ImageUpload
+                  bucket="product-images"
+                  images={productForm.images}
+                  onImagesChange={(images) => setProductForm({...productForm, images})}
+                  maxImages={5}
+                />
+
                 <Button type="submit">Add Product</Button>
               </form>
             </CardContent>
@@ -229,7 +240,13 @@ const Admin = () => {
                 {products?.map((product) => (
                   <div key={product.id} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center space-x-4">
-                      <img src={product.image_url} alt={product.title} className="w-16 h-16 object-cover rounded" />
+                      {product.images && product.images.length > 0 ? (
+                        <img src={product.images[0]} alt={product.title} className="w-16 h-16 object-cover rounded" />
+                      ) : (
+                        <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
+                          <span className="text-gray-400 text-xs">No Image</span>
+                        </div>
+                      )}
                       <div>
                         <h3 className="font-semibold">{product.title}</h3>
                         <p className="text-sm text-gray-600">{product.category} • {product.section}</p>
@@ -329,16 +346,15 @@ const Admin = () => {
                       onChange={(e) => setPropertyForm({...propertyForm, area: e.target.value})}
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="prop_image_url">Image URL</Label>
-                    <Input
-                      id="prop_image_url"
-                      value={propertyForm.image_url}
-                      onChange={(e) => setPropertyForm({...propertyForm, image_url: e.target.value})}
-                      required
-                    />
-                  </div>
                 </div>
+
+                <ImageUpload
+                  bucket="property-images"
+                  images={propertyForm.images}
+                  onImagesChange={(images) => setPropertyForm({...propertyForm, images})}
+                  maxImages={10}
+                />
+
                 <Button type="submit">Add Property</Button>
               </form>
             </CardContent>
@@ -353,7 +369,13 @@ const Admin = () => {
                 {properties?.map((property) => (
                   <div key={property.id} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center space-x-4">
-                      <img src={property.image_url} alt={property.title} className="w-16 h-16 object-cover rounded" />
+                      {property.images && property.images.length > 0 ? (
+                        <img src={property.images[0]} alt={property.title} className="w-16 h-16 object-cover rounded" />
+                      ) : (
+                        <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
+                          <span className="text-gray-400 text-xs">No Image</span>
+                        </div>
+                      )}
                       <div>
                         <h3 className="font-semibold">{property.title}</h3>
                         <p className="text-sm text-gray-600">{property.location} • For {property.type}</p>

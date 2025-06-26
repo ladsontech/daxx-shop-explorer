@@ -11,7 +11,7 @@ export interface Property {
   bedrooms: number | null;
   bathrooms: number | null;
   area: number | null;
-  image_url: string;
+  images: string[];
   created_at: string;
   updated_at: string;
 }
