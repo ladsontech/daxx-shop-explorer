@@ -29,7 +29,7 @@ const ProductDetail = () => {
   const handleBuyNow = () => {
     if (product && product.in_stock) {
       // Use different phone numbers based on category
-      const phoneNumber = product.category === 'fashion' ? "0740657694" : "+256751173504";
+      const phoneNumber = product.category === 'fashion' ? "+256740657694" : "+256751173504";
       const baseUrl = window.location.origin;
       const productUrl = `${baseUrl}/product/${product.id}`;
       

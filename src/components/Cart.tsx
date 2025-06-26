@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { X, Plus, Minus, ShoppingCart, AlertTriangle } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
@@ -39,7 +38,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
     const isFashionOrder = categories.includes('fashion');
     
     // Use different phone numbers based on category
-    const phoneNumber = isFashionOrder ? "0740657694" : "+256751173504";
+    const phoneNumber = isFashionOrder ? "+256740657694" : "+256751173504";
     const baseUrl = window.location.origin;
     
     let message = "Hello! I'd like to place an order for the following items:\n\n";
