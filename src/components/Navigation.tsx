@@ -3,12 +3,17 @@ import React, { useState } from 'react';
 import { Search, ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Shirt, Building } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+import { useSearch } from '../hooks/useSearch';
 import Cart from './Cart';
+import SearchResults from './SearchResults';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const { getTotalItems } = useCart();
+  const { searchResults, isSearching } = useSearch(searchQuery);
 
   const navLinks = [
     { name: 'Home', href: '/', icon: Home },
@@ -17,6 +22,11 @@ const Navigation = () => {
     { name: 'Fashion', href: '/#fashion', icon: Shirt },
     { name: 'Property', href: '/#property', icon: Building },
   ];
+
+  const handleSearchClose = () => {
+    setIsSearchFocused(false);
+    setSearchQuery('');
+  };
 
   return (
     <>
@@ -47,14 +57,25 @@ const Navigation = () => {
             </div>
 
             {/* Search Bar */}
-            <div className="hidden md:flex flex-1 max-w-md mx-8">
+            <div className="hidden md:flex flex-1 max-w-md mx-8 relative">
               <div className="relative w-full">
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder="Search products and properties..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setIsSearchFocused(true)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300/50 rounded-lg bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                {isSearchFocused && (
+                  <SearchResults
+                    results={searchResults}
+                    isSearching={isSearching}
+                    query={searchQuery}
+                    onClose={handleSearchClose}
+                  />
+                )}
               </div>
             </div>
 
@@ -89,18 +110,37 @@ const Navigation = () => {
           {isMenuOpen && (
             <div className="md:hidden border-t border-gray-200/50">
               <div className="px-2 pt-2 pb-3 space-y-1">
-                <div className="pb-2">
+                <div className="pb-2 relative">
                   <input
                     type="text"
-                    placeholder="Search products..."
+                    placeholder="Search products and properties..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onFocus={() => setIsSearchFocused(true)}
                     className="w-full px-3 py-2 border border-gray-300/50 rounded-lg bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-blue-500"
                   />
+                  {isSearchFocused && (
+                    <SearchResults
+                      results={searchResults}
+                      isSearching={isSearching}
+                      query={searchQuery}
+                      onClose={handleSearchClose}
+                    />
+                  )}
                 </div>
               </div>
             </div>
           )}
         </div>
       </nav>
+
+      {/* Overlay to close search when clicking outside */}
+      {isSearchFocused && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={handleSearchClose}
+        />
+      )}
 
       {/* Mobile Bottom Navigation */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-200/50 z-50">
