@@ -7,6 +7,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./contexts/CartContext";
 import Index from "./pages/Index";
 import ProductDetail from "./pages/ProductDetail";
+import GadgetsPage from "./pages/GadgetsPage";
+import AccessoriesPage from "./pages/AccessoriesPage";
+import FashionPage from "./pages/FashionPage";
+import PropertyPage from "./pages/PropertyPage";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
@@ -21,6 +25,10 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/gadgets" element={<GadgetsPage />} />
+            <Route path="/accessories" element={<AccessoriesPage />} />
+            <Route path="/fashion" element={<FashionPage />} />
+            <Route path="/property" element={<PropertyPage />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/admin" element={<Admin />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
