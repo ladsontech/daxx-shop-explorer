@@ -1,7 +1,7 @@
-
 import React from 'react';
 import Navigation from '../components/Navigation';
 import Hero from '../components/Hero';
+import SearchBar from '../components/SearchBar';
 import CategorySection from '../components/CategorySection';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
@@ -16,7 +16,6 @@ const Index = () => {
   const { data: fashion, isLoading: fashionLoading } = useProducts('fashion');
   const { data: properties, isLoading: propertiesLoading } = useProperties();
 
-  // Convert database format to component format
   const formatProductsForComponent = (products: any[]) => {
     return products?.map(product => ({
       id: product.id,
@@ -70,6 +69,19 @@ const Index = () => {
     <div className="min-h-screen bg-white pb-16 md:pb-0">
       <Navigation />
       <Hero />
+      
+      {/* Search Section */}
+      <section className="py-8 bg-gradient-to-r from-blue-50 to-purple-50">
+        <div className="text-center mb-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+            Find What You're Looking For
+          </h2>
+          <p className="text-gray-600">
+            Search through our products and properties
+          </p>
+        </div>
+        <SearchBar />
+      </section>
       
       {/* Featured Products Section */}
       <section className="py-16 bg-white">
