@@ -4,17 +4,31 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart, Share2 } from 'lucide-react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
-import { gadgets, accessories, fashion } from '../data/sampleData';
+import { useProductById } from '../hooks/useProducts';
+import { Loader2 } from 'lucide-react';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
-  // Find the product from all categories
-  const allProducts = [...gadgets, ...accessories, ...fashion];
-  const product = allProducts.find(item => item.id === parseInt(id || '0'));
+  const { data: product, isLoading, error } = useProductById(id || '');
 
-  if (!product) {
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white pb-16 md:pb-0">
+        <Navigation />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex items-center justify-center">
+          <div className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <p className="text-gray-600">Loading product...</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error || !product) {
     return (
       <div className="min-h-screen bg-white pb-16 md:pb-0">
         <Navigation />
@@ -33,15 +47,15 @@ const ProductDetail = () => {
 
   // For demo purposes, create multiple images from the single image
   const productImages = [
-    product.image,
-    product.image + '?variant=2',
-    product.image + '?variant=3'
+    product.image_url,
+    product.image_url + '?variant=2',
+    product.image_url + '?variant=3'
   ];
 
   const handleShare = async () => {
     const shareData = {
       title: product.title,
-      text: product.description,
+      text: product.description || '',
       url: window.location.href,
     };
 
@@ -124,12 +138,12 @@ const ProductDetail = () => {
               
               <div className="flex items-center space-x-3 mb-4">
                 <span className="text-3xl font-bold text-gray-900">UGX {product.price.toLocaleString()}</span>
-                {product.originalPrice && (
-                  <span className="text-xl text-gray-500 line-through">UGX {product.originalPrice.toLocaleString()}</span>
+                {product.original_price && (
+                  <span className="text-xl text-gray-500 line-through">UGX {product.original_price.toLocaleString()}</span>
                 )}
-                {product.originalPrice && (
+                {product.original_price && (
                   <span className="bg-red-100 text-red-800 px-2 py-1 rounded-md text-sm font-semibold">
-                    Save UGX {(product.originalPrice - product.price).toLocaleString()}
+                    Save UGX {(product.original_price - product.price).toLocaleString()}
                   </span>
                 )}
               </div>
@@ -139,7 +153,7 @@ const ProductDetail = () => {
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-3">Description</h2>
               <p className="text-gray-600 leading-relaxed">
-                {product.description}
+                {product.description || 'No description available.'}
               </p>
             </div>
 
@@ -147,17 +161,17 @@ const ProductDetail = () => {
             <div className="space-y-4">
               <button
                 className={`w-full py-3 px-6 rounded-lg font-semibold text-lg transition-all duration-200 flex items-center justify-center space-x-2 ${
-                  product.inStock
+                  product.in_stock
                     ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
-                disabled={!product.inStock}
+                disabled={!product.in_stock}
               >
                 <ShoppingCart className="h-5 w-5" />
-                <span>{product.inStock ? 'Add to Cart' : 'Out of Stock'}</span>
+                <span>{product.in_stock ? 'Add to Cart' : 'Out of Stock'}</span>
               </button>
               
-              {product.inStock && (
+              {product.in_stock && (
                 <button className="w-full py-3 px-6 rounded-lg font-semibold text-lg border-2 border-blue-600 text-blue-600 hover:bg-blue-50 transition-all duration-200">
                   Buy Now
                 </button>

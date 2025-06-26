@@ -1,17 +1,18 @@
 
 import React, { useState } from 'react';
-import { Search, ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Shirt, Building } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Shirt, Building, Settings } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartCount] = useState(3);
 
   const navLinks = [
-    { name: 'Home', href: '#', icon: Home },
-    { name: 'Gadgets', href: '#gadgets', icon: Smartphone },
-    { name: 'Accessories', href: '#accessories', icon: Headphones },
-    { name: 'Fashion', href: '#fashion', icon: Shirt },
-    { name: 'Property', href: '#property', icon: Building },
+    { name: 'Home', href: '/', icon: Home },
+    { name: 'Gadgets', href: '/#gadgets', icon: Smartphone },
+    { name: 'Accessories', href: '/#accessories', icon: Headphones },
+    { name: 'Fashion', href: '/#fashion', icon: Shirt },
+    { name: 'Property', href: '/#property', icon: Building },
   ];
 
   return (
@@ -22,9 +23,11 @@ const Navigation = () => {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex-shrink-0">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Daxx Shop
-              </h1>
+              <Link to="/">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  Daxx Shop
+                </h1>
+              </Link>
             </div>
 
             {/* Desktop Navigation Links */}
@@ -65,6 +68,9 @@ const Navigation = () => {
               <button className="p-2 text-gray-700 hover:text-blue-600 transition-colors">
                 <User className="h-6 w-6" />
               </button>
+              <Link to="/admin" className="p-2 text-gray-700 hover:text-blue-600 transition-colors">
+                <Settings className="h-6 w-6" />
+              </Link>
 
               {/* Mobile menu button */}
               <button

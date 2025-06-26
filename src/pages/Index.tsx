@@ -4,10 +4,67 @@ import Navigation from '../components/Navigation';
 import Hero from '../components/Hero';
 import CategorySection from '../components/CategorySection';
 import Footer from '../components/Footer';
-import { gadgets, accessories, fashion, properties } from '../data/sampleData';
+import { useProducts } from '../hooks/useProducts';
+import { useProperties } from '../hooks/useProperties';
 import { Link } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 
 const Index = () => {
+  const { data: gadgets, isLoading: gadgetsLoading } = useProducts('gadgets');
+  const { data: accessories, isLoading: accessoriesLoading } = useProducts('accessories');
+  const { data: fashion, isLoading: fashionLoading } = useProducts('fashion');
+  const { data: properties, isLoading: propertiesLoading } = useProperties();
+
+  // Convert database format to component format
+  const formatProductsForComponent = (products: any[]) => {
+    return products?.map(product => ({
+      id: product.id,
+      image: product.image_url,
+      title: product.title,
+      price: product.price,
+      originalPrice: product.original_price,
+      category: product.category,
+      description: product.description || '',
+      inStock: product.in_stock
+    })) || [];
+  };
+
+  const formatPropertiesForComponent = (properties: any[]) => {
+    return properties?.map(property => ({
+      id: property.id,
+      image: property.image_url,
+      title: property.title,
+      price: property.price,
+      location: property.location,
+      type: property.type,
+      bedrooms: property.bedrooms,
+      bathrooms: property.bathrooms,
+      area: property.area,
+      phone: "+256 123 456 789" // Default phone number since it's the site owner
+    })) || [];
+  };
+
+  const formattedGadgets = formatProductsForComponent(gadgets || []);
+  const formattedAccessories = formatProductsForComponent(accessories || []);
+  const formattedFashion = formatProductsForComponent(fashion || []);
+  const formattedProperties = formatPropertiesForComponent(properties || []);
+
+  const featuredProducts = [
+    ...formattedGadgets.slice(0, 2),
+    ...formattedFashion.slice(0, 2)
+  ];
+
+  if (gadgetsLoading || accessoriesLoading || fashionLoading || propertiesLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Loading products...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0">
       <Navigation />
@@ -26,7 +83,7 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {[...gadgets.slice(0, 2), ...fashion.slice(0, 2)].map((item) => (
+            {featuredProducts.map((item) => (
               <Link key={item.id} to={`/product/${item.id}`} className="block">
                 <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">
                   <div className="relative">
@@ -62,7 +119,7 @@ const Index = () => {
         title="Latest Gadgets"
         subtitle="Cutting-edge technology at your fingertips"
         type="products"
-        items={gadgets}
+        items={formattedGadgets}
       />
 
       <CategorySection
@@ -70,7 +127,7 @@ const Index = () => {
         title="Premium Accessories"
         subtitle="Enhance your devices with quality accessories"
         type="products"
-        items={accessories}
+        items={formattedAccessories}
       />
 
       <CategorySection
@@ -78,7 +135,7 @@ const Index = () => {
         title="Fashion Collection"
         subtitle="Style meets comfort in our curated fashion line"
         type="products"
-        items={fashion}
+        items={formattedFashion}
       />
 
       <CategorySection
@@ -86,7 +143,7 @@ const Index = () => {
         title="Property Listings"
         subtitle="Find your perfect home or investment opportunity"
         type="property"
-        items={properties}
+        items={formattedProperties}
       />
 
       <Footer />
