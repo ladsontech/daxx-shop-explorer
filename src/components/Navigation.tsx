@@ -1,25 +1,36 @@
-
 import React, { useState } from 'react';
 import { ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Shirt, Building } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import Cart from './Cart';
-
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { getTotalItems } = useCart();
-
-  const navLinks = [
-    { name: 'Home', href: '/', icon: Home },
-    { name: 'Gadgets', href: '/#gadgets', icon: Smartphone },
-    { name: 'Accessories', href: '/#accessories', icon: Headphones },
-    { name: 'Fashion', href: '/#fashion', icon: Shirt },
-    { name: 'Property', href: '/#property', icon: Building },
-  ];
-
-  return (
-    <>
+  const {
+    getTotalItems
+  } = useCart();
+  const navLinks = [{
+    name: 'Home',
+    href: '/',
+    icon: Home
+  }, {
+    name: 'Gadgets',
+    href: '/#gadgets',
+    icon: Smartphone
+  }, {
+    name: 'Accessories',
+    href: '/#accessories',
+    icon: Headphones
+  }, {
+    name: 'Fashion',
+    href: '/#fashion',
+    icon: Shirt
+  }, {
+    name: 'Property',
+    href: '/#property',
+    icon: Building
+  }];
+  return <>
       {/* Desktop Navigation */}
       <nav className="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,86 +46,54 @@ const Navigation = () => {
 
             {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center space-x-8">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
-                >
+              {navLinks.map(link => <a key={link.name} href={link.href} className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
                   {link.name}
-                </a>
-              ))}
+                </a>)}
             </div>
 
             {/* Right Icons */}
             <div className="flex items-center space-x-4">
-              <button 
-                onClick={() => setIsCartOpen(true)}
-                className="relative p-2 text-gray-700 hover:text-blue-600 transition-colors"
-              >
+              <button onClick={() => setIsCartOpen(true)} className="relative p-2 text-gray-700 hover:text-blue-600 transition-colors">
                 <ShoppingCart className="h-6 w-6" />
-                {getTotalItems() > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                {getTotalItems() > 0 && <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                     {getTotalItems()}
-                  </span>
-                )}
+                  </span>}
               </button>
-              <button className="p-2 text-gray-700 hover:text-blue-600 transition-colors">
-                <User className="h-6 w-6" />
-              </button>
+              
 
               {/* Mobile menu button */}
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-2 text-gray-700"
-              >
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2 text-gray-700">
                 {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
             </div>
           </div>
 
           {/* Mobile Navigation Overlay */}
-          {isMenuOpen && (
-            <div className="md:hidden border-t border-gray-200/50">
+          {isMenuOpen && <div className="md:hidden border-t border-gray-200/50">
               <div className="px-2 pt-2 pb-3 space-y-1">
-                {navLinks.map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.href}
-                    className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors"
-                  >
+                {navLinks.map(link => <a key={link.name} href={link.href} className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors">
                     {link.name}
-                  </a>
-                ))}
+                  </a>)}
               </div>
-            </div>
-          )}
+            </div>}
         </div>
       </nav>
 
       {/* Mobile Bottom Navigation */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-200/50 z-50">
         <div className="flex justify-around items-center py-2">
-          {navLinks.map((link) => {
-            const Icon = link.icon;
-            return (
-              <a
-                key={link.name}
-                href={link.href}
-                className="flex flex-col items-center py-2 px-3 text-gray-600 hover:text-blue-600 transition-colors"
-              >
+          {navLinks.map(link => {
+          const Icon = link.icon;
+          return <a key={link.name} href={link.href} className="flex flex-col items-center py-2 px-3 text-gray-600 hover:text-blue-600 transition-colors">
                 <Icon className="h-5 w-5 mb-1" />
                 <span className="text-xs font-medium">{link.name}</span>
-              </a>
-            );
-          })}
+              </a>;
+        })}
         </div>
       </div>
 
       {/* Cart Sidebar */}
       <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-    </>
-  );
+    </>;
 };
-
 export default Navigation;
