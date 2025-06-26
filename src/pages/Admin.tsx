@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,10 +10,19 @@ import { supabase } from '@/integrations/supabase/client';
 import { useProducts } from '@/hooks/useProducts';
 import { useProperties } from '@/hooks/useProperties';
 import { toast } from 'sonner';
-import { Trash2, Plus } from 'lucide-react';
+import { Trash2, Plus, Edit } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
+import AdminLogin from '@/components/AdminLogin';
+import EditProductDialog from '@/components/EditProductDialog';
+import EditPropertyDialog from '@/components/EditPropertyDialog';
+import { Product } from '@/hooks/useProducts';
+import { Property } from '@/hooks/useProperties';
 
 const Admin = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [editingProperty, setEditingProperty] = useState<Property | null>(null);
+  
   const [productForm, setProductForm] = useState({
     title: '',
     description: '',
@@ -122,9 +130,18 @@ const Admin = () => {
     }
   };
 
+  if (!isAuthenticated) {
+    return <AdminLogin onLogin={() => setIsAuthenticated(true)} />;
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Admin Dashboard</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+        <Button variant="outline" onClick={() => setIsAuthenticated(false)}>
+          Logout
+        </Button>
+      </div>
       
       <Tabs defaultValue="products" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
@@ -253,13 +270,22 @@ const Admin = () => {
                         <p className="font-bold">UGX {product.price.toLocaleString()}</p>
                       </div>
                     </div>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => deleteProduct(product.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <div className="flex space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setEditingProduct(product)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => deleteProduct(product.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -382,13 +408,22 @@ const Admin = () => {
                         <p className="font-bold">UGX {property.price.toLocaleString()}{property.type === 'rent' && '/month'}</p>
                       </div>
                     </div>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => deleteProperty(property.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <div className="flex space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setEditingProperty(property)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => deleteProperty(property.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -396,6 +431,20 @@ const Admin = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <EditProductDialog
+        product={editingProduct}
+        isOpen={!!editingProduct}
+        onClose={() => setEditingProduct(null)}
+        onUpdate={refetchProducts}
+      />
+
+      <EditPropertyDialog
+        property={editingProperty}
+        isOpen={!!editingProperty}
+        onClose={() => setEditingProperty(null)}
+        onUpdate={refetchProperties}
+      />
     </div>
   );
 };
