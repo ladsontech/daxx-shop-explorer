@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Product } from '@/hooks/useProducts';
@@ -26,7 +27,8 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
     original_price: product?.original_price?.toString() || '',
     section: product?.section || '',
     images: product?.images || [],
-    in_stock: product?.in_stock ?? true
+    in_stock: product?.in_stock ?? true,
+    featured: product?.featured ?? false
   });
 
   React.useEffect(() => {
@@ -38,7 +40,8 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
         original_price: product.original_price?.toString() || '',
         section: product.section,
         images: product.images || [],
-        in_stock: product.in_stock
+        in_stock: product.in_stock,
+        featured: product.featured || false
       });
     }
   }, [product]);
@@ -48,17 +51,39 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
     
     if (!product) return;
 
+    // Improved validation with specific error messages
+    if (!form.title.trim()) {
+      toast.error('Please enter a product title');
+      return;
+    }
+    
+    if (!form.price || parseFloat(form.price) <= 0) {
+      toast.error('Please enter a valid price greater than 0');
+      return;
+    }
+    
+    if (!form.section) {
+      toast.error('Please select a section (Gadgets, Accessories, or Fashion)');
+      return;
+    }
+    
+    if (form.images.length === 0) {
+      toast.error('Please upload at least one product image');
+      return;
+    }
+
     const { error } = await supabase
       .from('products')
       .update({
-        title: form.title,
-        description: form.description || null,
+        title: form.title.trim(),
+        description: form.description.trim() || null,
         price: parseFloat(form.price),
         original_price: form.original_price ? parseFloat(form.original_price) : null,
         category: form.section, // Use section as category
         section: form.section,
         images: form.images,
-        in_stock: form.in_stock
+        in_stock: form.in_stock,
+        featured: form.featured
       })
       .eq('id', product.id);
 
@@ -82,21 +107,24 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="edit_title">Title</Label>
+              <Label htmlFor="edit_title">Title *</Label>
               <Input
                 id="edit_title"
                 value={form.title}
                 onChange={(e) => setForm({...form, title: e.target.value})}
+                placeholder="Enter product title"
                 required
               />
             </div>
             <div>
-              <Label htmlFor="edit_price">Price (UGX)</Label>
+              <Label htmlFor="edit_price">Price (UGX) *</Label>
               <Input
                 id="edit_price"
                 type="number"
                 value={form.price}
                 onChange={(e) => setForm({...form, price: e.target.value})}
+                placeholder="Enter price in UGX"
+                min="1"
                 required
               />
             </div>
@@ -107,13 +135,15 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
                 type="number"
                 value={form.original_price}
                 onChange={(e) => setForm({...form, original_price: e.target.value})}
+                placeholder="Enter original price if on sale"
+                min="1"
               />
             </div>
             <div>
-              <Label htmlFor="edit_section">Section</Label>
+              <Label htmlFor="edit_section">Section *</Label>
               <Select value={form.section} onValueChange={(value) => setForm({...form, section: value})}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select section" />
+                  <SelectValue placeholder="Select a section" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="gadgets">Gadgets</SelectItem>
@@ -131,15 +161,31 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
               value={form.description}
               onChange={(e) => setForm({...form, description: e.target.value})}
               rows={3}
+              placeholder="Enter product description (optional)"
             />
           </div>
 
-          <ImageUpload
-            bucket="product-images"
-            images={form.images}
-            onImagesChange={(images) => setForm({...form, images})}
-            maxImages={5}
-          />
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="edit_featured"
+              checked={form.featured}
+              onCheckedChange={(checked) => setForm({...form, featured: !!checked})}
+            />
+            <Label htmlFor="edit_featured" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              Mark as featured product
+            </Label>
+          </div>
+
+          <div>
+            <Label>Product Images *</Label>
+            <ImageUpload
+              bucket="product-images"
+              images={form.images}
+              onImagesChange={(images) => setForm({...form, images})}
+              maxImages={5}
+            />
+            <p className="text-sm text-gray-500 mt-1">Upload at least one image (max 5 images)</p>
+          </div>
 
           <div className="flex justify-end space-x-2">
             <Button type="button" variant="outline" onClick={onClose}>

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 import { supabase } from '@/integrations/supabase/client';
 import { useProducts } from '@/hooks/useProducts';
 import { useProperties } from '@/hooks/useProperties';
@@ -30,7 +31,8 @@ const Admin = () => {
     original_price: '',
     section: '',
     images: [] as string[],
-    in_stock: true
+    in_stock: true,
+    featured: false
   });
 
   const [propertyForm, setPropertyForm] = useState({
@@ -50,20 +52,37 @@ const Admin = () => {
   const handleProductSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Improved validation with specific error messages
+    if (!productForm.title.trim()) {
+      toast.error('Please enter a product title');
+      return;
+    }
+    
+    if (!productForm.price || parseFloat(productForm.price) <= 0) {
+      toast.error('Please enter a valid price greater than 0');
+      return;
+    }
+    
+    if (!productForm.section) {
+      toast.error('Please select a section (Gadgets, Accessories, or Fashion)');
+      return;
+    }
+    
     if (productForm.images.length === 0) {
-      toast.error('Please upload at least one image');
+      toast.error('Please upload at least one product image');
       return;
     }
 
     const { error } = await supabase.from('products').insert([{
-      title: productForm.title,
-      description: productForm.description || null,
+      title: productForm.title.trim(),
+      description: productForm.description.trim() || null,
       price: parseFloat(productForm.price),
       original_price: productForm.original_price ? parseFloat(productForm.original_price) : null,
       category: productForm.section, // Use section as category
       section: productForm.section,
       images: productForm.images,
-      in_stock: productForm.in_stock
+      in_stock: productForm.in_stock,
+      featured: productForm.featured
     }]);
 
     if (error) {
@@ -72,7 +91,7 @@ const Admin = () => {
       toast.success('Product added successfully!');
       setProductForm({
         title: '', description: '', price: '', original_price: '',
-        section: '', images: [], in_stock: true
+        section: '', images: [], in_stock: true, featured: false
       });
       refetchProducts();
     }
@@ -161,21 +180,24 @@ const Admin = () => {
               <form onSubmit={handleProductSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="title">Title</Label>
+                    <Label htmlFor="title">Title *</Label>
                     <Input
                       id="title"
                       value={productForm.title}
                       onChange={(e) => setProductForm({...productForm, title: e.target.value})}
+                      placeholder="Enter product title"
                       required
                     />
                   </div>
                   <div>
-                    <Label htmlFor="price">Price (UGX)</Label>
+                    <Label htmlFor="price">Price (UGX) *</Label>
                     <Input
                       id="price"
                       type="number"
                       value={productForm.price}
                       onChange={(e) => setProductForm({...productForm, price: e.target.value})}
+                      placeholder="Enter price in UGX"
+                      min="1"
                       required
                     />
                   </div>
@@ -186,13 +208,15 @@ const Admin = () => {
                       type="number"
                       value={productForm.original_price}
                       onChange={(e) => setProductForm({...productForm, original_price: e.target.value})}
+                      placeholder="Enter original price if on sale"
+                      min="1"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="section">Section</Label>
+                    <Label htmlFor="section">Section *</Label>
                     <Select value={productForm.section} onValueChange={(value) => setProductForm({...productForm, section: value})}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select section" />
+                        <SelectValue placeholder="Select a section" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="gadgets">Gadgets</SelectItem>
@@ -210,17 +234,33 @@ const Admin = () => {
                     value={productForm.description}
                     onChange={(e) => setProductForm({...productForm, description: e.target.value})}
                     rows={3}
+                    placeholder="Enter product description (optional)"
                   />
                 </div>
 
-                <ImageUpload
-                  bucket="product-images"
-                  images={productForm.images}
-                  onImagesChange={(images) => setProductForm({...productForm, images})}
-                  maxImages={5}
-                />
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="featured"
+                    checked={productForm.featured}
+                    onCheckedChange={(checked) => setProductForm({...productForm, featured: !!checked})}
+                  />
+                  <Label htmlFor="featured" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    Mark as featured product
+                  </Label>
+                </div>
 
-                <Button type="submit">Add Product</Button>
+                <div>
+                  <Label>Product Images *</Label>
+                  <ImageUpload
+                    bucket="product-images"
+                    images={productForm.images}
+                    onImagesChange={(images) => setProductForm({...productForm, images})}
+                    maxImages={5}
+                  />
+                  <p className="text-sm text-gray-500 mt-1">Upload at least one image (max 5 images)</p>
+                </div>
+
+                <Button type="submit" className="w-full md:w-auto">Add Product</Button>
               </form>
             </CardContent>
           </Card>

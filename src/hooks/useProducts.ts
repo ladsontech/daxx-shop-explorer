@@ -12,6 +12,7 @@ export interface Product {
   section: string;
   images: string[];
   in_stock: boolean;
+  featured: boolean;
   created_at: string;
   updated_at: string;
 }
