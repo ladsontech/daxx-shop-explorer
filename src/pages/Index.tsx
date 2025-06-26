@@ -5,6 +5,7 @@ import Hero from '../components/Hero';
 import CategorySection from '../components/CategorySection';
 import Footer from '../components/Footer';
 import { gadgets, accessories, fashion, properties } from '../data/sampleData';
+import { Link } from 'react-router-dom';
 
 const Index = () => {
   return (
@@ -26,26 +27,31 @@ const Index = () => {
           
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[...gadgets.slice(0, 2), ...fashion.slice(0, 2)].map((item) => (
-              <div key={item.id} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">
-                <div className="relative">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-md text-xs font-semibold">
-                    FEATURED
+              <Link key={item.id} to={`/product/${item.id}`} className="block">
+                <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">
+                  <div className="relative">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-md text-xs font-semibold">
+                      FEATURED
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">
+                      {item.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                      {item.description}
+                    </p>
+                    <div className="text-xl font-bold text-gray-900">
+                      ${item.price}
+                    </div>
                   </div>
                 </div>
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">
-                    {item.title}
-                  </h3>
-                  <div className="text-xl font-bold text-gray-900">
-                    ${item.price}
-                  </div>
-                </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

@@ -1,4 +1,3 @@
-
 export const gadgets = [
   {
     id: 1,
@@ -6,9 +5,8 @@ export const gadgets = [
     title: "iPhone 15 Pro Max",
     price: 1199,
     originalPrice: 1299,
-    rating: 4.8,
-    reviews: 245,
     category: "Phones",
+    description: "The most advanced iPhone yet with titanium design, A17 Pro chip, and Pro camera system. Features incredible battery life and stunning display technology.",
     inStock: true
   },
   {
@@ -16,9 +14,8 @@ export const gadgets = [
     image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400",
     title: "MacBook Pro M3",
     price: 1999,
-    rating: 4.9,
-    reviews: 189,
     category: "Laptops",
+    description: "Supercharged by M3 chip for incredible performance. Perfect for professionals with up to 22 hours of battery life and stunning Liquid Retina XDR display.",
     inStock: true
   },
   {
@@ -27,9 +24,8 @@ export const gadgets = [
     title: "Samsung Galaxy Tab S9",
     price: 799,
     originalPrice: 899,
-    rating: 4.6,
-    reviews: 156,
     category: "Tablets",
+    description: "Premium Android tablet with S Pen included. Perfect for productivity and creativity with a brilliant AMOLED display and all-day battery life.",
     inStock: true
   },
   {
@@ -37,9 +33,8 @@ export const gadgets = [
     image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400",
     title: "Apple Watch Series 9",
     price: 399,
-    rating: 4.7,
-    reviews: 312,
     category: "Smartwatches",
+    description: "The most advanced Apple Watch with new S9 chip, brighter display, and innovative health features. Track your fitness and stay connected.",
     inStock: false
   }
 ];
@@ -51,9 +46,8 @@ export const accessories = [
     title: "Sony WH-1000XM5 Headphones",
     price: 349,
     originalPrice: 399,
-    rating: 4.8,
-    reviews: 428,
     category: "Audio",
+    description: "Industry-leading noise canceling headphones with exceptional sound quality. 30-hour battery life and crystal-clear hands-free calling.",
     inStock: true
   },
   {
@@ -61,9 +55,8 @@ export const accessories = [
     image: "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400",
     title: "Wireless Charging Pad",
     price: 49,
-    rating: 4.4,
-    reviews: 89,
     category: "Chargers",
+    description: "Fast wireless charging pad compatible with all Qi-enabled devices. Sleek design with LED indicator and overheat protection.",
     inStock: true
   },
   {
@@ -72,9 +65,8 @@ export const accessories = [
     title: "iPhone 15 Pro Case",
     price: 29,
     originalPrice: 39,
-    rating: 4.5,
-    reviews: 167,
     category: "Cases",
+    description: "Premium protective case with military-grade drop protection. Precise cutouts and wireless charging compatible with raised edges for screen protection.",
     inStock: true
   },
   {
@@ -82,9 +74,8 @@ export const accessories = [
     image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
     title: "USB-C Hub 7-in-1",
     price: 79,
-    rating: 4.6,
-    reviews: 234,
     category: "Cables",
+    description: "Versatile 7-in-1 hub with HDMI 4K, USB 3.0 ports, SD card readers, and fast charging. Perfect for laptops and tablets with USB-C connectivity.",
     inStock: true
   }
 ];
@@ -96,9 +87,8 @@ export const fashion = [
     title: "Premium Cotton T-Shirt",
     price: 29,
     originalPrice: 39,
-    rating: 4.3,
-    reviews: 145,
     category: "Men's Clothing",
+    description: "Soft, breathable premium cotton t-shirt with modern fit. Available in multiple colors with tagless design for maximum comfort.",
     inStock: true
   },
   {
@@ -106,9 +96,8 @@ export const fashion = [
     image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400",
     title: "Designer Handbag",
     price: 189,
-    rating: 4.7,
-    reviews: 98,
     category: "Women's Bags",
+    description: "Elegant designer handbag crafted from genuine leather. Features multiple compartments, adjustable strap, and timeless design that complements any outfit.",
     inStock: true
   },
   {
@@ -117,9 +106,8 @@ export const fashion = [
     title: "Running Sneakers",
     price: 129,
     originalPrice: 159,
-    rating: 4.6,
-    reviews: 203,
     category: "Shoes",
+    description: "High-performance running shoes with advanced cushioning and breathable mesh upper. Designed for comfort and durability during intense workouts.",
     inStock: true
   },
   {
@@ -127,9 +115,8 @@ export const fashion = [
     image: "https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=400",
     title: "Gold Chain Necklace",
     price: 299,
-    rating: 4.8,
-    reviews: 67,
     category: "Jewelry",
+    description: "Elegant 18k gold-plated chain necklace with secure clasp. Hypoallergenic and tarnish-resistant with a sophisticated design perfect for any occasion.",
     inStock: true
   }
 ];
