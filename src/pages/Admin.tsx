@@ -28,7 +28,6 @@ const Admin = () => {
     description: '',
     price: '',
     original_price: '',
-    category: '',
     section: '',
     images: [] as string[],
     in_stock: true
@@ -61,7 +60,7 @@ const Admin = () => {
       description: productForm.description || null,
       price: parseFloat(productForm.price),
       original_price: productForm.original_price ? parseFloat(productForm.original_price) : null,
-      category: productForm.category,
+      category: productForm.section, // Use section as category
       section: productForm.section,
       images: productForm.images,
       in_stock: productForm.in_stock
@@ -73,7 +72,7 @@ const Admin = () => {
       toast.success('Product added successfully!');
       setProductForm({
         title: '', description: '', price: '', original_price: '',
-        category: '', section: '', images: [], in_stock: true
+        section: '', images: [], in_stock: true
       });
       refetchProducts();
     }
@@ -202,28 +201,6 @@ const Admin = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="md:col-span-2">
-                    <Label htmlFor="category">Category</Label>
-                    <Select value={productForm.category} onValueChange={(value) => setProductForm({...productForm, category: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Phones">Phones</SelectItem>
-                        <SelectItem value="Laptops">Laptops</SelectItem>
-                        <SelectItem value="Tablets">Tablets</SelectItem>
-                        <SelectItem value="Smartwatches">Smartwatches</SelectItem>
-                        <SelectItem value="Audio">Audio</SelectItem>
-                        <SelectItem value="Chargers">Chargers</SelectItem>
-                        <SelectItem value="Cases">Cases</SelectItem>
-                        <SelectItem value="Cables">Cables</SelectItem>
-                        <SelectItem value="Men's Clothing">Men's Clothing</SelectItem>
-                        <SelectItem value="Women's Bags">Women's Bags</SelectItem>
-                        <SelectItem value="Shoes">Shoes</SelectItem>
-                        <SelectItem value="Jewelry">Jewelry</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
                 </div>
                 
                 <div>
@@ -266,7 +243,7 @@ const Admin = () => {
                       )}
                       <div>
                         <h3 className="font-semibold">{product.title}</h3>
-                        <p className="text-sm text-gray-600">{product.category} • {product.section}</p>
+                        <p className="text-sm text-gray-600">{product.section}</p>
                         <p className="font-bold">UGX {product.price.toLocaleString()}</p>
                       </div>
                     </div>

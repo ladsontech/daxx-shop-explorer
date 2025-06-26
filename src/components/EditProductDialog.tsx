@@ -24,7 +24,6 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
     description: product?.description || '',
     price: product?.price?.toString() || '',
     original_price: product?.original_price?.toString() || '',
-    category: product?.category || '',
     section: product?.section || '',
     images: product?.images || [],
     in_stock: product?.in_stock ?? true
@@ -37,7 +36,6 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
         description: product.description || '',
         price: product.price.toString(),
         original_price: product.original_price?.toString() || '',
-        category: product.category,
         section: product.section,
         images: product.images || [],
         in_stock: product.in_stock
@@ -57,7 +55,7 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
         description: form.description || null,
         price: parseFloat(form.price),
         original_price: form.original_price ? parseFloat(form.original_price) : null,
-        category: form.category,
+        category: form.section, // Use section as category
         section: form.section,
         images: form.images,
         in_stock: form.in_stock
@@ -121,28 +119,6 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
                   <SelectItem value="gadgets">Gadgets</SelectItem>
                   <SelectItem value="accessories">Accessories</SelectItem>
                   <SelectItem value="fashion">Fashion</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="md:col-span-2">
-              <Label htmlFor="edit_category">Category</Label>
-              <Select value={form.category} onValueChange={(value) => setForm({...form, category: value})}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Phones">Phones</SelectItem>
-                  <SelectItem value="Laptops">Laptops</SelectItem>
-                  <SelectItem value="Tablets">Tablets</SelectItem>
-                  <SelectItem value="Smartwatches">Smartwatches</SelectItem>
-                  <SelectItem value="Audio">Audio</SelectItem>
-                  <SelectItem value="Chargers">Chargers</SelectItem>
-                  <SelectItem value="Cases">Cases</SelectItem>
-                  <SelectItem value="Cables">Cables</SelectItem>
-                  <SelectItem value="Men's Clothing">Men's Clothing</SelectItem>
-                  <SelectItem value="Women's Bags">Women's Bags</SelectItem>
-                  <SelectItem value="Shoes">Shoes</SelectItem>
-                  <SelectItem value="Jewelry">Jewelry</SelectItem>
                 </SelectContent>
               </Select>
             </div>
