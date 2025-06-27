@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useProducts } from '@/hooks/useProducts';
 import { useProperties } from '@/hooks/useProperties';
 import { toast } from 'sonner';
-import { Trash2, Plus, Edit } from 'lucide-react';
+import { Trash2, Plus, Edit, Filter } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
 import AdminLogin from '@/components/AdminLogin';
 import EditProductDialog from '@/components/EditProductDialog';
@@ -23,6 +24,7 @@ const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   
   const [productForm, setProductForm] = useState({
     title: '',
@@ -48,6 +50,11 @@ const Admin = () => {
 
   const { data: products, refetch: refetchProducts } = useProducts();
   const { data: properties, refetch: refetchProperties } = useProperties();
+
+  // Filter products based on selected category
+  const filteredProducts = selectedCategory === 'all' 
+    ? products 
+    : products?.filter(product => product.section === selectedCategory);
 
   const handleProductSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -267,11 +274,33 @@ const Admin = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Manage Products</CardTitle>
+              <div className="flex justify-between items-center">
+                <CardTitle>Manage Products</CardTitle>
+                <div className="flex items-center space-x-2">
+                  <Filter className="h-4 w-4" />
+                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                    <SelectTrigger className="w-48">
+                      <SelectValue placeholder="Filter by category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
+                      <SelectItem value="gadgets">Gadgets</SelectItem>
+                      <SelectItem value="accessories">Accessories</SelectItem>
+                      <SelectItem value="fashion">Fashion</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <CardDescription>
+                {selectedCategory === 'all' 
+                  ? `Showing all products (${products?.length || 0} total)`
+                  : `Showing ${selectedCategory} products (${filteredProducts?.length || 0} items)`
+                }
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {products?.map((product) => (
+                {filteredProducts?.map((product) => (
                   <div key={product.id} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center space-x-4">
                       {product.images && product.images.length > 0 ? (
@@ -283,7 +312,21 @@ const Admin = () => {
                       )}
                       <div>
                         <h3 className="font-semibold">{product.title}</h3>
-                        <p className="text-sm text-gray-600">{product.section}</p>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm text-gray-600">{product.section}</span>
+                          <span className={`px-2 py-1 text-xs rounded-full font-medium ${
+                            product.section === 'gadgets' ? 'bg-blue-100 text-blue-800' :
+                            product.section === 'accessories' ? 'bg-green-100 text-green-800' :
+                            'bg-purple-100 text-purple-800'
+                          }`}>
+                            {product.section.charAt(0).toUpperCase() + product.section.slice(1)}
+                          </span>
+                          {product.featured && (
+                            <span className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800 font-medium">
+                              Featured
+                            </span>
+                          )}
+                        </div>
                         <p className="font-bold">UGX {product.price.toLocaleString()}</p>
                       </div>
                     </div>
@@ -305,6 +348,16 @@ const Admin = () => {
                     </div>
                   </div>
                 ))}
+                {filteredProducts?.length === 0 && (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">
+                      {selectedCategory === 'all' 
+                        ? 'No products found.' 
+                        : `No ${selectedCategory} products found.`
+                      }
+                    </p>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
