@@ -1,14 +1,53 @@
+
+# Robots.txt for Daxx Shop - Uganda's Premier Online Store
+# https://daxxshop.com
+
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: facebookexternalhit
 Allow: /
 
 User-agent: Twitterbot
 Allow: /
 
-User-agent: facebookexternalhit
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
 Allow: /
 
 User-agent: *
 Allow: /
+Crawl-delay: 2
+
+# Disallow admin areas and API endpoints if any
+Disallow: /admin/
+Disallow: /api/
+Disallow: /*?*utm_source=
+Disallow: /*?*utm_medium=
+Disallow: /*?*utm_campaign=
+
+# Allow important directories
+Allow: /images/
+Allow: /gadgets
+Allow: /fashion
+Allow: /accessories
+Allow: /property
+Allow: /search
+
+# Sitemap location
+Sitemap: https://daxxshop.com/sitemap.xml

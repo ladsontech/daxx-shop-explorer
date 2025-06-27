@@ -5,10 +5,13 @@ import SearchBar from '../components/SearchBar';
 import CategorySection from '../components/CategorySection';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
+import SEOHead from '../components/SEOHead';
 import { useProducts } from '../hooks/useProducts';
 import { useProperties } from '../hooks/useProperties';
 import { Link } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
+
 const Index = () => {
   
   const {
@@ -19,6 +22,7 @@ const Index = () => {
     data: properties,
     isLoading: propertiesLoading
   } = useProperties();
+
   const formatProductsForComponent = (products: any[]) => {
     return products?.map(product => ({
       id: product.id,
@@ -31,6 +35,7 @@ const Index = () => {
       inStock: product.in_stock
     })) || [];
   };
+
   const formatPropertiesForComponent = (properties: any[]) => {
     return properties?.map(property => ({
       id: property.id,
@@ -46,9 +51,9 @@ const Index = () => {
     })) || [];
   };
 
-  // Filter only featured products
   const featuredProducts = formatProductsForComponent(allProducts?.filter(product => product.featured) || []);
   const formattedProperties = formatPropertiesForComponent(properties || []);
+
   if (productsLoading || propertiesLoading) {
     return <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
@@ -57,7 +62,39 @@ const Index = () => {
         </div>
       </div>;
   }
-  return <div className="min-h-screen bg-white pb-16 md:pb-0">
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "Daxx Shop",
+    "description": "Uganda's premier online marketplace for gadgets, fashion, accessories, and property",
+    "url": "https://daxxshop.com",
+    "logo": "https://daxxshop.com/images/logo.png",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+256751173504",
+      "contactType": "customer service"
+    },
+    "areaServed": "Uganda",
+    "currenciesAccepted": "UGX",
+    "paymentAccepted": "Cash, Mobile Money, WhatsApp"
+  };
+
+  return (
+    <div className="min-h-screen bg-white pb-16 md:pb-0">
+      <SEOHead 
+        title="Daxx Shop - Quality Gadgets, Fashion & Property | Uganda's Premier Online Store"
+        description="Shop premium gadgets, trendy fashion, stylish accessories, and quality properties at Daxx Shop Uganda. Best prices, fast delivery, and excellent customer service. Your trusted online marketplace."
+        keywords="Uganda online shop, gadgets Uganda, fashion Uganda, accessories Uganda, property Uganda, electronics Kampala, clothing store Uganda, mobile phones Uganda, laptops Uganda, real estate Uganda, Daxx Shop"
+        url="https://daxxshop.com"
+      />
+      
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Helmet>
+
       <Navigation />
       <Hero />
       
@@ -75,7 +112,8 @@ const Index = () => {
       </section>
       
       {/* Featured Products Section */}
-      {featuredProducts.length > 0 && <section className="py-16 bg-white">
+      {featuredProducts.length > 0 && (
+        <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -87,10 +125,15 @@ const Index = () => {
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {featuredProducts.map(item => <Link key={item.id} to={`/product/${item.id}`} className="block">
+              {featuredProducts.map(item => (
+                <Link key={item.id} to={`/product/${item.id}`} className="block">
                   <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">
                     <div className="relative">
-                      <img src={item.images && item.images.length > 0 ? item.images[0] : '/placeholder.svg'} alt={item.title} className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300" />
+                      <img 
+                        src={item.images && item.images.length > 0 ? item.images[0] : '/placeholder.svg'} 
+                        alt={item.title} 
+                        className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300" 
+                      />
                       <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-md text-xs font-semibold">
                         FEATURED
                       </div>
@@ -107,16 +150,26 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                </Link>)}
+                </Link>
+              ))}
             </div>
           </div>
-        </section>}
+        </section>
+      )}
 
       {/* Property Listings Section */}
-      <CategorySection id="property" title="Property Listings" subtitle="Find your perfect home or investment opportunity" type="property" items={formattedProperties} />
+      <CategorySection 
+        id="property" 
+        title="Property Listings" 
+        subtitle="Find your perfect home or investment opportunity" 
+        type="property" 
+        items={formattedProperties} 
+      />
 
       <Footer />
       <WhatsAppButton />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;

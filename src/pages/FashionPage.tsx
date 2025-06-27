@@ -4,8 +4,10 @@ import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
 import ProductCard from '../components/ProductCard';
+import SEOHead from '../components/SEOHead';
 import { useProducts } from '../hooks/useProducts';
 import { Search, Loader2 } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const FashionPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -31,6 +33,31 @@ const FashionPage = () => {
 
   const formattedFashion = formatProductsForComponent(filteredFashion);
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage", 
+    "name": "Fashion Collection - Daxx Shop Uganda",
+    "description": "Trendy fashion, clothing, shoes, and style accessories for men and women in Uganda",
+    "url": "https://daxxshop.com/fashion",
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": formattedFashion.length,
+      "itemListElement": formattedFashion.slice(0, 10).map((product, index) => ({
+        "@type": "Product",
+        "position": index + 1,
+        "name": product.title,
+        "url": `https://daxxshop.com/product/${product.id}`,
+        "image": product.images[0] || "https://daxxshop.com/placeholder.svg",
+        "offers": {
+          "@type": "Offer",
+          "price": product.price,
+          "priceCurrency": "UGX",
+          "availability": product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+        }
+      }))
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
@@ -44,6 +71,19 @@ const FashionPage = () => {
 
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0">
+      <SEOHead
+        title="Fashion Collection & Clothing | Daxx Shop Uganda - Trendy Clothes, Shoes & Style"
+        description="Shop trendy fashion and clothing in Uganda. Men's and women's fashion, shoes, dresses, shirts, trousers, and style accessories. Latest fashion trends at affordable prices."
+        keywords="fashion Uganda, clothing Uganda, men fashion Uganda, women fashion Uganda, shoes Uganda, dresses Uganda, shirts Uganda, style Uganda, fashion Kampala, clothing store Uganda"
+        url="https://daxxshop.com/fashion"
+      />
+      
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Helmet>
+
       <Navigation />
       
       {/* Header Section */}
@@ -54,7 +94,7 @@ const FashionPage = () => {
               Fashion Collection
             </h1>
             <p className="text-xl text-gray-600 mb-8">
-              Style meets comfort in our curated fashion line
+              Style meets comfort in our curated fashion line - Trendy Clothes, Shoes & Accessories
             </p>
           </div>
           

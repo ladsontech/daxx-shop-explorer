@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart, Share2 } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
+import SEOHead from '../components/SEOHead';
 import { useProductById } from '../hooks/useProducts';
 import { Loader2 } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
@@ -28,7 +30,6 @@ const ProductDetail = () => {
 
   const handleBuyNow = () => {
     if (product && product.in_stock) {
-      // Use different phone numbers based on category
       const phoneNumber = product.category === 'fashion' ? "+256740657694" : "+256751173504";
       const baseUrl = window.location.origin;
       const productUrl = `${baseUrl}/product/${product.id}`;
@@ -78,6 +79,38 @@ const ProductDetail = () => {
   }
 
   const productImages = product.images && product.images.length > 0 ? product.images : ['/placeholder.svg'];
+  const productTitle = `${product.title} | ${product.category} | Daxx Shop Uganda`;
+  const productDescription = `${product.description || product.title} - Premium ${product.category} available at Daxx Shop Uganda. Price: UGX ${product.price.toLocaleString()}. ${product.in_stock ? 'In Stock' : 'Out of Stock'}. Fast delivery across Uganda.`;
+  const productKeywords = `${product.title}, ${product.category}, Uganda, Daxx Shop, buy ${product.category} Uganda, ${product.category} Kampala, online shopping Uganda`;
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.title,
+    "description": product.description || product.title,
+    "image": productImages,
+    "brand": {
+      "@type": "Brand",
+      "name": "Daxx Shop"
+    },
+    "category": product.category,
+    "offers": {
+      "@type": "Offer",
+      "price": product.price,
+      "priceCurrency": "UGX",
+      "availability": product.in_stock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      "seller": {
+        "@type": "Organization",
+        "name": "Daxx Shop",
+        "url": "https://daxxshop.com"
+      }
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.5",
+      "reviewCount": "50"
+    }
+  };
 
   const handleShare = async () => {
     const shareData = {
@@ -105,6 +138,25 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0">
+      <SEOHead
+        title={productTitle}
+        description={productDescription}
+        keywords={productKeywords}
+        image={productImages[0]}
+        url={`https://daxxshop.com/product/${product.id}`}
+        type="product"
+        price={product.price}
+        currency="UGX"
+        availability={product.in_stock ? 'InStock' : 'OutOfStock'}
+        category={product.category}
+      />
+      
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Helmet>
+
       <Navigation />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

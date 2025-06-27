@@ -4,8 +4,10 @@ import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
 import ProductCard from '../components/ProductCard';
+import SEOHead from '../components/SEOHead';
 import { useProducts } from '../hooks/useProducts';
 import { Search, Loader2 } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const AccessoriesPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -31,6 +33,31 @@ const AccessoriesPage = () => {
 
   const formattedAccessories = formatProductsForComponent(filteredAccessories);
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Premium Accessories - Daxx Shop Uganda", 
+    "description": "Quality accessories, phone cases, chargers, bags, watches, and tech accessories in Uganda",
+    "url": "https://daxxshop.com/accessories",
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": formattedAccessories.length,
+      "itemListElement": formattedAccessories.slice(0, 10).map((product, index) => ({
+        "@type": "Product",
+        "position": index + 1,
+        "name": product.title,
+        "url": `https://daxxshop.com/product/${product.id}`,
+        "image": product.images[0] || "https://daxxshop.com/placeholder.svg",
+        "offers": {
+          "@type": "Offer",
+          "price": product.price,
+          "priceCurrency": "UGX",
+          "availability": product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+        }
+      }))
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
@@ -44,6 +71,19 @@ const AccessoriesPage = () => {
 
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0">
+      <SEOHead
+        title="Premium Accessories & Tech Gadgets | Daxx Shop Uganda - Cases, Chargers & More"
+        description="Shop quality accessories in Uganda. Phone cases, chargers, bags, watches, tech accessories, and gadget add-ons. Enhance your devices with premium accessories."
+        keywords="accessories Uganda, phone cases Uganda, chargers Uganda, bags Uganda, watches Uganda, tech accessories Uganda, gadget accessories Kampala, phone accessories Uganda"
+        url="https://daxxshop.com/accessories"
+      />
+      
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Helmet>
+
       <Navigation />
       
       {/* Header Section */}
@@ -54,7 +94,7 @@ const AccessoriesPage = () => {
               Premium Accessories
             </h1>
             <p className="text-xl text-gray-600 mb-8">
-              Enhance your devices with quality accessories
+              Enhance your devices with quality accessories - Cases, Chargers, Bags & More
             </p>
           </div>
           

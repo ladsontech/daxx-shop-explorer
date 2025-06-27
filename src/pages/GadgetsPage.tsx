@@ -4,8 +4,10 @@ import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
 import ProductCard from '../components/ProductCard';
+import SEOHead from '../components/SEOHead';
 import { useProducts } from '../hooks/useProducts';
 import { Search, Loader2 } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const GadgetsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -31,6 +33,31 @@ const GadgetsPage = () => {
 
   const formattedGadgets = formatProductsForComponent(filteredGadgets);
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Latest Gadgets - Daxx Shop Uganda",
+    "description": "Premium gadgets, electronics, smartphones, laptops, and tech accessories in Uganda",
+    "url": "https://daxxshop.com/gadgets",
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": formattedGadgets.length,
+      "itemListElement": formattedGadgets.slice(0, 10).map((product, index) => ({
+        "@type": "Product",
+        "position": index + 1,
+        "name": product.title,
+        "url": `https://daxxshop.com/product/${product.id}`,
+        "image": product.images[0] || "https://daxxshop.com/placeholder.svg",
+        "offers": {
+          "@type": "Offer",
+          "price": product.price,
+          "priceCurrency": "UGX",
+          "availability": product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+        }
+      }))
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
@@ -44,6 +71,19 @@ const GadgetsPage = () => {
 
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0">
+      <SEOHead
+        title="Latest Gadgets & Electronics | Daxx Shop Uganda - Smartphones, Laptops & Tech"
+        description="Shop premium gadgets and electronics in Uganda. Find smartphones, laptops, tablets, smartwatches, headphones, and tech accessories at best prices. Fast delivery across Uganda."
+        keywords="gadgets Uganda, electronics Uganda, smartphones Uganda, laptops Uganda, tablets Uganda, tech accessories Uganda, mobile phones Kampala, electronics Kampala, gadgets online Uganda"
+        url="https://daxxshop.com/gadgets"
+      />
+      
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Helmet>
+
       <Navigation />
       
       {/* Header Section */}
@@ -51,10 +91,10 @@ const GadgetsPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Latest Gadgets
+              Latest Gadgets & Electronics
             </h1>
             <p className="text-xl text-gray-600 mb-8">
-              Cutting-edge technology at your fingertips
+              Cutting-edge technology at your fingertips - Smartphones, Laptops, Tablets & More
             </p>
           </div>
           

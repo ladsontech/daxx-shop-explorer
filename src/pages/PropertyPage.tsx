@@ -4,8 +4,10 @@ import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
 import PropertyCard from '../components/PropertyCard';
+import SEOHead from '../components/SEOHead';
 import { useProperties } from '../hooks/useProperties';
 import { Search, Loader2 } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const PropertyPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -34,6 +36,35 @@ const PropertyPage = () => {
 
   const formattedProperties = formatPropertiesForComponent(filteredProperties);
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Property Listings - Daxx Shop Uganda",
+    "description": "Find houses, apartments, land, and commercial properties for sale and rent in Uganda",
+    "url": "https://daxxshop.com/property",
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": formattedProperties.length,
+      "itemListElement": formattedProperties.slice(0, 10).map((property, index) => ({
+        "@type": "RealEstateListing",
+        "position": index + 1,
+        "name": property.title,
+        "url": `https://daxxshop.com/property/${property.id}`,
+        "image": property.images[0] || "https://daxxshop.com/placeholder.svg",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": property.location,
+          "addressCountry": "Uganda"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": property.price,
+          "priceCurrency": "UGX"
+        }
+      }))
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
@@ -47,6 +78,19 @@ const PropertyPage = () => {
 
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0">
+      <SEOHead
+        title="Property Listings Uganda | Houses, Apartments & Land for Sale/Rent - Daxx Shop"
+        description="Find houses, apartments, land, and commercial properties for sale and rent in Uganda. Prime locations in Kampala, Entebbe, Jinja and across Uganda. Best property deals."
+        keywords="property Uganda, houses for sale Uganda, apartments for rent Uganda, land for sale Uganda, real estate Uganda, property Kampala, houses Kampala, apartments Kampala, commercial property Uganda"
+        url="https://daxxshop.com/property"
+      />
+      
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Helmet>
+
       <Navigation />
       
       {/* Header Section */}
@@ -54,10 +98,10 @@ const PropertyPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Property Listings
+              Property Listings Uganda
             </h1>
             <p className="text-xl text-gray-600 mb-8">
-              Find your perfect home or investment opportunity
+              Find your perfect home or investment opportunity - Houses, Apartments & Land
             </p>
           </div>
           
