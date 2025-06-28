@@ -1,6 +1,6 @@
 
 # Robots.txt for Daxx Shop - Uganda's Premier Online Store
-# https://daxxshop.com
+# https://daxx.shop
 
 User-agent: Googlebot
 Allow: /
@@ -50,4 +50,4 @@ Allow: /property
 Allow: /search
 
 # Sitemap location
-Sitemap: https://daxxshop.com/sitemap.xml
+Sitemap: https://daxx.shop/sitemap.xml
