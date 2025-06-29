@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,7 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useProducts } from '@/hooks/useProducts';
 import { useProperties } from '@/hooks/useProperties';
 import { toast } from 'sonner';
-import { Trash2, Plus, Edit, Filter } from 'lucide-react';
+import { Trash2, Plus, Edit, Filter, Smartphone, Headphones, Shirt, Building } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
 import AdminLogin from '@/components/AdminLogin';
 import EditProductDialog from '@/components/EditProductDialog';
@@ -24,14 +23,14 @@ const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [activeCategory, setActiveCategory] = useState<string>('gadgets');
   
   const [productForm, setProductForm] = useState({
     title: '',
     description: '',
     price: '',
     original_price: '',
-    section: '',
+    section: activeCategory,
     images: [] as string[],
     in_stock: true,
     featured: false
@@ -51,10 +50,21 @@ const Admin = () => {
   const { data: products, refetch: refetchProducts } = useProducts();
   const { data: properties, refetch: refetchProperties } = useProperties();
 
-  // Filter products based on selected category
-  const filteredProducts = selectedCategory === 'all' 
-    ? products 
-    : products?.filter(product => product.section === selectedCategory);
+  // Filter products based on active category
+  const filteredProducts = products?.filter(product => product.section === activeCategory) || [];
+
+  // Category configuration
+  const categories = [
+    { id: 'gadgets', name: 'Gadgets', icon: Smartphone, color: 'bg-blue-500' },
+    { id: 'accessories', name: 'Accessories', icon: Headphones, color: 'bg-green-500' },
+    { id: 'fashion', name: 'Fashion', icon: Shirt, color: 'bg-purple-500' },
+    { id: 'property', name: 'Property', icon: Building, color: 'bg-orange-500' }
+  ];
+
+  // Update product form section when category changes
+  React.useEffect(() => {
+    setProductForm(prev => ({ ...prev, section: activeCategory }));
+  }, [activeCategory]);
 
   const handleProductSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,7 +108,7 @@ const Admin = () => {
       toast.success('Product added successfully!');
       setProductForm({
         title: '', description: '', price: '', original_price: '',
-        section: '', images: [], in_stock: true, featured: false
+        section: activeCategory, images: [], in_stock: true, featured: false
       });
       refetchProducts();
     }
@@ -136,22 +146,26 @@ const Admin = () => {
   };
 
   const deleteProduct = async (id: string) => {
-    const { error } = await supabase.from('products').delete().eq('id', id);
-    if (error) {
-      toast.error('Error deleting product');
-    } else {
-      toast.success('Product deleted successfully');
-      refetchProducts();
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      const { error } = await supabase.from('products').delete().eq('id', id);
+      if (error) {
+        toast.error('Error deleting product');
+      } else {
+        toast.success('Product deleted successfully');
+        refetchProducts();
+      }
     }
   };
 
   const deleteProperty = async (id: string) => {
-    const { error } = await supabase.from('properties').delete().eq('id', id);
-    if (error) {
-      toast.error('Error deleting property');
-    } else {
-      toast.success('Property deleted successfully');
-      refetchProperties();
+    if (window.confirm('Are you sure you want to delete this property?')) {
+      const { error } = await supabase.from('properties').delete().eq('id', id);
+      if (error) {
+        toast.error('Error deleting property');
+      } else {
+        toast.success('Property deleted successfully');
+        refetchProperties();
+      }
     }
   };
 
@@ -167,21 +181,214 @@ const Admin = () => {
           Logout
         </Button>
       </div>
+
+      {/* Category Navigation */}
+      <div className="mb-8">
+        <div className="flex flex-wrap gap-4">
+          {categories.map((category) => {
+            const Icon = category.icon;
+            return (
+              <button
+                key={category.id}
+                onClick={() => setActiveCategory(category.id)}
+                className={`flex items-center space-x-2 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
+                  activeCategory === category.id
+                    ? `${category.color} text-white shadow-lg`
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <Icon className="h-5 w-5" />
+                <span>{category.name}</span>
+                <span className="bg-white bg-opacity-20 px-2 py-1 rounded-full text-xs">
+                  {category.id === 'property' 
+                    ? properties?.length || 0 
+                    : products?.filter(p => p.section === category.id).length || 0
+                  }
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
       
-      <Tabs defaultValue="products" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="products">Products</TabsTrigger>
-          <TabsTrigger value="properties">Properties</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="products" className="space-y-6">
+      {activeCategory === 'property' ? (
+        // Property Management
+        <div className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Plus className="h-5 w-5" />
-                <span>Add New Product</span>
+                <span>Add New Property</span>
               </CardTitle>
-              <CardDescription>Add gadgets, accessories, or fashion items</CardDescription>
+              <CardDescription>Add properties for sale or rent</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handlePropertySubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="prop_title">Title *</Label>
+                    <Input
+                      id="prop_title"
+                      value={propertyForm.title}
+                      onChange={(e) => setPropertyForm({...propertyForm, title: e.target.value})}
+                      placeholder="Enter property title"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="prop_price">Price (UGX) *</Label>
+                    <Input
+                      id="prop_price"
+                      type="number"
+                      value={propertyForm.price}
+                      onChange={(e) => setPropertyForm({...propertyForm, price: e.target.value})}
+                      placeholder="Enter price in UGX"
+                      min="1"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="location">Location *</Label>
+                    <Input
+                      id="location"
+                      value={propertyForm.location}
+                      onChange={(e) => setPropertyForm({...propertyForm, location: e.target.value})}
+                      placeholder="Enter property location"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="type">Type *</Label>
+                    <Select value={propertyForm.type} onValueChange={(value: 'sale' | 'rent') => setPropertyForm({...propertyForm, type: value})}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="sale">For Sale</SelectItem>
+                        <SelectItem value="rent">For Rent</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="bedrooms">Bedrooms</Label>
+                    <Input
+                      id="bedrooms"
+                      type="number"
+                      value={propertyForm.bedrooms}
+                      onChange={(e) => setPropertyForm({...propertyForm, bedrooms: e.target.value})}
+                      placeholder="Number of bedrooms"
+                      min="0"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="bathrooms">Bathrooms</Label>
+                    <Input
+                      id="bathrooms"
+                      type="number"
+                      value={propertyForm.bathrooms}
+                      onChange={(e) => setPropertyForm({...propertyForm, bathrooms: e.target.value})}
+                      placeholder="Number of bathrooms"
+                      min="0"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="area">Area (sqft)</Label>
+                    <Input
+                      id="area"
+                      type="number"
+                      value={propertyForm.area}
+                      onChange={(e) => setPropertyForm({...propertyForm, area: e.target.value})}
+                      placeholder="Area in square feet"
+                      min="1"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label>Property Images *</Label>
+                  <ImageUpload
+                    bucket="property-images"
+                    images={propertyForm.images}
+                    onImagesChange={(images) => setPropertyForm({...propertyForm, images})}
+                    maxImages={10}
+                  />
+                  <p className="text-sm text-gray-500 mt-1">Upload at least one image (max 10 images)</p>
+                </div>
+
+                <Button type="submit" className="w-full md:w-auto">Add Property</Button>
+              </form>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Manage Properties</CardTitle>
+              <CardDescription>
+                Showing all properties ({properties?.length || 0} total)
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {properties?.map((property) => (
+                  <div key={property.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center space-x-4">
+                      {property.images && property.images.length > 0 ? (
+                        <img src={property.images[0]} alt={property.title} className="w-16 h-16 object-cover rounded" />
+                      ) : (
+                        <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
+                          <span className="text-gray-400 text-xs">No Image</span>
+                        </div>
+                      )}
+                      <div>
+                        <h3 className="font-semibold">{property.title}</h3>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm text-gray-600">{property.location}</span>
+                          <span className={`px-2 py-1 text-xs rounded-full font-medium ${
+                            property.type === 'sale' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
+                          }`}>
+                            For {property.type}
+                          </span>
+                        </div>
+                        <p className="font-bold">UGX {property.price.toLocaleString()}{property.type === 'rent' && '/month'}</p>
+                      </div>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setEditingProperty(property)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => deleteProperty(property.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                {properties?.length === 0 && (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">No properties found.</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      ) : (
+        // Product Management
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Plus className="h-5 w-5" />
+                <span>Add New {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)} Product</span>
+              </CardTitle>
+              <CardDescription>Add products to the {activeCategory} category</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleProductSubmit} className="space-y-4">
@@ -220,17 +427,13 @@ const Admin = () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="section">Section *</Label>
-                    <Select value={productForm.section} onValueChange={(value) => setProductForm({...productForm, section: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a section" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="gadgets">Gadgets</SelectItem>
-                        <SelectItem value="accessories">Accessories</SelectItem>
-                        <SelectItem value="fashion">Fashion</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label htmlFor="section">Category</Label>
+                    <Input
+                      id="section"
+                      value={activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}
+                      disabled
+                      className="bg-gray-100"
+                    />
                   </div>
                 </div>
                 
@@ -274,33 +477,14 @@ const Admin = () => {
 
           <Card>
             <CardHeader>
-              <div className="flex justify-between items-center">
-                <CardTitle>Manage Products</CardTitle>
-                <div className="flex items-center space-x-2">
-                  <Filter className="h-4 w-4" />
-                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger className="w-48">
-                      <SelectValue placeholder="Filter by category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Categories</SelectItem>
-                      <SelectItem value="gadgets">Gadgets</SelectItem>
-                      <SelectItem value="accessories">Accessories</SelectItem>
-                      <SelectItem value="fashion">Fashion</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
+              <CardTitle>Manage {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)} Products</CardTitle>
               <CardDescription>
-                {selectedCategory === 'all' 
-                  ? `Showing all products (${products?.length || 0} total)`
-                  : `Showing ${selectedCategory} products (${filteredProducts?.length || 0} items)`
-                }
+                Showing {activeCategory} products ({filteredProducts.length} items)
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {filteredProducts?.map((product) => (
+                {filteredProducts.map((product) => (
                   <div key={product.id} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center space-x-4">
                       {product.images && product.images.length > 0 ? (
@@ -314,18 +498,16 @@ const Admin = () => {
                         <h3 className="font-semibold">{product.title}</h3>
                         <div className="flex items-center space-x-2">
                           <span className="text-sm text-gray-600">{product.section}</span>
-                          <span className={`px-2 py-1 text-xs rounded-full font-medium ${
-                            product.section === 'gadgets' ? 'bg-blue-100 text-blue-800' :
-                            product.section === 'accessories' ? 'bg-green-100 text-green-800' :
-                            'bg-purple-100 text-purple-800'
-                          }`}>
-                            {product.section.charAt(0).toUpperCase() + product.section.slice(1)}
-                          </span>
                           {product.featured && (
                             <span className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800 font-medium">
                               Featured
                             </span>
                           )}
+                          <span className={`px-2 py-1 text-xs rounded-full font-medium ${
+                            product.in_stock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          }`}>
+                            {product.in_stock ? 'In Stock' : 'Out of Stock'}
+                          </span>
                         </div>
                         <p className="font-bold">UGX {product.price.toLocaleString()}</p>
                       </div>
@@ -348,159 +530,16 @@ const Admin = () => {
                     </div>
                   </div>
                 ))}
-                {filteredProducts?.length === 0 && (
+                {filteredProducts.length === 0 && (
                   <div className="text-center py-8">
-                    <p className="text-gray-500">
-                      {selectedCategory === 'all' 
-                        ? 'No products found.' 
-                        : `No ${selectedCategory} products found.`
-                      }
-                    </p>
+                    <p className="text-gray-500">No {activeCategory} products found.</p>
                   </div>
                 )}
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-        
-        <TabsContent value="properties" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Plus className="h-5 w-5" />
-                <span>Add New Property</span>
-              </CardTitle>
-              <CardDescription>Add properties for sale or rent</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handlePropertySubmit} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="prop_title">Title</Label>
-                    <Input
-                      id="prop_title"
-                      value={propertyForm.title}
-                      onChange={(e) => setPropertyForm({...propertyForm, title: e.target.value})}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="prop_price">Price (UGX)</Label>
-                    <Input
-                      id="prop_price"
-                      type="number"
-                      value={propertyForm.price}
-                      onChange={(e) => setPropertyForm({...propertyForm, price: e.target.value})}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="location">Location</Label>
-                    <Input
-                      id="location"
-                      value={propertyForm.location}
-                      onChange={(e) => setPropertyForm({...propertyForm, location: e.target.value})}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="type">Type</Label>
-                    <Select value={propertyForm.type} onValueChange={(value: 'sale' | 'rent') => setPropertyForm({...propertyForm, type: value})}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="sale">For Sale</SelectItem>
-                        <SelectItem value="rent">For Rent</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="bedrooms">Bedrooms</Label>
-                    <Input
-                      id="bedrooms"
-                      type="number"
-                      value={propertyForm.bedrooms}
-                      onChange={(e) => setPropertyForm({...propertyForm, bedrooms: e.target.value})}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="bathrooms">Bathrooms</Label>
-                    <Input
-                      id="bathrooms"
-                      type="number"
-                      value={propertyForm.bathrooms}
-                      onChange={(e) => setPropertyForm({...propertyForm, bathrooms: e.target.value})}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="area">Area (sqft)</Label>
-                    <Input
-                      id="area"
-                      type="number"
-                      value={propertyForm.area}
-                      onChange={(e) => setPropertyForm({...propertyForm, area: e.target.value})}
-                    />
-                  </div>
-                </div>
-
-                <ImageUpload
-                  bucket="property-images"
-                  images={propertyForm.images}
-                  onImagesChange={(images) => setPropertyForm({...propertyForm, images})}
-                  maxImages={10}
-                />
-
-                <Button type="submit">Add Property</Button>
-              </form>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Manage Properties</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {properties?.map((property) => (
-                  <div key={property.id} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center space-x-4">
-                      {property.images && property.images.length > 0 ? (
-                        <img src={property.images[0]} alt={property.title} className="w-16 h-16 object-cover rounded" />
-                      ) : (
-                        <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
-                          <span className="text-gray-400 text-xs">No Image</span>
-                        </div>
-                      )}
-                      <div>
-                        <h3 className="font-semibold">{property.title}</h3>
-                        <p className="text-sm text-gray-600">{property.location} • For {property.type}</p>
-                        <p className="font-bold">UGX {property.price.toLocaleString()}{property.type === 'rent' && '/month'}</p>
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setEditingProperty(property)}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => deleteProperty(property.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+        </div>
+      )}
 
       <EditProductDialog
         product={editingProduct}

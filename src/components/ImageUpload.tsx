@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -54,37 +53,57 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
   const removeImage = async (imageUrl: string, index: number) => {
     try {
-      // Extract file path from URL
+      // Extract file path from URL - improved extraction
       const urlParts = imageUrl.split('/');
-      const fileName = urlParts[urlParts.length - 1];
+      const bucketIndex = urlParts.findIndex(part => part === bucket);
       
-      // Delete from storage
-      const { error } = await supabase.storage
-        .from(bucket)
-        .remove([fileName]);
+      if (bucketIndex !== -1 && bucketIndex < urlParts.length - 1) {
+        // Get the file path after the bucket name
+        const filePath = urlParts.slice(bucketIndex + 1).join('/');
+        
+        // Delete from storage
+        const { error } = await supabase.storage
+          .from(bucket)
+          .remove([filePath]);
 
-      if (error) throw error;
+        if (error) {
+          console.warn('Error deleting from storage:', error);
+          // Continue with removing from UI even if storage deletion fails
+        }
+      }
 
+      // Remove from the images array regardless of storage deletion result
       const newImages = images.filter((_, i) => i !== index);
       onImagesChange(newImages);
       
       toast.success('Image removed successfully!');
     } catch (error) {
       console.error('Error removing image:', error);
-      toast.error('Error removing image');
+      // Still remove from UI even if there's an error
+      const newImages = images.filter((_, i) => i !== index);
+      onImagesChange(newImages);
+      toast.success('Image removed from list');
     }
   };
 
   const handleFiles = (files: FileList) => {
-    Array.from(files).forEach(file => {
-      if (images.length < maxImages) {
-        if (file.type.startsWith('image/')) {
-          uploadImage(file);
-        } else {
-          toast.error('Please select only image files');
+    const remainingSlots = maxImages - images.length;
+    const filesToProcess = Math.min(files.length, remainingSlots);
+    
+    if (filesToProcess < files.length) {
+      toast.error(`Can only upload ${filesToProcess} more image(s). Maximum ${maxImages} images allowed.`);
+    }
+    
+    Array.from(files).slice(0, filesToProcess).forEach(file => {
+      if (file.type.startsWith('image/')) {
+        // Check file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+          toast.error(`File ${file.name} is too large. Maximum size is 10MB.`);
+          return;
         }
+        uploadImage(file);
       } else {
-        toast.error(`Maximum ${maxImages} images allowed`);
+        toast.error(`File ${file.name} is not an image. Please select only image files.`);
       }
     });
   };
@@ -117,6 +136,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   const openFileDialog = () => {
+    if (images.length >= maxImages) {
+      toast.error(`Maximum ${maxImages} images allowed`);
+      return;
+    }
     fileInputRef.current?.click();
   };
 
@@ -125,43 +148,48 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       <Label>Images ({images.length}/{maxImages})</Label>
       
       {/* Upload Area */}
-      <div
-        className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-          dragActive 
-            ? 'border-blue-500 bg-blue-50' 
-            : 'border-gray-300 hover:border-gray-400'
-        } ${uploading ? 'pointer-events-none opacity-50' : 'cursor-pointer'}`}
-        onDragEnter={handleDrag}
-        onDragLeave={handleDrag}
-        onDragOver={handleDrag}
-        onDrop={handleDrop}
-        onClick={openFileDialog}
-      >
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handleFileSelect}
-          className="hidden"
-          disabled={uploading || images.length >= maxImages}
-        />
-        
-        {uploading ? (
-          <div className="flex flex-col items-center space-y-2">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-            <p className="text-sm text-gray-600">Uploading...</p>
-          </div>
-        ) : (
-          <div className="flex flex-col items-center space-y-2">
-            <Upload className="h-8 w-8 text-gray-400" />
-            <p className="text-sm text-gray-600">
-              <span className="font-medium text-blue-600">Click to upload</span> or drag and drop
-            </p>
-            <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
-          </div>
-        )}
-      </div>
+      {images.length < maxImages && (
+        <div
+          className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+            dragActive 
+              ? 'border-blue-500 bg-blue-50' 
+              : 'border-gray-300 hover:border-gray-400'
+          } ${uploading ? 'pointer-events-none opacity-50' : 'cursor-pointer'}`}
+          onDragEnter={handleDrag}
+          onDragLeave={handleDrag}
+          onDragOver={handleDrag}
+          onDrop={handleDrop}
+          onClick={openFileDialog}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFileSelect}
+            className="hidden"
+            disabled={uploading || images.length >= maxImages}
+          />
+          
+          {uploading ? (
+            <div className="flex flex-col items-center space-y-2">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+              <p className="text-sm text-gray-600">Uploading...</p>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center space-y-2">
+              <Upload className="h-8 w-8 text-gray-400" />
+              <p className="text-sm text-gray-600">
+                <span className="font-medium text-blue-600">Click to upload</span> or drag and drop
+              </p>
+              <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+              <p className="text-xs text-gray-500">
+                {maxImages - images.length} slot{maxImages - images.length !== 1 ? 's' : ''} remaining
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Image Previews */}
       {images.length > 0 && (
@@ -173,6 +201,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                   src={imageUrl}
                   alt={`Upload ${index + 1}`}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/placeholder.svg';
+                  }}
                 />
               </div>
               <button
@@ -180,10 +212,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                   e.stopPropagation();
                   removeImage(imageUrl, index);
                 }}
-                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 z-10"
+                title="Remove image"
               >
                 <X className="h-4 w-4" />
               </button>
+              <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
+                {index + 1}
+              </div>
             </div>
           ))}
           
@@ -191,7 +227,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           {images.length < maxImages && (
             <div
               onClick={openFileDialog}
-              className="aspect-square rounded-lg border-2 border-dashed border-gray-300 hover:border-gray-400 flex items-center justify-center cursor-pointer transition-colors group"
+              className="aspect-square rounded-lg border-2 border-dashed border-gray-300 hover:border-gray-400 flex items-center justify-center cursor-pointer transition-colors group bg-gray-50 hover:bg-gray-100"
             >
               <div className="flex flex-col items-center space-y-1">
                 <Plus className="h-6 w-6 text-gray-400 group-hover:text-gray-500" />
@@ -203,9 +239,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       )}
       
       {images.length >= maxImages && (
-        <p className="text-sm text-orange-600 bg-orange-50 p-2 rounded">
-          Maximum {maxImages} images reached
-        </p>
+        <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+          <p className="text-sm text-orange-700 font-medium">
+            Maximum {maxImages} images reached
+          </p>
+          <p className="text-xs text-orange-600 mt-1">
+            Remove an image to add a new one
+          </p>
+        </div>
       )}
     </div>
   );
