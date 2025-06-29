@@ -1,10 +1,8 @@
-
 import React from 'react';
 import Navigation from '../components/Navigation';
 import Hero from '../components/Hero';
 import SearchBar from '../components/SearchBar';
 import CategorySection from '../components/CategorySection';
-import UpdatesSection from '../components/UpdatesSection';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
 import SEOHead from '../components/SEOHead';
@@ -114,9 +112,6 @@ const Index = () => {
         </div>
         <SearchBar />
       </section>
-
-      {/* Updates Section */}
-      <UpdatesSection />
       
       {/* Featured Products Section */}
       {featuredProducts.length > 0 && (
