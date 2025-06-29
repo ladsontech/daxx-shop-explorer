@@ -51,38 +51,38 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     }
   };
 
-  const removeImage = async (imageUrl: string, index: number) => {
+  const removeImage = (imageUrl: string, index: number) => {
     try {
-      // Extract file path from URL - improved extraction
+      // Extract filename from the URL for storage deletion
       const urlParts = imageUrl.split('/');
-      const bucketIndex = urlParts.findIndex(part => part === bucket);
+      const fileName = urlParts[urlParts.length - 1];
       
-      if (bucketIndex !== -1 && bucketIndex < urlParts.length - 1) {
-        // Get the file path after the bucket name
-        const filePath = urlParts.slice(bucketIndex + 1).join('/');
-        
-        // Delete from storage
-        const { error } = await supabase.storage
+      // Attempt to delete from storage (don't wait for it)
+      if (fileName && !fileName.includes('placeholder')) {
+        supabase.storage
           .from(bucket)
-          .remove([filePath]);
-
-        if (error) {
-          console.warn('Error deleting from storage:', error);
-          // Continue with removing from UI even if storage deletion fails
-        }
+          .remove([fileName])
+          .then(({ error }) => {
+            if (error) {
+              console.warn('Storage deletion warning:', error);
+            }
+          })
+          .catch((error) => {
+            console.warn('Storage deletion failed:', error);
+          });
       }
 
-      // Remove from the images array regardless of storage deletion result
+      // Immediately remove from UI regardless of storage deletion result
       const newImages = images.filter((_, i) => i !== index);
       onImagesChange(newImages);
       
-      toast.success('Image removed successfully!');
+      toast.success('Image removed!');
     } catch (error) {
       console.error('Error removing image:', error);
       // Still remove from UI even if there's an error
       const newImages = images.filter((_, i) => i !== index);
       onImagesChange(newImages);
-      toast.success('Image removed from list');
+      toast.success('Image removed!');
     }
   };
 
