@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -12,7 +11,7 @@ const Hero = () => {
       subtitle: "Up to 70% OFF on Electronics",
       description: "Don't miss out on the biggest deals of the year!",
       image: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&h=400&fit=crop",
-      backgroundColor: "bg-gradient-to-r from-red-600 to-pink-600"
+      backgroundColor: "bg-gradient-to-r from-orange-500 to-red-600"
     },
     {
       id: 2,
@@ -20,7 +19,7 @@ const Hero = () => {
       subtitle: "Latest Models Available Now",
       description: "Experience the future with our newest smartphone lineup",
       image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=800&h=400&fit=crop",
-      backgroundColor: "bg-gradient-to-r from-blue-600 to-purple-600"
+      backgroundColor: "bg-gradient-to-r from-blue-600 to-indigo-700"
     },
     {
       id: 3,
@@ -28,7 +27,7 @@ const Hero = () => {
       subtitle: "Trendy Styles & Premium Quality",
       description: "Discover the latest fashion trends at unbeatable prices",
       image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=400&fit=crop",
-      backgroundColor: "bg-gradient-to-r from-green-600 to-teal-600"
+      backgroundColor: "bg-gradient-to-r from-green-600 to-emerald-700"
     },
     {
       id: 4,
@@ -36,7 +35,7 @@ const Hero = () => {
       subtitle: "Prime Locations Available",
       description: "Find your dream home with exclusive property offers",
       image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=400&fit=crop",
-      backgroundColor: "bg-gradient-to-r from-orange-600 to-yellow-600"
+      backgroundColor: "bg-gradient-to-r from-yellow-500 to-orange-600"
     }
   ];
 
@@ -62,7 +61,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <div className="relative h-64 md:h-96 overflow-hidden">
+    <div className="relative h-64 md:h-96 overflow-hidden amazon-shadow">
       {advertisements.map((ad, index) => (
         <div
           key={ad.id}
@@ -82,7 +81,7 @@ const Hero = () => {
               <p className="text-sm md:text-lg mb-4 md:mb-6 opacity-90">
                 {ad.description}
               </p>
-              <button className="bg-white text-gray-800 px-4 md:px-6 py-2 md:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+              <button className="amazon-orange amazon-hover-orange px-4 md:px-6 py-2 md:py-3 rounded font-semibold text-sm md:text-base">
                 Shop Now
               </button>
             </div>
@@ -90,7 +89,7 @@ const Hero = () => {
               <img
                 src={ad.image}
                 alt={ad.title}
-                className="h-32 md:h-64 w-32 md:w-64 object-cover rounded-lg shadow-lg"
+                className="h-32 md:h-64 w-32 md:w-64 object-cover rounded-lg amazon-shadow"
               />
             </div>
           </div>
@@ -100,14 +99,14 @@ const Hero = () => {
       {/* Navigation Buttons */}
       <button
         onClick={prevSlide}
-        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all"
+        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-2 rounded-full transition-all amazon-shadow"
       >
         <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
       </button>
       
       <button
         onClick={nextSlide}
-        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-2 rounded-full transition-all amazon-shadow"
       >
         <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
       </button>

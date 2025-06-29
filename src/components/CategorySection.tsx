@@ -1,4 +1,3 @@
-
 import React from 'react';
 import ProductCard from './ProductCard';
 import PropertyCard from './PropertyCard';
@@ -19,7 +18,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({
   items
 }) => {
   return (
-    <section id={id} className="py-16 bg-gray-50">
+    <section id={id} className="py-16 amazon-gray">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -47,7 +46,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({
         </div>
         
         <div className="text-center mt-8">
-          <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+          <button className="amazon-orange amazon-hover-orange text-white px-8 py-3 rounded font-semibold amazon-shadow transition-all duration-300 transform hover:-translate-y-1">
             View All {title}
           </button>
         </div>

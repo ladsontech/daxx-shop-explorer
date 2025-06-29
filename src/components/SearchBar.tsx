@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import { useSearch } from '../hooks/useSearch';
@@ -24,7 +23,7 @@ const SearchBar = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsSearchFocused(true)}
-            className="w-full pl-12 pr-4 py-3 border border-gray-300/50 rounded-lg bg-white/90 backdrop-blur-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm text-lg"
+            className="w-full pl-12 pr-4 py-3 amazon-border border rounded bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent amazon-shadow text-lg"
           />
           <Search className="absolute left-4 top-3.5 h-6 w-6 text-gray-400" />
           {isSearchFocused && (

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Shirt, Building } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -21,7 +20,7 @@ const Navigation = () => {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-white/20">
+      <nav className="amazon-dark-blue shadow-md sticky top-0 z-50 border-b border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -32,19 +31,19 @@ const Navigation = () => {
                   alt="Daxx Shop Logo" 
                   className="h-10 w-10 animate-[shake_3s_ease-in-out_infinite]"
                 />
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-bold text-white">
                   Daxx Shop
                 </h1>
               </Link>
             </div>
 
             {/* Desktop Navigation Links */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden md:flex items-center space-x-1">
               {navLinks.map(link => (
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+                  className="text-white hover:bg-gray-700 px-3 py-2 text-sm font-medium transition-colors rounded"
                 >
                   {link.name}
                 </Link>
@@ -55,11 +54,11 @@ const Navigation = () => {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2 text-gray-700 hover:text-blue-600 transition-colors"
+                className="relative p-2 text-white hover:bg-gray-700 transition-colors rounded"
               >
                 <ShoppingCart className="h-6 w-6" />
                 {getTotalItems() > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 h-5 w-5 amazon-orange text-white text-xs rounded-full flex items-center justify-center font-bold">
                     {getTotalItems()}
                   </span>
                 )}
@@ -68,7 +67,7 @@ const Navigation = () => {
               {/* Mobile menu button */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-2 text-gray-700"
+                className="md:hidden p-2 text-white hover:bg-gray-700 rounded"
               >
                 {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
@@ -77,13 +76,13 @@ const Navigation = () => {
 
           {/* Mobile Navigation Overlay */}
           {isMenuOpen && (
-            <div className="md:hidden border-t border-gray-200/50">
+            <div className="md:hidden border-t border-gray-700">
               <div className="px-2 pt-2 pb-3 space-y-1">
                 {navLinks.map(link => (
                   <Link
                     key={link.name}
                     to={link.href}
-                    className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors"
+                    className="block px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {link.name}
@@ -96,7 +95,7 @@ const Navigation = () => {
       </nav>
 
       {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-200/50 z-50">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 amazon-dark-blue border-t border-gray-700 z-50">
         <div className="flex justify-around items-center py-2">
           {navLinks.map(link => {
             const Icon = link.icon;
@@ -104,7 +103,7 @@ const Navigation = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className="flex flex-col items-center py-2 px-3 text-gray-600 hover:text-blue-600 transition-colors"
+                className="flex flex-col items-center py-2 px-3 text-gray-300 hover:text-white transition-colors"
               >
                 <Icon className="h-5 w-5 mb-1" />
                 <span className="text-xs font-medium">{link.name}</span>

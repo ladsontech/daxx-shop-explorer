@@ -2,6 +2,7 @@ import React from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+
 interface ProductCardProps {
   id: string;
   images: string[];
@@ -12,6 +13,7 @@ interface ProductCardProps {
   description: string;
   inStock?: boolean;
 }
+
 const ProductCard: React.FC<ProductCardProps> = ({
   id,
   images,
@@ -22,10 +24,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
   description,
   inStock = true
 }) => {
-  const {
-    addToCart
-  } = useCart();
+  const { addToCart } = useCart();
   const displayImage = images && images.length > 0 ? images[0] : '/placeholder.svg';
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -39,14 +40,22 @@ const ProductCard: React.FC<ProductCardProps> = ({
       });
     }
   };
-  return <Link to={`/product/${id}`} className="block">
-      <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">
+
+  return (
+    <Link to={`/product/${id}`} className="block">
+      <div className="bg-white rounded amazon-border border amazon-shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">
         <div className="relative">
-          <img src={displayImage} alt={title} className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300" />
-          {originalPrice && <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-md text-xs font-semibold">
+          <img
+            src={displayImage}
+            alt={title}
+            className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+          {originalPrice && (
+            <div className="absolute top-2 left-2 amazon-orange text-white px-2 py-1 rounded text-xs font-semibold">
               SALE
-            </div>}
-          <div className="absolute top-2 right-2 bg-gray-800 bg-opacity-70 text-white px-2 py-1 rounded-md text-xs">
+            </div>
+          )}
+          <div className="absolute top-2 right-2 bg-gray-800 bg-opacity-70 text-white px-2 py-1 rounded text-xs">
             {category}
           </div>
         </div>
@@ -63,16 +72,28 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <div className="flex items-center justify-between mb-2 md:mb-3">
             <div className="flex items-center space-x-1 md:space-x-2">
               <span className="text-sm font-bold text-gray-900 md:text-sm">UGX {price.toLocaleString()}</span>
-              {originalPrice && <span className="text-xs md:text-sm text-gray-500 line-through">UGX {originalPrice.toLocaleString()}</span>}
+              {originalPrice && (
+                <span className="text-xs md:text-sm text-gray-500 line-through">UGX {originalPrice.toLocaleString()}</span>
+              )}
             </div>
           </div>
           
-          <button className={`w-full py-1.5 md:py-2 px-3 md:px-4 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-1 md:space-x-2 ${inStock ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`} disabled={!inStock} onClick={handleAddToCart}>
+          <button
+            className={`w-full py-1.5 md:py-2 px-3 md:px-4 rounded text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-1 md:space-x-2 ${
+              inStock 
+                ? 'amazon-orange amazon-hover-orange text-white' 
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+            disabled={!inStock}
+            onClick={handleAddToCart}
+          >
             <ShoppingCart className="h-3 w-3 md:h-4 md:w-4" />
             <span>{inStock ? 'Add to Cart' : 'Out of Stock'}</span>
           </button>
         </div>
       </div>
-    </Link>;
+    </Link>
+  );
 };
+
 export default ProductCard;

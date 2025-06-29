@@ -55,12 +55,14 @@ const Index = () => {
   const formattedProperties = formatPropertiesForComponent(properties || []);
 
   if (productsLoading || propertiesLoading) {
-    return <div className="min-h-screen bg-white flex items-center justify-center">
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Loading products...</p>
         </div>
-      </div>;
+      </div>
+    );
   }
 
   const structuredData = {
@@ -99,7 +101,7 @@ const Index = () => {
       <Hero />
       
       {/* Search Section */}
-      <section className="py-8 bg-gradient-to-r from-blue-50 to-purple-50">
+      <section className="py-8 amazon-gray">
         <div className="text-center mb-6">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
             Find What You're Looking For
@@ -127,14 +129,14 @@ const Index = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {featuredProducts.map(item => (
                 <Link key={item.id} to={`/product/${item.id}`} className="block">
-                  <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">
+                  <div className="bg-white rounded amazon-border border amazon-shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">
                     <div className="relative">
                       <img 
                         src={item.images && item.images.length > 0 ? item.images[0] : '/placeholder.svg'} 
                         alt={item.title} 
                         className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300" 
                       />
-                      <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-md text-xs font-semibold">
+                      <div className="absolute top-2 left-2 amazon-orange text-white px-2 py-1 rounded text-xs font-semibold">
                         FEATURED
                       </div>
                     </div>
