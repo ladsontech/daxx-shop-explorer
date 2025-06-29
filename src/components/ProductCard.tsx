@@ -61,7 +61,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             </div>
           )}
           {section === 'gadgets' && condition && (
-            <div className={`absolute top-2 right-2 px-2 py-1 rounded text-xs font-semibold text-white ${
+            <div className={`absolute top-2 right-2 px-1 md:px-2 py-0.5 md:py-1 rounded text-xs font-semibold text-white ${
               condition === 'new' ? 'bg-green-500' : 'bg-blue-500'
             }`}>
               {condition === 'new' ? 'NEW' : 'USED'}
