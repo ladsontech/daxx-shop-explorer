@@ -10,9 +10,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { supabase } from '@/integrations/supabase/client';
 import { useProducts } from '@/hooks/useProducts';
 import { useProperties } from '@/hooks/useProperties';
+import { useUpdates, useCreateUpdate, useDeleteUpdate } from '@/hooks/useUpdates';
 import { toast } from 'sonner';
-import { Trash2, Plus, Edit, Filter, Smartphone, Headphones, Shirt, Building } from 'lucide-react';
+import { Trash2, Plus, Edit, Filter, Smartphone, Headphones, Shirt, Building, Newspaper } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
+import UpdateImageUpload from '@/components/UpdateImageUpload';
 import AdminLogin from '@/components/AdminLogin';
 import EditProductDialog from '@/components/EditProductDialog';
 import EditPropertyDialog from '@/components/EditPropertyDialog';
@@ -47,24 +49,57 @@ const Admin = () => {
     images: [] as string[]
   });
 
+  // Add update form state
+  const [updateForm, setUpdateForm] = useState({
+    title: '',
+    description: '',
+    image_url: null as string | null,
+    published: true
+  });
+
   const { data: products, refetch: refetchProducts } = useProducts();
   const { data: properties, refetch: refetchProperties } = useProperties();
+  const { data: updates, refetch: refetchUpdates } = useUpdates();
+  const createUpdateMutation = useCreateUpdate();
+  const deleteUpdateMutation = useDeleteUpdate();
 
   // Filter products based on active category
   const filteredProducts = products?.filter(product => product.section === activeCategory) || [];
 
-  // Category configuration
+  // Category configuration - add updates category
   const categories = [
     { id: 'gadgets', name: 'Gadgets', icon: Smartphone, color: 'bg-blue-500' },
     { id: 'accessories', name: 'Accessories', icon: Headphones, color: 'bg-green-500' },
     { id: 'fashion', name: 'Fashion', icon: Shirt, color: 'bg-purple-500' },
-    { id: 'property', name: 'Property', icon: Building, color: 'bg-orange-500' }
+    { id: 'property', name: 'Property', icon: Building, color: 'bg-orange-500' },
+    { id: 'updates', name: 'Updates', icon: Newspaper, color: 'bg-indigo-500' }
   ];
 
-  // Update product form section when category changes
   React.useEffect(() => {
     setProductForm(prev => ({ ...prev, section: activeCategory }));
   }, [activeCategory]);
+
+  // Add update form submission handler
+  const handleUpdateSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!updateForm.title.trim()) {
+      toast.error('Please enter an update title');
+      return;
+    }
+
+    createUpdateMutation.mutate(updateForm, {
+      onSuccess: () => {
+        setUpdateForm({
+          title: '',
+          description: '',
+          image_url: null,
+          published: true
+        });
+        refetchUpdates();
+      }
+    });
+  };
 
   const handleProductSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -169,6 +204,12 @@ const Admin = () => {
     }
   };
 
+  const deleteUpdate = (id: string) => {
+    if (window.confirm('Are you sure you want to delete this update?')) {
+      deleteUpdateMutation.mutate(id);
+    }
+  };
+
   if (!isAuthenticated) {
     return <AdminLogin onLogin={() => setIsAuthenticated(true)} />;
   }
@@ -187,6 +228,12 @@ const Admin = () => {
         <div className="flex flex-wrap gap-4">
           {categories.map((category) => {
             const Icon = category.icon;
+            const count = category.id === 'property' 
+              ? properties?.length || 0 
+              : category.id === 'updates'
+              ? updates?.length || 0
+              : products?.filter(p => p.section === category.id).length || 0;
+            
             return (
               <button
                 key={category.id}
@@ -200,10 +247,7 @@ const Admin = () => {
                 <Icon className="h-5 w-5" />
                 <span>{category.name}</span>
                 <span className="bg-white bg-opacity-20 px-2 py-1 rounded-full text-xs">
-                  {category.id === 'property' 
-                    ? properties?.length || 0 
-                    : products?.filter(p => p.section === category.id).length || 0
-                  }
+                  {count}
                 </span>
               </button>
             );
@@ -211,8 +255,131 @@ const Admin = () => {
         </div>
       </div>
       
-      {activeCategory === 'property' ? (
-        // Property Management
+      {activeCategory === 'updates' ? (
+        // Updates Management
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Plus className="h-5 w-5" />
+                <span>Add New Update</span>
+              </CardTitle>
+              <CardDescription>Create news updates and announcements</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleUpdateSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="update_title">Title *</Label>
+                    <Input
+                      id="update_title"
+                      value={updateForm.title}
+                      onChange={(e) => setUpdateForm({...updateForm, title: e.target.value})}
+                      placeholder="Enter update title"
+                      required
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="published"
+                      checked={updateForm.published}
+                      onCheckedChange={(checked) => setUpdateForm({...updateForm, published: !!checked})}
+                    />
+                    <Label htmlFor="published" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      Publish immediately
+                    </Label>
+                  </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="update_description">Description</Label>
+                  <Textarea
+                    id="update_description"
+                    value={updateForm.description}
+                    onChange={(e) => setUpdateForm({...updateForm, description: e.target.value})}
+                    rows={4}
+                    placeholder="Enter update description"
+                  />
+                </div>
+
+                <div>
+                  <UpdateImageUpload
+                    imageUrl={updateForm.image_url}
+                    onImageChange={(imageUrl) => setUpdateForm({...updateForm, image_url: imageUrl})}
+                  />
+                </div>
+
+                <Button type="submit" className="w-full md:w-auto" disabled={createUpdateMutation.isPending}>
+                  {createUpdateMutation.isPending ? 'Adding...' : 'Add Update'}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Manage Updates</CardTitle>
+              <CardDescription>
+                Showing all updates ({updates?.length || 0} total)
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {updates?.map((update) => (
+                  <div key={update.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center space-x-4">
+                      {update.image_url ? (
+                        <div className="w-24 h-16 rounded overflow-hidden bg-gray-100">
+                          <img 
+                            src={update.image_url} 
+                            alt={update.title} 
+                            className="w-full h-full object-cover" 
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-24 h-16 bg-gray-200 rounded flex items-center justify-center">
+                          <span className="text-gray-400 text-xs">No Image</span>
+                        </div>
+                      )}
+                      <div>
+                        <h3 className="font-semibold">{update.title}</h3>
+                        {update.description && (
+                          <p className="text-sm text-gray-600 line-clamp-2">{update.description}</p>
+                        )}
+                        <div className="flex items-center space-x-2 mt-1">
+                          <span className={`px-2 py-1 text-xs rounded-full font-medium ${
+                            update.published ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                          }`}>
+                            {update.published ? 'Published' : 'Draft'}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {new Date(update.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => deleteUpdate(update.id)}
+                        disabled={deleteUpdateMutation.isPending}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                {updates?.length === 0 && (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">No updates found.</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      ) : activeCategory === 'property' ? (
         <div className="space-y-6">
           <Card>
             <CardHeader>
@@ -380,7 +547,6 @@ const Admin = () => {
           </Card>
         </div>
       ) : (
-        // Product Management
         <div className="space-y-6">
           <Card>
             <CardHeader>
