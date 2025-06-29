@@ -9,7 +9,7 @@ import SEOHead from '../components/SEOHead';
 import { useProducts } from '../hooks/useProducts';
 import { useProperties } from '../hooks/useProperties';
 import { Link } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Star } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
 const Index = () => {
@@ -136,8 +136,8 @@ const Index = () => {
                         alt={item.title} 
                         className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300" 
                       />
-                      <div className="absolute top-2 left-2 amazon-orange text-white px-2 py-1 rounded text-xs font-semibold">
-                        FEATURED
+                      <div className="absolute top-2 left-2 amazon-orange text-white p-2 rounded-full shadow-lg">
+                        <Star className="h-4 w-4 fill-current" />
                       </div>
                     </div>
                     <div className="p-4">
