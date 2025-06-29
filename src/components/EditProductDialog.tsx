@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -52,7 +53,7 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
     
     if (!product) return;
 
-    // Improved validation with specific error messages
+    // Enhanced validation with cosmetics support
     if (!form.title.trim()) {
       toast.error('Please enter a product title');
       return;
@@ -73,6 +74,9 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
       return;
     }
 
+    // Condition validation - only required for gadgets, null for others
+    const conditionValue = form.section === 'gadgets' ? form.condition : null;
+
     const { error } = await supabase
       .from('products')
       .update({
@@ -85,14 +89,15 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
         images: form.images,
         in_stock: form.in_stock,
         featured: form.featured,
-        condition: form.section === 'gadgets' ? form.condition : null
+        condition: conditionValue
       })
       .eq('id', product.id);
 
     if (error) {
       toast.error('Error updating product: ' + error.message);
+      console.error('Product update error:', error);
     } else {
-      toast.success('Product updated successfully!');
+      toast.success(`${form.section.charAt(0).toUpperCase() + form.section.slice(1)} product updated successfully!`);
       onUpdate();
       onClose();
     }
@@ -104,7 +109,7 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Edit Product</DialogTitle>
+          <DialogTitle>Edit {form.section.charAt(0).toUpperCase() + form.section.slice(1)} Product</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -114,7 +119,12 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
                 id="edit_title"
                 value={form.title}
                 onChange={(e) => setForm({...form, title: e.target.value})}
-                placeholder="Enter product title"
+                placeholder={
+                  form.section === 'cosmetics' ? 'e.g., Moisturizing Face Cream' :
+                  form.section === 'gadgets' ? 'e.g., Wireless Bluetooth Headphones' :
+                  form.section === 'accessories' ? 'e.g., Leather Handbag' :
+                  'Enter product title'
+                }
                 required
               />
             </div>
@@ -167,6 +177,7 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
                     <SelectItem value="used">Used</SelectItem>
                   </SelectContent>
                 </Select>
+                <p className="text-xs text-gray-500 mt-1">Only gadgets require condition specification</p>
               </div>
             )}
           </div>
@@ -178,7 +189,12 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
               value={form.description}
               onChange={(e) => setForm({...form, description: e.target.value})}
               rows={3}
-              placeholder="Enter product description (optional)"
+              placeholder={
+                form.section === 'cosmetics' ? 'Describe the beauty product, ingredients, benefits, skin type, etc.' :
+                form.section === 'gadgets' ? 'Describe specifications, features, compatibility, etc.' :
+                form.section === 'accessories' ? 'Describe material, dimensions, style, color, etc.' :
+                'Enter product description (optional)'
+              }
             />
           </div>
 

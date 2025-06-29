@@ -65,13 +65,13 @@ const Admin = () => {
   // Filter products based on active category
   const filteredProducts = products?.filter(product => product.section === activeCategory) || [];
 
-  // Category configuration - add cosmetics and reorder
+  // Updated category configuration with proper cosmetics support
   const categories = [
     { id: 'gadgets', name: 'Gadgets', icon: Smartphone, color: 'bg-blue-500' },
     { id: 'accessories', name: 'Accessories', icon: Headphones, color: 'bg-green-500' },
-    { id: 'property', name: 'Property', icon: Building, color: 'bg-orange-500' },
     { id: 'cosmetics', name: 'Cosmetics', icon: Palette, color: 'bg-pink-500' },
     { id: 'fashion', name: 'Fashion', icon: Shirt, color: 'bg-purple-500' },
+    { id: 'property', name: 'Property', icon: Building, color: 'bg-orange-500' },
     { id: 'updates', name: 'Updates', icon: Newspaper, color: 'bg-indigo-500' }
   ];
 
@@ -102,7 +102,7 @@ const Admin = () => {
   const handleProductSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Improved validation with specific error messages
+    // Enhanced validation with cosmetics-specific checks
     if (!productForm.title.trim()) {
       toast.error('Please enter a product title');
       return;
@@ -123,6 +123,9 @@ const Admin = () => {
       return;
     }
 
+    // Condition validation - only required for gadgets
+    const conditionValue = productForm.section === 'gadgets' ? productForm.condition : null;
+
     const { error } = await supabase.from('products').insert([{
       title: productForm.title.trim(),
       description: productForm.description.trim() || null,
@@ -133,13 +136,14 @@ const Admin = () => {
       images: productForm.images,
       in_stock: productForm.in_stock,
       featured: productForm.featured,
-      condition: productForm.section === 'gadgets' ? productForm.condition : null
+      condition: conditionValue
     }]);
 
     if (error) {
       toast.error('Error adding product: ' + error.message);
+      console.error('Product creation error:', error);
     } else {
-      toast.success('Product added successfully!');
+      toast.success(`${productForm.section.charAt(0).toUpperCase() + productForm.section.slice(1)} product added successfully!`);
       setProductForm({
         title: '', description: '', price: '', original_price: '',
         section: activeCategory, images: [], in_stock: true, featured: false, condition: 'used'
@@ -357,6 +361,7 @@ const Admin = () => {
           </Card>
         </div>
       ) : activeCategory === 'property' ? (
+        // Property Management section
         <div className="space-y-6">
           <Card>
             <CardHeader>
@@ -531,7 +536,13 @@ const Admin = () => {
                 <Plus className="h-5 w-5" />
                 <span>Add New {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)} Product</span>
               </CardTitle>
-              <CardDescription>Add products to the {activeCategory} category</CardDescription>
+              <CardDescription>
+                Add products to the {activeCategory} category
+                {activeCategory === 'cosmetics' && ' - Beauty products, makeup, skincare, and personal care items'}
+                {activeCategory === 'gadgets' && ' - Electronics, devices, and tech accessories'}
+                {activeCategory === 'accessories' && ' - Fashion accessories, jewelry, and style items'}
+                {activeCategory === 'fashion' && ' - Clothing, shoes, and fashion items'}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleProductSubmit} className="space-y-4">
@@ -542,7 +553,12 @@ const Admin = () => {
                       id="title"
                       value={productForm.title}
                       onChange={(e) => setProductForm({...productForm, title: e.target.value})}
-                      placeholder="Enter product title"
+                      placeholder={
+                        activeCategory === 'cosmetics' ? 'e.g., Moisturizing Face Cream' :
+                        activeCategory === 'gadgets' ? 'e.g., Wireless Bluetooth Headphones' :
+                        activeCategory === 'accessories' ? 'e.g., Leather Handbag' :
+                        'Enter product title'
+                      }
                       required
                     />
                   </div>
@@ -590,6 +606,7 @@ const Admin = () => {
                           <SelectItem value="used">Used</SelectItem>
                         </SelectContent>
                       </Select>
+                      <p className="text-xs text-gray-500 mt-1">Only gadgets require condition specification</p>
                     </div>
                   )}
                 </div>
@@ -601,7 +618,12 @@ const Admin = () => {
                     value={productForm.description}
                     onChange={(e) => setProductForm({...productForm, description: e.target.value})}
                     rows={3}
-                    placeholder="Enter product description (optional)"
+                    placeholder={
+                      activeCategory === 'cosmetics' ? 'Describe the beauty product, ingredients, benefits, skin type, etc.' :
+                      activeCategory === 'gadgets' ? 'Describe specifications, features, compatibility, etc.' :
+                      activeCategory === 'accessories' ? 'Describe material, dimensions, style, color, etc.' :
+                      'Enter product description (optional)'
+                    }
                   />
                 </div>
 
@@ -627,7 +649,9 @@ const Admin = () => {
                   <p className="text-sm text-gray-500 mt-1">Upload at least one image (max 5 images)</p>
                 </div>
 
-                <Button type="submit" className="w-full md:w-auto">Add Product</Button>
+                <Button type="submit" className="w-full md:w-auto">
+                  Add {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)} Product
+                </Button>
               </form>
             </CardContent>
           </Card>
@@ -637,6 +661,7 @@ const Admin = () => {
               <CardTitle>Manage {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)} Products</CardTitle>
               <CardDescription>
                 Showing {activeCategory} products ({filteredProducts.length} items)
+                {activeCategory === 'cosmetics' && ' - Beauty and personal care products'}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -663,7 +688,15 @@ const Admin = () => {
                       <div>
                         <h3 className="font-semibold">{product.title}</h3>
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm text-gray-600">{product.section}</span>
+                          <span className={`text-sm px-2 py-1 rounded-full text-white font-medium ${
+                            product.section === 'cosmetics' ? 'bg-pink-500' :
+                            product.section === 'gadgets' ? 'bg-blue-500' :
+                            product.section === 'accessories' ? 'bg-green-500' :
+                            product.section === 'fashion' ? 'bg-purple-500' :
+                            'bg-gray-500'
+                          }`}>
+                            {product.section}
+                          </span>
                           {product.featured && (
                             <span className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800 font-medium">
                               Featured
@@ -676,6 +709,11 @@ const Admin = () => {
                           </span>
                         </div>
                         <p className="font-bold">UGX {product.price.toLocaleString()}</p>
+                        {product.original_price && (
+                          <p className="text-sm text-gray-500 line-through">
+                            UGX {product.original_price.toLocaleString()}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="flex space-x-2">
@@ -699,6 +737,12 @@ const Admin = () => {
                 {filteredProducts.length === 0 && (
                   <div className="text-center py-8">
                     <p className="text-gray-500">No {activeCategory} products found.</p>
+                    <p className="text-gray-400 text-sm mt-1">
+                      {activeCategory === 'cosmetics' && 'Add your first beauty product above!'}
+                      {activeCategory === 'gadgets' && 'Add your first gadget above!'}
+                      {activeCategory === 'accessories' && 'Add your first accessory above!'}
+                      {activeCategory === 'fashion' && 'Add your first fashion item above!'}
+                    </p>
                   </div>
                 )}
               </div>
