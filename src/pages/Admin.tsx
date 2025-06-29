@@ -12,7 +12,7 @@ import { useProducts } from '@/hooks/useProducts';
 import { useProperties } from '@/hooks/useProperties';
 import { useUpdates, useCreateUpdate, useDeleteUpdate } from '@/hooks/useUpdates';
 import { toast } from 'sonner';
-import { Trash2, Plus, Edit, Filter, Smartphone, Headphones, Shirt, Building, Newspaper, Image } from 'lucide-react';
+import { Trash2, Plus, Edit, Filter, Smartphone, Headphones, Palette, Shirt, Building, Newspaper, Image } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
 import UpdateImageUpload from '@/components/UpdateImageUpload';
 import AdminLogin from '@/components/AdminLogin';
@@ -65,12 +65,13 @@ const Admin = () => {
   // Filter products based on active category
   const filteredProducts = products?.filter(product => product.section === activeCategory) || [];
 
-  // Category configuration - add updates category
+  // Category configuration - add cosmetics and reorder
   const categories = [
     { id: 'gadgets', name: 'Gadgets', icon: Smartphone, color: 'bg-blue-500' },
     { id: 'accessories', name: 'Accessories', icon: Headphones, color: 'bg-green-500' },
-    { id: 'fashion', name: 'Fashion', icon: Shirt, color: 'bg-purple-500' },
     { id: 'property', name: 'Property', icon: Building, color: 'bg-orange-500' },
+    { id: 'cosmetics', name: 'Cosmetics', icon: Palette, color: 'bg-pink-500' },
+    { id: 'fashion', name: 'Fashion', icon: Shirt, color: 'bg-purple-500' },
     { id: 'updates', name: 'Updates', icon: Newspaper, color: 'bg-indigo-500' }
   ];
 
@@ -113,7 +114,7 @@ const Admin = () => {
     }
     
     if (!productForm.section) {
-      toast.error('Please select a section (Gadgets, Accessories, or Fashion)');
+      toast.error('Please select a section');
       return;
     }
     

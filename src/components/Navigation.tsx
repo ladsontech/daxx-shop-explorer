@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Shirt, Building, Phone } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Palette, Shirt, Building, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import Cart from './Cart';
@@ -13,8 +13,9 @@ const Navigation = () => {
     { name: 'Home', href: '/', icon: Home },
     { name: 'Gadgets', href: '/gadgets', icon: Smartphone },
     { name: 'Accessories', href: '/accessories', icon: Headphones },
-    { name: 'Fashion', href: '/fashion', icon: Shirt },
-    { name: 'Property', href: '/property', icon: Building }
+    { name: 'Property', href: '/property', icon: Building },
+    { name: 'Cosmetics', href: '/cosmetics', icon: Palette },
+    { name: 'Fashion', href: '/fashion', icon: Shirt }
   ];
 
   const handleCallClick = () => {
@@ -149,9 +150,9 @@ const Navigation = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className="flex flex-col items-center py-2 px-3 text-gray-300 hover:text-white transition-colors"
+                className="flex flex-col items-center py-2 px-1 text-gray-300 hover:text-white transition-colors"
               >
-                <Icon className="h-5 w-5 mb-1" />
+                <Icon className="h-4 w-4 mb-1" />
                 <span className="text-xs font-medium">{link.name}</span>
               </Link>
             );

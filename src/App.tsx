@@ -11,6 +11,7 @@ import ProductDetail from "./pages/ProductDetail";
 import PropertyDetail from "./pages/PropertyDetail";
 import GadgetsPage from "./pages/GadgetsPage";
 import AccessoriesPage from "./pages/AccessoriesPage";
+import CosmeticsPage from "./pages/CosmeticsPage";
 import FashionPage from "./pages/FashionPage";
 import PropertyPage from "./pages/PropertyPage";
 import Admin from "./pages/Admin";
@@ -36,6 +37,7 @@ const App = () => {
               <Route path="/" element={<Index />} />
               <Route path="/gadgets" element={<GadgetsPage />} />
               <Route path="/accessories" element={<AccessoriesPage />} />
+              <Route path="/cosmetics" element={<CosmeticsPage />} />
               <Route path="/fashion" element={<FashionPage />} />
               <Route path="/property" element={<PropertyPage />} />
               <Route path="/product/:id" element={<ProductDetail />} />

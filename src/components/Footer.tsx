@@ -12,7 +12,7 @@ const Footer = () => {
               Daxx Shop
             </h3>
             <p className="text-gray-300">
-              Your trusted marketplace for gadgets, fashion, accessories, and property. 
+              Your trusted marketplace for gadgets, fashion, cosmetics, accessories, and property. 
               Quality products, competitive prices.
             </p>
             <div className="flex space-x-4">
@@ -40,8 +40,9 @@ const Footer = () => {
             <ul className="space-y-2">
               <li><a href="#gadgets" className="text-gray-300 hover:text-white transition-colors">Gadgets</a></li>
               <li><a href="#accessories" className="text-gray-300 hover:text-white transition-colors">Accessories</a></li>
-              <li><a href="#fashion" className="text-gray-300 hover:text-white transition-colors">Fashion</a></li>
               <li><a href="#property" className="text-gray-300 hover:text-white transition-colors">Property</a></li>
+              <li><a href="#cosmetics" className="text-gray-300 hover:text-white transition-colors">Cosmetics</a></li>
+              <li><a href="#fashion" className="text-gray-300 hover:text-white transition-colors">Fashion</a></li>
             </ul>
           </div>
 

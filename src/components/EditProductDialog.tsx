@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -65,7 +64,7 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
     }
     
     if (!form.section) {
-      toast.error('Please select a section (Gadgets, Accessories, or Fashion)');
+      toast.error('Please select a section');
       return;
     }
     
@@ -151,6 +150,7 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
                 <SelectContent>
                   <SelectItem value="gadgets">Gadgets</SelectItem>
                   <SelectItem value="accessories">Accessories</SelectItem>
+                  <SelectItem value="cosmetics">Cosmetics</SelectItem>
                   <SelectItem value="fashion">Fashion</SelectItem>
                 </SelectContent>
               </Select>
