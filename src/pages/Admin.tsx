@@ -12,7 +12,7 @@ import { useProducts } from '@/hooks/useProducts';
 import { useProperties } from '@/hooks/useProperties';
 import { useUpdates, useCreateUpdate, useDeleteUpdate } from '@/hooks/useUpdates';
 import { toast } from 'sonner';
-import { Trash2, Plus, Edit, Filter, Smartphone, Headphones, Shirt, Building, Newspaper } from 'lucide-react';
+import { Trash2, Plus, Edit, Filter, Smartphone, Headphones, Shirt, Building, Newspaper, Image } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
 import UpdateImageUpload from '@/components/UpdateImageUpload';
 import AdminLogin from '@/components/AdminLogin';
@@ -49,10 +49,8 @@ const Admin = () => {
     images: [] as string[]
   });
 
-  // Add update form state
+  // Simplified update form - just image and published status
   const [updateForm, setUpdateForm] = useState({
-    title: '',
-    description: '',
     image_url: null as string | null,
     published: true
   });
@@ -79,20 +77,18 @@ const Admin = () => {
     setProductForm(prev => ({ ...prev, section: activeCategory }));
   }, [activeCategory]);
 
-  // Add update form submission handler
+  // Simplified update form submission handler
   const handleUpdateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!updateForm.title.trim()) {
-      toast.error('Please enter an update title');
+    if (!updateForm.image_url) {
+      toast.error('Please upload a poster image');
       return;
     }
 
     createUpdateMutation.mutate(updateForm, {
       onSuccess: () => {
         setUpdateForm({
-          title: '',
-          description: '',
           image_url: null,
           published: true
         });
@@ -256,52 +252,18 @@ const Admin = () => {
       </div>
       
       {activeCategory === 'updates' ? (
-        // Updates Management
+        // Simplified Updates Management
         <div className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Plus className="h-5 w-5" />
-                <span>Add New Update</span>
+                <span>Upload New Update Poster</span>
               </CardTitle>
-              <CardDescription>Create news updates and announcements</CardDescription>
+              <CardDescription>Upload landscape poster images for news and updates</CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleUpdateSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="update_title">Title *</Label>
-                    <Input
-                      id="update_title"
-                      value={updateForm.title}
-                      onChange={(e) => setUpdateForm({...updateForm, title: e.target.value})}
-                      placeholder="Enter update title"
-                      required
-                    />
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="published"
-                      checked={updateForm.published}
-                      onCheckedChange={(checked) => setUpdateForm({...updateForm, published: !!checked})}
-                    />
-                    <Label htmlFor="published" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                      Publish immediately
-                    </Label>
-                  </div>
-                </div>
-                
-                <div>
-                  <Label htmlFor="update_description">Description</Label>
-                  <Textarea
-                    id="update_description"
-                    value={updateForm.description}
-                    onChange={(e) => setUpdateForm({...updateForm, description: e.target.value})}
-                    rows={4}
-                    placeholder="Enter update description"
-                  />
-                </div>
-
+              <form onSubmit={handleUpdateSubmit} className="space-y-6">
                 <div>
                   <UpdateImageUpload
                     imageUrl={updateForm.image_url}
@@ -309,8 +271,23 @@ const Admin = () => {
                   />
                 </div>
 
-                <Button type="submit" className="w-full md:w-auto" disabled={createUpdateMutation.isPending}>
-                  {createUpdateMutation.isPending ? 'Adding...' : 'Add Update'}
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="published"
+                    checked={updateForm.published}
+                    onCheckedChange={(checked) => setUpdateForm({...updateForm, published: !!checked})}
+                  />
+                  <Label htmlFor="published" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    Publish immediately
+                  </Label>
+                </div>
+
+                <Button 
+                  type="submit" 
+                  className="w-full md:w-auto" 
+                  disabled={createUpdateMutation.isPending || !updateForm.image_url}
+                >
+                  {createUpdateMutation.isPending ? 'Uploading...' : 'Post Update'}
                 </Button>
               </form>
             </CardContent>
@@ -318,61 +295,58 @@ const Admin = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Manage Updates</CardTitle>
+              <CardTitle>Manage Update Posters</CardTitle>
               <CardDescription>
-                Showing all updates ({updates?.length || 0} total)
+                Showing all update posters ({updates?.length || 0} total)
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {updates?.map((update) => (
-                  <div key={update.id} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center space-x-4">
+                  <div key={update.id} className="relative group">
+                    <div className="aspect-video rounded-lg overflow-hidden bg-gray-100 border">
                       {update.image_url ? (
-                        <div className="w-24 h-16 rounded overflow-hidden bg-gray-100">
-                          <img 
-                            src={update.image_url} 
-                            alt={update.title} 
-                            className="w-full h-full object-cover" 
-                          />
-                        </div>
+                        <img 
+                          src={update.image_url} 
+                          alt="Update poster" 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" 
+                        />
                       ) : (
-                        <div className="w-24 h-16 bg-gray-200 rounded flex items-center justify-center">
-                          <span className="text-gray-400 text-xs">No Image</span>
+                        <div className="w-full h-full flex items-center justify-center">
+                          <span className="text-gray-400">No Image</span>
                         </div>
                       )}
-                      <div>
-                        <h3 className="font-semibold">{update.title}</h3>
-                        {update.description && (
-                          <p className="text-sm text-gray-600 line-clamp-2">{update.description}</p>
-                        )}
-                        <div className="flex items-center space-x-2 mt-1">
-                          <span className={`px-2 py-1 text-xs rounded-full font-medium ${
-                            update.published ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                          }`}>
-                            {update.published ? 'Published' : 'Draft'}
-                          </span>
-                          <span className="text-xs text-gray-500">
-                            {new Date(update.created_at).toLocaleDateString()}
-                          </span>
-                        </div>
-                      </div>
                     </div>
-                    <div className="flex space-x-2">
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <Button
                         variant="destructive"
                         size="sm"
                         onClick={() => deleteUpdate(update.id)}
                         disabled={deleteUpdateMutation.isPending}
+                        className="shadow-lg"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
+                    <div className="absolute bottom-2 left-2">
+                      <span className={`px-2 py-1 text-xs rounded-full font-medium shadow-lg ${
+                        update.published ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'
+                      }`}>
+                        {update.published ? 'Published' : 'Draft'}
+                      </span>
+                    </div>
+                    <div className="absolute bottom-2 right-2">
+                      <span className="px-2 py-1 text-xs rounded-full bg-black bg-opacity-50 text-white shadow-lg">
+                        {new Date(update.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
                   </div>
                 ))}
                 {updates?.length === 0 && (
-                  <div className="text-center py-8">
-                    <p className="text-gray-500">No updates found.</p>
+                  <div className="col-span-full text-center py-12">
+                    <Image className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500 text-lg">No update posters found.</p>
+                    <p className="text-gray-400 text-sm">Upload your first landscape poster above.</p>
                   </div>
                 )}
               </div>

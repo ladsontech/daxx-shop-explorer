@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { X, Upload, Loader2, Camera } from 'lucide-react';
+import { X, Upload, Loader2, Image } from 'lucide-react';
 
 interface UpdateImageUploadProps {
   imageUrl: string | null;
@@ -49,10 +49,10 @@ const UpdateImageUpload: React.FC<UpdateImageUploadProps> = ({
         .getPublicUrl(data.path);
 
       onImageChange(publicUrl);
-      toast.success('Image uploaded successfully!');
+      toast.success('Poster uploaded successfully!');
     } catch (error) {
       console.error('Error uploading image:', error);
-      toast.error('Error uploading image');
+      toast.error('Error uploading poster');
     } finally {
       setUploading(false);
     }
@@ -83,12 +83,12 @@ const UpdateImageUpload: React.FC<UpdateImageUploadProps> = ({
 
       // Immediately remove from UI
       onImageChange(null);
-      toast.success('Image removed!');
+      toast.success('Poster removed!');
     } catch (error) {
       console.error('Error removing image:', error);
       // Still remove from UI even if there's an error
       onImageChange(null);
-      toast.success('Image removed!');
+      toast.success('Poster removed!');
     }
   };
 
@@ -126,15 +126,15 @@ const UpdateImageUpload: React.FC<UpdateImageUploadProps> = ({
 
   return (
     <div className="space-y-4">
-      <Label>Update Image (Landscape Preferred)</Label>
+      <Label>Update Poster (Landscape Format Required)</Label>
       
       {/* Current Image Preview */}
       {imageUrl && (
         <div className="relative group">
-          <div className="aspect-video rounded-lg overflow-hidden border bg-gray-100 max-w-md">
+          <div className="aspect-video rounded-lg overflow-hidden border bg-gray-100 max-w-lg">
             <img
               src={imageUrl}
-              alt="Update preview"
+              alt="Update poster preview"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
@@ -145,7 +145,7 @@ const UpdateImageUpload: React.FC<UpdateImageUploadProps> = ({
           <button
             onClick={removeImage}
             className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 z-10"
-            title="Remove image"
+            title="Remove poster"
           >
             <X className="h-4 w-4" />
           </button>
@@ -154,7 +154,7 @@ const UpdateImageUpload: React.FC<UpdateImageUploadProps> = ({
 
       {/* Upload Area */}
       <div
-        className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+        className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
           dragActive 
             ? 'border-blue-500 bg-blue-50' 
             : 'border-gray-300 hover:border-gray-400'
@@ -175,18 +175,22 @@ const UpdateImageUpload: React.FC<UpdateImageUploadProps> = ({
         />
         
         {uploading ? (
-          <div className="flex flex-col items-center space-y-2">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-            <p className="text-sm text-gray-600">Uploading...</p>
+          <div className="flex flex-col items-center space-y-3">
+            <Loader2 className="h-12 w-12 animate-spin text-blue-500" />
+            <p className="text-lg text-gray-600">Uploading poster...</p>
           </div>
         ) : (
-          <div className="flex flex-col items-center space-y-2">
-            <Camera className="h-8 w-8 text-gray-400" />
-            <p className="text-sm text-gray-600">
-              <span className="font-medium text-blue-600">Click to upload</span> or drag and drop
-            </p>
-            <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
-            <p className="text-xs text-gray-500">Landscape format (16:9) recommended for best display</p>
+          <div className="flex flex-col items-center space-y-3">
+            <Image className="h-12 w-12 text-gray-400" />
+            <div>
+              <p className="text-lg text-gray-600">
+                <span className="font-medium text-blue-600">Click to upload</span> or drag and drop
+              </p>
+              <p className="text-sm text-gray-500 mt-1">PNG, JPG, GIF up to 10MB</p>
+              <p className="text-sm font-medium text-orange-600 mt-2">
+                📐 Landscape format (16:9 ratio) required for best display
+              </p>
+            </div>
           </div>
         )}
       </div>

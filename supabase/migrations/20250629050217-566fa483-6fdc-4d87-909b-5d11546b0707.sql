@@ -1,4 +1,5 @@
 
+
 -- Create updates table
 CREATE TABLE public.updates (
   id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -35,3 +36,4 @@ CREATE POLICY "Anyone can delete updates" ON public.updates FOR DELETE USING (tr
 
 -- Enable RLS
 ALTER TABLE public.updates ENABLE ROW LEVEL SECURITY;
+

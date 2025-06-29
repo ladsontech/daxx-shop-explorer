@@ -5,8 +5,6 @@ import { toast } from 'sonner';
 
 export interface Update {
   id: string;
-  title: string;
-  description: string | null;
   image_url: string | null;
   published: boolean;
   created_at: string;
@@ -44,35 +42,10 @@ export const useCreateUpdate = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['updates'] });
-      toast.success('Update created successfully!');
+      toast.success('Update posted successfully!');
     },
     onError: (error) => {
-      toast.error('Failed to create update: ' + error.message);
-    },
-  });
-};
-
-export const useUpdateUpdate = () => {
-  const queryClient = useQueryClient();
-  
-  return useMutation({
-    mutationFn: async ({ id, ...update }: Partial<Update> & { id: string }) => {
-      const { data, error } = await supabase
-        .from('updates')
-        .update({ ...update, updated_at: new Date().toISOString() })
-        .eq('id', id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['updates'] });
-      toast.success('Update updated successfully!');
-    },
-    onError: (error) => {
-      toast.error('Failed to update update: ' + error.message);
+      toast.error('Failed to post update: ' + error.message);
     },
   });
 };
