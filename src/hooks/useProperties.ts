@@ -1,4 +1,3 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -28,5 +27,22 @@ export const useProperties = () => {
       if (error) throw error;
       return data as Property[];
     },
+  });
+};
+
+export const usePropertyById = (id: string) => {
+  return useQuery({
+    queryKey: ['property', id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('id', id)
+        .single();
+      
+      if (error) throw error;
+      return data as Property;
+    },
+    enabled: !!id,
   });
 };

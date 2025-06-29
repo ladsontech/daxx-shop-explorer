@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,6 +8,7 @@ import { useState } from "react";
 import SplashScreen from "./components/SplashScreen";
 import Index from "./pages/Index";
 import ProductDetail from "./pages/ProductDetail";
+import PropertyDetail from "./pages/PropertyDetail";
 import GadgetsPage from "./pages/GadgetsPage";
 import AccessoriesPage from "./pages/AccessoriesPage";
 import FashionPage from "./pages/FashionPage";
@@ -39,6 +39,7 @@ const App = () => {
               <Route path="/fashion" element={<FashionPage />} />
               <Route path="/property" element={<PropertyPage />} />
               <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/property/:id" element={<PropertyDetail />} />
               <Route path="/admin" element={<Admin />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
