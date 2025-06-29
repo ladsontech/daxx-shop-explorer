@@ -35,7 +35,8 @@ const Admin = () => {
     section: activeCategory,
     images: [] as string[],
     in_stock: true,
-    featured: false
+    featured: false,
+    condition: 'used' as 'new' | 'used'
   });
 
   const [propertyForm, setPropertyForm] = useState({
@@ -130,7 +131,8 @@ const Admin = () => {
       section: productForm.section,
       images: productForm.images,
       in_stock: productForm.in_stock,
-      featured: productForm.featured
+      featured: productForm.featured,
+      condition: productForm.section === 'gadgets' ? productForm.condition : null
     }]);
 
     if (error) {
@@ -139,7 +141,7 @@ const Admin = () => {
       toast.success('Product added successfully!');
       setProductForm({
         title: '', description: '', price: '', original_price: '',
-        section: activeCategory, images: [], in_stock: true, featured: false
+        section: activeCategory, images: [], in_stock: true, featured: false, condition: 'used'
       });
       refetchProducts();
     }
@@ -575,6 +577,20 @@ const Admin = () => {
                       className="bg-gray-100"
                     />
                   </div>
+                  {activeCategory === 'gadgets' && (
+                    <div>
+                      <Label htmlFor="condition">Condition *</Label>
+                      <Select value={productForm.condition} onValueChange={(value: 'new' | 'used') => setProductForm({...productForm, condition: value})}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="new">Brand New</SelectItem>
+                          <SelectItem value="used">Used</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
                 </div>
                 
                 <div>
@@ -628,7 +644,16 @@ const Admin = () => {
                   <div key={product.id} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center space-x-4">
                       {product.images && product.images.length > 0 ? (
-                        <img src={product.images[0]} alt={product.title} className="w-16 h-16 object-cover rounded" />
+                        <div className="relative">
+                          <img src={product.images[0]} alt={product.title} className="w-16 h-16 object-cover rounded" />
+                          {product.section === 'gadgets' && product.condition && (
+                            <div className={`absolute -top-1 -right-1 px-1 py-0.5 rounded text-xs font-semibold text-white ${
+                              product.condition === 'new' ? 'bg-green-500' : 'bg-blue-500'
+                            }`}>
+                              {product.condition === 'new' ? 'NEW' : 'USED'}
+                            </div>
+                          )}
+                        </div>
                       ) : (
                         <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
                           <span className="text-gray-400 text-xs">No Image</span>

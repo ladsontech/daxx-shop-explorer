@@ -28,7 +28,8 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
     section: product?.section || '',
     images: product?.images || [],
     in_stock: product?.in_stock ?? true,
-    featured: product?.featured ?? false
+    featured: product?.featured ?? false,
+    condition: product?.condition || 'used' as 'new' | 'used'
   });
 
   React.useEffect(() => {
@@ -41,7 +42,8 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
         section: product.section,
         images: product.images || [],
         in_stock: product.in_stock,
-        featured: product.featured || false
+        featured: product.featured || false,
+        condition: product.condition || 'used'
       });
     }
   }, [product]);
@@ -83,7 +85,8 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
         section: form.section,
         images: form.images,
         in_stock: form.in_stock,
-        featured: form.featured
+        featured: form.featured,
+        condition: form.section === 'gadgets' ? form.condition : null
       })
       .eq('id', product.id);
 
@@ -152,6 +155,20 @@ const EditProductDialog = ({ product, isOpen, onClose, onUpdate }: EditProductDi
                 </SelectContent>
               </Select>
             </div>
+            {form.section === 'gadgets' && (
+              <div>
+                <Label htmlFor="edit_condition">Condition *</Label>
+                <Select value={form.condition} onValueChange={(value: 'new' | 'used') => setForm({...form, condition: value})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="new">Brand New</SelectItem>
+                    <SelectItem value="used">Used</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
           
           <div>

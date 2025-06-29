@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -10,8 +11,10 @@ interface ProductCardProps {
   price: number;
   originalPrice?: number;
   category: string;
+  section: string;
   description: string;
   inStock?: boolean;
+  condition?: 'new' | 'used' | null;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -21,8 +24,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
   price,
   originalPrice,
   category,
+  section,
   description,
-  inStock = true
+  inStock = true,
+  condition
 }) => {
   const { addToCart } = useCart();
   const displayImage = images && images.length > 0 ? images[0] : '/placeholder.svg';
@@ -53,6 +58,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
           {originalPrice && (
             <div className="absolute top-2 left-2 amazon-orange text-white px-2 py-1 rounded text-xs font-semibold">
               SALE
+            </div>
+          )}
+          {section === 'gadgets' && condition && (
+            <div className={`absolute top-2 right-2 px-2 py-1 rounded text-xs font-semibold text-white ${
+              condition === 'new' ? 'bg-green-500' : 'bg-blue-500'
+            }`}>
+              {condition === 'new' ? 'NEW' : 'USED'}
             </div>
           )}
         </div>

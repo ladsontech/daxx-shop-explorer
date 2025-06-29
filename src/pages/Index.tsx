@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Navigation from '../components/Navigation';
 import Hero from '../components/Hero';
@@ -31,8 +32,10 @@ const Index = () => {
       price: product.price,
       originalPrice: product.original_price,
       category: product.category,
+      section: product.section,
       description: product.description || '',
-      inStock: product.in_stock
+      inStock: product.in_stock,
+      condition: product.condition
     })) || [];
   };
 
@@ -139,6 +142,13 @@ const Index = () => {
                       <div className="absolute top-2 left-2 amazon-orange text-white p-2 rounded-full shadow-lg">
                         <Star className="h-4 w-4 fill-current" />
                       </div>
+                      {item.section === 'gadgets' && item.condition && (
+                        <div className={`absolute top-2 right-2 px-2 py-1 rounded text-xs font-semibold text-white ${
+                          item.condition === 'new' ? 'bg-green-500' : 'bg-blue-500'
+                        }`}>
+                          {item.condition === 'new' ? 'NEW' : 'USED'}
+                        </div>
+                      )}
                     </div>
                     <div className="p-4">
                       <h3 className="font-semibold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors text-sm">

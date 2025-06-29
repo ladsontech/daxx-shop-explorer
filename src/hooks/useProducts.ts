@@ -13,6 +13,7 @@ export interface Product {
   images: string[];
   in_stock: boolean;
   featured: boolean;
+  condition: 'new' | 'used' | null;
   created_at: string;
   updated_at: string;
 }
