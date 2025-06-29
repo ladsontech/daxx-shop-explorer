@@ -33,7 +33,11 @@ export const useCreateUpdate = () => {
     mutationFn: async (update: Omit<Update, 'id' | 'created_at' | 'updated_at'>) => {
       const { data, error } = await supabase
         .from('updates')
-        .insert([update])
+        .insert([{
+          ...update,
+          title: 'Update Poster', // Provide a default title to satisfy database requirement
+          description: null
+        }])
         .select()
         .single();
       
