@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
@@ -26,8 +25,10 @@ const FashionPage = () => {
       price: product.price,
       originalPrice: product.original_price,
       category: product.category,
+      section: product.section,
       description: product.description || '',
-      inStock: product.in_stock
+      inStock: product.in_stock,
+      condition: product.condition
     })) || [];
   };
 
