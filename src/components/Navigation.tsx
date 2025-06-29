@@ -29,7 +29,7 @@ const Navigation = () => {
                 <img 
                   src="/images/logo.png" 
                   alt="Daxx Shop Logo" 
-                  className="h-10 w-10 animate-[shake_3s_ease-in-out_infinite]"
+                  className="h-10 w-10"
                 />
                 <h1 className="text-2xl font-bold text-white">
                   Daxx Shop
