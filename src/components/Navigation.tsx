@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Shirt, Building } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Shirt, Building, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import Cart from './Cart';
@@ -17,9 +17,35 @@ const Navigation = () => {
     { name: 'Property', href: '/property', icon: Building }
   ];
 
+  const handleCallClick = () => {
+    window.location.href = 'tel:+256751173504';
+  };
+
   return (
     <>
-      {/* Desktop Navigation */}
+      {/* Top Contact Bar - Desktop Only */}
+      <div className="hidden md:block amazon-dark-blue border-b border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-2 text-sm">
+            <div className="text-gray-300">
+              Welcome to Daxx Shop - Your trusted marketplace
+            </div>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={handleCallClick}
+                className="flex items-center space-x-2 text-white hover:text-orange-400 transition-colors"
+              >
+                <Phone className="h-4 w-4" />
+                <span className="font-medium">+256 751 173504</span>
+              </button>
+              <div className="text-gray-300">|</div>
+              <span className="text-gray-300">support@daxxshop.com</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Navigation */}
       <nav className="amazon-dark-blue shadow-md sticky top-0 z-50 border-b border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -52,6 +78,15 @@ const Navigation = () => {
 
             {/* Right Icons */}
             <div className="flex items-center space-x-4">
+              {/* Desktop Contact Button */}
+              <button
+                onClick={handleCallClick}
+                className="hidden md:flex items-center space-x-2 text-white hover:bg-gray-700 px-3 py-2 rounded transition-colors"
+              >
+                <Phone className="h-4 w-4" />
+                <span className="text-sm font-medium">Call Us</span>
+              </button>
+
               <button
                 onClick={() => setIsCartOpen(true)}
                 className="relative p-2 text-white hover:bg-gray-700 transition-colors rounded"
@@ -88,6 +123,17 @@ const Navigation = () => {
                     {link.name}
                   </Link>
                 ))}
+                {/* Mobile Contact Link */}
+                <button
+                  onClick={() => {
+                    handleCallClick();
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded flex items-center space-x-2"
+                >
+                  <Phone className="h-4 w-4" />
+                  <span>Call +256 751 173504</span>
+                </button>
               </div>
             </div>
           )}
