@@ -141,19 +141,19 @@ const Navigation = () => {
         </div>
       </nav>
 
-      {/* Mobile Bottom Navigation */}
+      {/* Mobile Bottom Navigation - Optimized for better responsiveness */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 amazon-dark-blue border-t border-gray-700 z-50">
-        <div className="flex justify-around items-center py-2">
+        <div className="grid grid-cols-6 gap-0">
           {navLinks.map(link => {
             const Icon = link.icon;
             return (
               <Link
                 key={link.name}
                 to={link.href}
-                className="flex flex-col items-center py-2 px-1 text-gray-300 hover:text-white transition-colors"
+                className="flex flex-col items-center justify-center py-1.5 px-1 text-gray-300 hover:text-white transition-colors min-h-[60px]"
               >
-                <Icon className="h-4 w-4 mb-1" />
-                <span className="text-xs font-medium">{link.name}</span>
+                <Icon className="h-3.5 w-3.5 mb-0.5" />
+                <span className="text-[10px] font-medium leading-tight text-center">{link.name}</span>
               </Link>
             );
           })}

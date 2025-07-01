@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navigation from '../components/Navigation';
 import Hero from '../components/Hero';
@@ -72,7 +71,7 @@ const Index = () => {
     "@context": "https://schema.org",
     "@type": "Store",
     "name": "Daxx Shop",
-    "description": "Uganda's premier online marketplace for gadgets, fashion, accessories, and property",
+    "description": "Uganda's premier online marketplace for gadgets, fashion, cosmetics, accessories, and property",
     "url": "https://daxxshop.com",
     "logo": "https://daxxshop.com/images/logo.png",
     "contactPoint": {
@@ -88,9 +87,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0">
       <SEOHead 
-        title="Daxx Shop - Quality Gadgets, Fashion & Property | Uganda's Premier Online Store"
-        description="Shop premium gadgets, trendy fashion, stylish accessories, and quality properties at Daxx Shop Uganda. Best prices, fast delivery, and excellent customer service. Your trusted online marketplace."
-        keywords="Uganda online shop, gadgets Uganda, fashion Uganda, accessories Uganda, property Uganda, electronics Kampala, clothing store Uganda, mobile phones Uganda, laptops Uganda, real estate Uganda, Daxx Shop"
+        title="Daxx Shop - Quality Gadgets, Fashion, Cosmetics & Property | Uganda's Premier Online Store"
+        description="Shop premium gadgets, trendy fashion, beauty cosmetics, stylish accessories, and quality properties at Daxx Shop Uganda. Best prices, fast delivery, and excellent customer service. Your trusted online marketplace."
+        keywords="Uganda online shop, gadgets Uganda, fashion Uganda, cosmetics Uganda, accessories Uganda, property Uganda, electronics Kampala, clothing store Uganda, beauty products Uganda, mobile phones Uganda, laptops Uganda, real estate Uganda, Daxx Shop"
         url="https://daxxshop.com"
       />
       
@@ -142,8 +141,13 @@ const Index = () => {
                       <div className="absolute top-2 left-2 amazon-orange text-white p-2 rounded-full shadow-lg">
                         <Star className="h-4 w-4 fill-current" />
                       </div>
+                      {item.originalPrice && (
+                        <div className="absolute top-2 right-2 amazon-orange text-white px-2 py-1 rounded text-xs font-semibold">
+                          SALE
+                        </div>
+                      )}
                       {item.section === 'gadgets' && item.condition && (
-                        <div className={`absolute top-2 right-2 px-2 py-1 rounded text-xs font-semibold text-white ${
+                        <div className={`absolute ${item.originalPrice ? 'top-10 right-2' : 'top-2 right-2'} px-2 py-1 rounded text-xs font-semibold text-white ${
                           item.condition === 'new' ? 'bg-green-500' : 'bg-blue-500'
                         }`}>
                           {item.condition === 'new' ? 'NEW' : 'USED'}
@@ -157,8 +161,15 @@ const Index = () => {
                       <p className="text-sm text-gray-600 mb-2 line-clamp-2">
                         {item.description}
                       </p>
-                      <div className="text-sm font-bold text-gray-900">
-                        UGX {item.price.toLocaleString()}
+                      <div className="flex items-center space-x-2 mb-2">
+                        <span className="text-sm font-bold text-gray-900">
+                          UGX {item.price.toLocaleString()}
+                        </span>
+                        {item.originalPrice && (
+                          <span className="text-xs text-gray-500 line-through">
+                            UGX {item.originalPrice.toLocaleString()}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
