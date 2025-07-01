@@ -53,7 +53,50 @@ const Index = () => {
     })) || [];
   };
 
-  const featuredProducts = formatProductsForComponent(allProducts?.filter(product => product.featured) || []);
+  // Balance featured products across all categories
+  const getBalancedFeaturedProducts = () => {
+    if (!allProducts) return [];
+    
+    const categories = ['gadgets', 'accessories', 'cosmetics', 'fashion'];
+    const maxPerCategory = 2; // Maximum products per category
+    const balancedProducts: any[] = [];
+    
+    // Get featured products from each category
+    categories.forEach(category => {
+      const categoryProducts = allProducts
+        .filter(product => product.section === category && product.featured)
+        .slice(0, maxPerCategory); // Limit per category
+      
+      balancedProducts.push(...categoryProducts);
+    });
+    
+    // If we don't have enough featured products, fill with non-featured products
+    if (balancedProducts.length < 8) {
+      const remainingSlots = 8 - balancedProducts.length;
+      const usedIds = new Set(balancedProducts.map(p => p.id));
+      
+      categories.forEach(category => {
+        if (balancedProducts.length >= 8) return;
+        
+        const categoryNonFeatured = allProducts
+          .filter(product => 
+            product.section === category && 
+            !product.featured && 
+            !usedIds.has(product.id)
+          )
+          .slice(0, Math.ceil(remainingSlots / categories.length));
+        
+        balancedProducts.push(...categoryNonFeatured);
+      });
+    }
+    
+    // Shuffle the array to avoid predictable ordering
+    const shuffled = [...balancedProducts].sort(() => Math.random() - 0.5);
+    
+    return shuffled.slice(0, 8); // Limit to 8 products total
+  };
+
+  const featuredProducts = formatProductsForComponent(getBalancedFeaturedProducts());
   const formattedProperties = formatPropertiesForComponent(properties || []);
 
   if (productsLoading || propertiesLoading) {
@@ -124,8 +167,26 @@ const Index = () => {
                 Featured Products
               </h2>
               <p className="text-xl text-gray-600">
-                Discover our handpicked selection of premium products
+                Discover our handpicked selection from all categories
               </p>
+              <div className="flex justify-center space-x-4 mt-4 text-sm text-gray-500">
+                <span className="flex items-center">
+                  <span className="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
+                  Gadgets
+                </span>
+                <span className="flex items-center">
+                  <span className="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                  Accessories
+                </span>
+                <span className="flex items-center">
+                  <span className="w-3 h-3 bg-pink-500 rounded-full mr-2"></span>
+                  Cosmetics
+                </span>
+                <span className="flex items-center">
+                  <span className="w-3 h-3 bg-purple-500 rounded-full mr-2"></span>
+                  Fashion
+                </span>
+              </div>
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -140,6 +201,16 @@ const Index = () => {
                       />
                       <div className="absolute top-2 left-2 amazon-orange text-white p-2 rounded-full shadow-lg">
                         <Star className="h-4 w-4 fill-current" />
+                      </div>
+                      {/* Category indicator badge */}
+                      <div className={`absolute top-2 left-12 px-2 py-1 rounded text-xs font-semibold text-white ${
+                        item.section === 'gadgets' ? 'bg-blue-500' :
+                        item.section === 'accessories' ? 'bg-green-500' :
+                        item.section === 'cosmetics' ? 'bg-pink-500' :
+                        item.section === 'fashion' ? 'bg-purple-500' :
+                        'bg-gray-500'
+                      }`}>
+                        {item.section.charAt(0).toUpperCase() + item.section.slice(1)}
                       </div>
                       {item.originalPrice && (
                         <div className="absolute top-2 right-2 amazon-orange text-white px-2 py-1 rounded text-xs font-semibold">
@@ -175,6 +246,26 @@ const Index = () => {
                   </div>
                 </Link>
               ))}
+            </div>
+            
+            {/* View All Categories Links */}
+            <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Link to="/gadgets" className="text-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                <div className="text-blue-600 font-semibold">View All Gadgets</div>
+                <div className="text-sm text-gray-600">Electronics & Tech</div>
+              </Link>
+              <Link to="/accessories" className="text-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                <div className="text-green-600 font-semibold">View All Accessories</div>
+                <div className="text-sm text-gray-600">Style & Function</div>
+              </Link>
+              <Link to="/cosmetics" className="text-center p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors">
+                <div className="text-pink-600 font-semibold">View All Cosmetics</div>
+                <div className="text-sm text-gray-600">Beauty & Care</div>
+              </Link>
+              <Link to="/fashion" className="text-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                <div className="text-purple-600 font-semibold">View All Fashion</div>
+                <div className="text-sm text-gray-600">Clothing & Style</div>
+              </Link>
             </div>
           </div>
         </section>
