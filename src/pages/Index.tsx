@@ -158,18 +158,19 @@ const Index = () => {
         <SearchBar />
       </section>
       
-      {/* Featured Products Section */}
+      {/* Featured Products Section - Enhanced Mobile Responsiveness */}
       {featuredProducts.length > 0 && (
-        <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <section className="py-8 md:py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+            <div className="text-center mb-6 md:mb-12">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 md:mb-4">
                 Featured Products
               </h2>
-              <p className="text-xl text-gray-600">
+              <p className="text-base md:text-xl text-gray-600 mb-3 md:mb-0">
                 Discover our handpicked selection from all categories
               </p>
-              <div className="flex justify-center space-x-4 mt-4 text-sm text-gray-500">
+              {/* Category Legend - Hidden on mobile, shown on larger screens */}
+              <div className="hidden md:flex justify-center flex-wrap gap-3 lg:gap-4 mt-4 text-sm text-gray-500">
                 <span className="flex items-center">
                   <span className="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
                   Gadgets
@@ -189,7 +190,8 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {/* Mobile-optimized grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
               {featuredProducts.map(item => (
                 <Link key={item.id} to={`/product/${item.id}`} className="block">
                   <div className="bg-white rounded amazon-border border amazon-shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">
@@ -199,41 +201,29 @@ const Index = () => {
                         alt={item.title} 
                         className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300" 
                       />
-                      <div className="absolute top-2 left-2 amazon-orange text-white p-2 rounded-full shadow-lg">
-                        <Star className="h-4 w-4 fill-current" />
+                      {/* Featured star badge */}
+                      <div className="absolute top-1 md:top-2 left-1 md:left-2 amazon-orange text-white p-1 md:p-2 rounded-full shadow-lg">
+                        <Star className="h-3 w-3 md:h-4 md:w-4 fill-current" />
                       </div>
-                      {/* Category indicator badge */}
-                      <div className={`absolute top-2 left-12 px-2 py-1 rounded text-xs font-semibold text-white ${
-                        item.section === 'gadgets' ? 'bg-blue-500' :
-                        item.section === 'accessories' ? 'bg-green-500' :
-                        item.section === 'cosmetics' ? 'bg-pink-500' :
-                        item.section === 'fashion' ? 'bg-purple-500' :
-                        'bg-gray-500'
-                      }`}>
-                        {item.section.charAt(0).toUpperCase() + item.section.slice(1)}
-                      </div>
-                      {item.originalPrice && (
-                        <div className="absolute top-2 right-2 amazon-orange text-white px-2 py-1 rounded text-xs font-semibold">
-                          SALE
-                        </div>
-                      )}
+                      {/* Condition badge for gadgets only */}
                       {item.section === 'gadgets' && item.condition && (
-                        <div className={`absolute ${item.originalPrice ? 'top-10 right-2' : 'top-2 right-2'} px-2 py-1 rounded text-xs font-semibold text-white ${
+                        <div className={`absolute top-1 md:top-2 right-1 md:right-2 px-1 md:px-2 py-0.5 md:py-1 rounded text-xs font-semibold text-white ${
                           item.condition === 'new' ? 'bg-green-500' : 'bg-blue-500'
                         }`}>
                           {item.condition === 'new' ? 'NEW' : 'USED'}
                         </div>
                       )}
                     </div>
-                    <div className="p-4">
-                      <h3 className="font-semibold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors text-sm">
+                    <div className="p-2 md:p-4">
+                      <h3 className="font-semibold text-gray-800 mb-1 md:mb-2 group-hover:text-blue-600 transition-colors text-xs md:text-sm line-clamp-2">
                         {item.title}
                       </h3>
-                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                      {/* Description hidden on mobile for better space utilization */}
+                      <p className="hidden md:block text-sm text-gray-600 mb-2 line-clamp-2">
                         {item.description}
                       </p>
-                      <div className="flex items-center space-x-2 mb-2">
-                        <span className="text-sm font-bold text-gray-900">
+                      <div className="flex flex-col md:flex-row md:items-center md:space-x-2 mb-1 md:mb-2">
+                        <span className="text-xs md:text-sm font-bold text-gray-900">
                           UGX {item.price.toLocaleString()}
                         </span>
                         {item.originalPrice && (
@@ -248,23 +238,23 @@ const Index = () => {
               ))}
             </div>
             
-            {/* View All Categories Links */}
-            <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Link to="/gadgets" className="text-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-                <div className="text-blue-600 font-semibold">View All Gadgets</div>
-                <div className="text-sm text-gray-600">Electronics & Tech</div>
+            {/* View All Categories Links - Mobile optimized */}
+            <div className="mt-8 md:mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+              <Link to="/gadgets" className="text-center p-3 md:p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                <div className="text-blue-600 font-semibold text-sm md:text-base">View All Gadgets</div>
+                <div className="text-xs md:text-sm text-gray-600">Electronics & Tech</div>
               </Link>
-              <Link to="/accessories" className="text-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
-                <div className="text-green-600 font-semibold">View All Accessories</div>
-                <div className="text-sm text-gray-600">Style & Function</div>
+              <Link to="/accessories" className="text-center p-3 md:p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                <div className="text-green-600 font-semibold text-sm md:text-base">View All Accessories</div>
+                <div className="text-xs md:text-sm text-gray-600">Style & Function</div>
               </Link>
-              <Link to="/cosmetics" className="text-center p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors">
-                <div className="text-pink-600 font-semibold">View All Cosmetics</div>
-                <div className="text-sm text-gray-600">Beauty & Care</div>
+              <Link to="/cosmetics" className="text-center p-3 md:p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors">
+                <div className="text-pink-600 font-semibold text-sm md:text-base">View All Cosmetics</div>
+                <div className="text-xs md:text-sm text-gray-600">Beauty & Care</div>
               </Link>
-              <Link to="/fashion" className="text-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
-                <div className="text-purple-600 font-semibold">View All Fashion</div>
-                <div className="text-sm text-gray-600">Clothing & Style</div>
+              <Link to="/fashion" className="text-center p-3 md:p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                <div className="text-purple-600 font-semibold text-sm md:text-base">View All Fashion</div>
+                <div className="text-xs md:text-sm text-gray-600">Clothing & Style</div>
               </Link>
             </div>
           </div>

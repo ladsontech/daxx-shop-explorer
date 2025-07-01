@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -55,11 +54,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             alt={title}
             className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300"
           />
-          {originalPrice && (
-            <div className="absolute top-2 left-2 amazon-orange text-white px-2 py-1 rounded text-xs font-semibold">
-              SALE
-            </div>
-          )}
+          {/* Only show condition badge for gadgets */}
           {section === 'gadgets' && condition && (
             <div className={`absolute top-2 right-2 px-1 md:px-2 py-0.5 md:py-1 rounded text-xs font-semibold text-white ${
               condition === 'new' ? 'bg-green-500' : 'bg-blue-500'
