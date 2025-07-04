@@ -5,7 +5,7 @@ import { MessageCircle } from 'lucide-react';
 const WhatsAppButton = () => {
   const handleWhatsAppClick = () => {
     const phoneNumber = "+256751173504";
-    const message = `Hello! I'm interested in your products at Daxx Shop. Could you please help me?`;
+    const message = `Hello! I'm interested in your products at Esale Uganda. Could you please help me?`;
     const whatsappUrl = `https://wa.me/${phoneNumber.replace('+', '')}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };

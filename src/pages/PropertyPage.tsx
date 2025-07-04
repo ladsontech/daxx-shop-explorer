@@ -39,7 +39,7 @@ const PropertyPage = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "Property Listings - Daxx Shop Uganda",
+    "name": "Property Listings - Esale Uganda",
     "description": "Find houses, apartments, land, and commercial properties for sale and rent in Uganda",
     "url": "https://daxxshop.com/property",
     "mainEntity": {
@@ -79,7 +79,7 @@ const PropertyPage = () => {
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0">
       <SEOHead
-        title="Property Listings Uganda | Houses, Apartments & Land for Sale/Rent - Daxx Shop"
+        title="Property Listings Uganda | Houses, Apartments & Land for Sale/Rent - Esale Uganda"
         description="Find houses, apartments, land, and commercial properties for sale and rent in Uganda. Prime locations in Kampala, Entebbe, Jinja and across Uganda. Best property deals."
         keywords="property Uganda, houses for sale Uganda, apartments for rent Uganda, land for sale Uganda, real estate Uganda, property Kampala, houses Kampala, apartments Kampala, commercial property Uganda"
         url="https://daxxshop.com/property"

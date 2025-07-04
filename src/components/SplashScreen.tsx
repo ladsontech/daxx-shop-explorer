@@ -22,10 +22,10 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
         <div className="text-center">
           <img 
             src="/images/logo.png" 
-            alt="Daxx Shop Logo" 
+            alt="Esale Uganda Logo"
             className="h-24 w-24 mx-auto mb-6"
           />
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Daxx Shop</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2 font-playfair">Esale Uganda</h1>
           <p className="text-gray-600">Your trusted marketplace</p>
         </div>
       </div>
@@ -37,10 +37,10 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
       <div className="text-center">
         <img 
           src="/images/logo.png" 
-          alt="Daxx Shop Logo" 
+          alt="Esale Uganda Logo" 
           className="h-24 w-24 mx-auto mb-6"
         />
-        <h1 className="text-4xl font-bold text-gray-900 mb-2 animate-fade-in">Daxx Shop</h1>
+        <h1 className="text-4xl font-bold text-gray-900 mb-2 animate-fade-in font-playfair">Esale Uganda</h1>
         <p className="text-gray-600 animate-fade-in">Your trusted marketplace</p>
         <div className="mt-8">
           <div className="inline-block h-2 w-16 bg-gray-200 rounded-full overflow-hidden">

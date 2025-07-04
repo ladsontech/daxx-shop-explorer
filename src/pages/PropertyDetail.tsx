@@ -118,7 +118,7 @@ const PropertyDetail = () => {
       "priceCurrency": "UGX",
       "seller": {
         "@type": "Organization",
-        "name": "Daxx Shop",
+        "name": "Esale Uganda",
         "url": "https://daxxshop.com"
       }
     },

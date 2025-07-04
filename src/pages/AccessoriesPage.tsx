@@ -37,7 +37,7 @@ const AccessoriesPage = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "Premium Accessories - Daxx Shop Uganda", 
+    "name": "Premium Accessories - Esale Uganda", 
     "description": "Quality accessories, phone cases, chargers, bags, watches, and tech accessories in Uganda",
     "url": "https://daxxshop.com/accessories",
     "mainEntity": {
@@ -73,7 +73,7 @@ const AccessoriesPage = () => {
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0">
       <SEOHead
-        title="Premium Accessories & Tech Gadgets | Daxx Shop Uganda - Cases, Chargers & More"
+        title="Premium Accessories & Tech Gadgets | Esale Uganda - Cases, Chargers & More"
         description="Shop quality accessories in Uganda. Phone cases, chargers, bags, watches, tech accessories, and gadget add-ons. Enhance your devices with premium accessories."
         keywords="accessories Uganda, phone cases Uganda, chargers Uganda, bags Uganda, watches Uganda, tech accessories Uganda, gadget accessories Kampala, phone accessories Uganda"
         url="https://daxxshop.com/accessories"

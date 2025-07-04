@@ -113,10 +113,10 @@ const Index = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Store",
-    "name": "Daxx Shop",
+    "name": "Esale Uganda",
     "description": "Uganda's premier online marketplace for gadgets, fashion, cosmetics, accessories, and property",
-    "url": "https://daxxshop.com",
-    "logo": "https://daxxshop.com/images/logo.png",
+    "url": "https://esaleuganda.com",
+    "logo": "https://esaleuganda.com/images/logo.png",
     "contactPoint": {
       "@type": "ContactPoint",
       "telephone": "+256751173504",
@@ -130,10 +130,10 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0">
       <SEOHead 
-        title="Daxx Shop - Quality Gadgets, Fashion, Cosmetics & Property | Uganda's Premier Online Store"
-        description="Shop premium gadgets, trendy fashion, beauty cosmetics, stylish accessories, and quality properties at Daxx Shop Uganda. Best prices, fast delivery, and excellent customer service. Your trusted online marketplace."
-        keywords="Uganda online shop, gadgets Uganda, fashion Uganda, cosmetics Uganda, accessories Uganda, property Uganda, electronics Kampala, clothing store Uganda, beauty products Uganda, mobile phones Uganda, laptops Uganda, real estate Uganda, Daxx Shop"
-        url="https://daxxshop.com"
+        title="Esale Uganda - Quality Gadgets, Fashion, Cosmetics & Property | Uganda's Premier Online Store"
+        description="Shop premium gadgets, trendy fashion, beauty cosmetics, stylish accessories, and quality properties at Esale Uganda. Best prices, fast delivery, and excellent customer service. Your trusted online marketplace."
+        keywords="Uganda online shop, gadgets Uganda, fashion Uganda, cosmetics Uganda, accessories Uganda, property Uganda, electronics Kampala, clothing store Uganda, beauty products Uganda, mobile phones Uganda, laptops Uganda, real estate Uganda, Esale Uganda"
+        url="https://esaleuganda.com"
       />
       
       <Helmet>

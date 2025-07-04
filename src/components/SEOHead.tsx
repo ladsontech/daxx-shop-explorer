@@ -16,8 +16,8 @@ interface SEOHeadProps {
 }
 
 const SEOHead: React.FC<SEOHeadProps> = ({
-  title = "Daxx Shop - Quality Gadgets, Fashion & Property | Uganda's Premier Online Store",
-  description = "Shop premium gadgets, trendy fashion, stylish accessories, and quality properties at Daxx Shop Uganda. Best prices, fast delivery, and excellent customer service.",
+  title = "Esale Uganda - Quality Gadgets, Fashion & Property | Uganda's Premier Online Store",
+  description = "Shop premium gadgets, trendy fashion, stylish accessories, and quality properties at Esale Uganda. Best prices, fast delivery, and excellent customer service.",
   keywords = "Uganda online shop, gadgets Uganda, fashion Uganda, accessories Uganda, property Uganda",
   image = "https://daxx.shop/images/logo.png",
   url = "https://daxx.shop",
@@ -26,7 +26,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
   currency = 'UGX',
   availability = 'InStock',
   category,
-  brand = 'Daxx Shop'
+  brand = 'Esale Uganda'
 }) => {
   const structuredData = type === 'product' && price ? {
     "@context": "https://schema.org",
@@ -46,7 +46,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
       "availability": `https://schema.org/${availability}`,
       "seller": {
         "@type": "Organization",
-        "name": "Daxx Shop"
+        "name": "Esale Uganda"
       }
     }
   } : null;
@@ -64,7 +64,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
       <meta property="og:image" content={image} />
       <meta property="og:url" content={url} />
       <meta property="og:type" content={type} />
-      <meta property="og:site_name" content="Daxx Shop" />
+      <meta property="og:site_name" content="Esale Uganda" />
       
       {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />

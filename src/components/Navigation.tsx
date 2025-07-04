@@ -29,7 +29,7 @@ const Navigation = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-2 text-sm">
             <div className="text-gray-300">
-              Welcome to Daxx Shop - Your trusted marketplace
+              Welcome to Esale Uganda - Your trusted marketplace
             </div>
             <div className="flex items-center space-x-4">
               <button
@@ -55,11 +55,11 @@ const Navigation = () => {
               <Link to="/" className="flex items-center space-x-3">
                 <img 
                   src="/images/logo.png" 
-                  alt="Daxx Shop Logo" 
+                  alt="Esale Uganda Logo" 
                   className="h-10 w-10"
                 />
-                <h1 className="text-2xl font-bold text-white">
-                  Daxx Shop
+                <h1 className="text-2xl font-bold text-white font-playfair">
+                  Esale Uganda
                 </h1>
               </Link>
             </div>

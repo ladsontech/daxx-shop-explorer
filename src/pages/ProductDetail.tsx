@@ -104,9 +104,9 @@ const ProductDetail = () => {
   }
 
   const productImages = product.images && product.images.length > 0 ? product.images : ['/placeholder.svg'];
-  const productTitle = `${product.title} | ${product.category} | Daxx Shop Uganda`;
-  const productDescription = `${product.description || product.title} - Premium ${product.category} available at Daxx Shop Uganda. Price: UGX ${product.price.toLocaleString()}. ${product.in_stock ? 'In Stock' : 'Out of Stock'}. Fast delivery across Uganda.`;
-  const productKeywords = `${product.title}, ${product.category}, Uganda, Daxx Shop, buy ${product.category} Uganda, ${product.category} Kampala, online shopping Uganda`;
+  const productTitle = `${product.title} | ${product.category} | Esale Uganda`;
+  const productDescription = `${product.description || product.title} - Premium ${product.category} available at Esale Uganda. Price: UGX ${product.price.toLocaleString()}. ${product.in_stock ? 'In Stock' : 'Out of Stock'}. Fast delivery across Uganda.`;
+  const productKeywords = `${product.title}, ${product.category}, Uganda, Esale Uganda, buy ${product.category} Uganda, ${product.category} Kampala, online shopping Uganda`;
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -116,7 +116,7 @@ const ProductDetail = () => {
     "image": productImages,
     "brand": {
       "@type": "Brand",
-      "name": "Daxx Shop"
+      "name": "Esale Uganda"
     },
     "category": product.category,
     "offers": {
@@ -126,7 +126,7 @@ const ProductDetail = () => {
       "availability": product.in_stock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
       "seller": {
         "@type": "Organization",
-        "name": "Daxx Shop",
+        "name": "Esale Uganda",
         "url": "https://daxxshop.com"
       }
     },
