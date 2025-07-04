@@ -58,7 +58,7 @@ const Navigation = () => {
                   alt="Esale Uganda Logo" 
                   className="h-10 w-10"
                 />
-                <h1 className="text-2xl font-bold text-white font-playfair">
+                <h1 className="text-3xl md:text-4xl font-bold text-white font-playfair bg-gradient-to-r from-white to-orange-200 bg-clip-text text-transparent tracking-wide">
                   Esale Uganda
                 </h1>
               </Link>
