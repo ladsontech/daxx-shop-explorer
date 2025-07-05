@@ -9,7 +9,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <h3 className="text-2xl font-bold text-white font-playfair">
-              Esale Uganda
+              E-Sale Uganda
             </h3>
             <p className="text-gray-300">
               Your trusted marketplace for gadgets, fashion, cosmetics, accessories, and property. 
@@ -68,7 +68,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-center">
           <p className="text-gray-300">
-            © 2024 Esale Uganda. All rights reserved.
+            © 2024 E-Sale Uganda. All rights reserved.
           </p>
         </div>
       </div>

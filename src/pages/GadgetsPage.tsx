@@ -37,7 +37,7 @@ const GadgetsPage = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "Latest Gadgets - Esale Uganda",
+    "name": "Latest Gadgets - E-Sale Uganda",
     "description": "Premium gadgets, electronics, smartphones, laptops, and tech accessories in Uganda",
     "url": "https://daxxshop.com/gadgets",
     "mainEntity": {
@@ -73,7 +73,7 @@ const GadgetsPage = () => {
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0">
       <SEOHead
-        title="Latest Gadgets & Electronics | Esale Uganda - Smartphones, Laptops & Tech"
+        title="Latest Gadgets & Electronics | E-Sale Uganda - Smartphones, Laptops & Tech"
         description="Shop premium gadgets and electronics in Uganda. Find smartphones, laptops, tablets, smartwatches, headphones, and tech accessories at best prices. Fast delivery across Uganda."
         keywords="gadgets Uganda, electronics Uganda, smartphones Uganda, laptops Uganda, tablets Uganda, tech accessories Uganda, mobile phones Kampala, electronics Kampala, gadgets online Uganda"
         url="https://daxxshop.com/gadgets"

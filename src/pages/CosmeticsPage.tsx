@@ -37,7 +37,7 @@ const CosmeticsPage = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "Beauty & Cosmetics - Esale Uganda", 
+    "name": "Beauty & Cosmetics - E-Sale Uganda", 
     "description": "Premium beauty products, cosmetics, skincare, makeup, and personal care items in Uganda",
     "url": "https://daxxshop.com/cosmetics",
     "mainEntity": {
@@ -73,7 +73,7 @@ const CosmeticsPage = () => {
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0">
       <SEOHead
-        title="Beauty & Cosmetics | Esale Uganda - Makeup, Skincare & Personal Care"
+        title="Beauty & Cosmetics | E-Sale Uganda - Makeup, Skincare & Personal Care"
         description="Shop premium beauty products and cosmetics in Uganda. Makeup, skincare, perfumes, hair care, and personal care items. Quality beauty products at affordable prices."
         keywords="cosmetics Uganda, beauty products Uganda, makeup Uganda, skincare Uganda, perfumes Uganda, hair care Uganda, beauty store Uganda, cosmetics Kampala, makeup store Uganda"
         url="https://daxxshop.com/cosmetics"

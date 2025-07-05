@@ -113,7 +113,7 @@ const Index = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Store",
-    "name": "Esale Uganda",
+    "name": "E-Sale Uganda",
     "description": "Uganda's premier online marketplace for gadgets, fashion, cosmetics, accessories, and property",
     "url": "https://esaleuganda.com",
     "logo": "https://esaleuganda.com/images/logo.png",
@@ -130,9 +130,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0">
       <SEOHead 
-        title="Esale Uganda - Quality Gadgets, Fashion, Cosmetics & Property | Uganda's Premier Online Store"
-        description="Shop premium gadgets, trendy fashion, beauty cosmetics, stylish accessories, and quality properties at Esale Uganda. Best prices, fast delivery, and excellent customer service. Your trusted online marketplace."
-        keywords="Uganda online shop, gadgets Uganda, fashion Uganda, cosmetics Uganda, accessories Uganda, property Uganda, electronics Kampala, clothing store Uganda, beauty products Uganda, mobile phones Uganda, laptops Uganda, real estate Uganda, Esale Uganda"
+        title="E-Sale Uganda - Quality Gadgets, Fashion, Cosmetics & Property | Uganda's Premier Online Store"
+        description="Shop premium gadgets, trendy fashion, beauty cosmetics, stylish accessories, and quality properties at E-Sale Uganda. Best prices, fast delivery, and excellent customer service. Your trusted online marketplace."
+        keywords="Uganda online shop, gadgets Uganda, fashion Uganda, cosmetics Uganda, accessories Uganda, property Uganda, electronics Kampala, clothing store Uganda, beauty products Uganda, mobile phones Uganda, laptops Uganda, real estate Uganda, E-Sale Uganda"
         url="https://esaleuganda.com"
       />
       

@@ -29,7 +29,7 @@ const Navigation = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-2 text-sm">
             <div className="text-gray-300">
-              Welcome to Esale Uganda - Your trusted marketplace
+              Welcome to E-Sale Uganda - Your trusted marketplace
             </div>
             <div className="flex items-center space-x-4">
               <button
@@ -55,11 +55,11 @@ const Navigation = () => {
               <Link to="/" className="flex items-center space-x-3">
                 <img 
                   src="/images/logo.png" 
-                  alt="Esale Uganda Logo" 
+                  alt="E-Sale Uganda Logo" 
                   className="h-10 w-10"
                 />
                 <h1 className="text-3xl md:text-4xl font-bold text-white font-playfair bg-gradient-to-r from-white to-orange-200 bg-clip-text text-transparent tracking-wide">
-                  Esale Uganda
+                  E-Sale Uganda
                 </h1>
               </Link>
             </div>
@@ -140,6 +140,25 @@ const Navigation = () => {
       )}
     </div>
   </nav>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 amazon-dark-blue border-t border-gray-700 z-50">
+        <div className="grid grid-cols-6 gap-0">
+          {navLinks.map(link => {
+            const Icon = link.icon;
+            return (
+              <Link
+                key={link.name}
+                to={link.href}
+                className="flex flex-col items-center justify-center py-1.5 px-1 text-gray-300 hover:text-white transition-colors min-h-[60px]"
+              >
+                <Icon className="h-3.5 w-3.5 mb-0.5" />
+                <span className="text-[10px] font-medium leading-tight text-center">{link.name}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
 
       {/* Cart Sidebar */}
       <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />

@@ -37,7 +37,7 @@ const FashionPage = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "CollectionPage", 
-    "name": "Fashion Collection - Esale Uganda",
+    "name": "Fashion Collection - E-Sale Uganda",
     "description": "Trendy fashion, clothing, shoes, and style accessories for men and women in Uganda",
     "url": "https://daxxshop.com/fashion",
     "mainEntity": {
@@ -73,7 +73,7 @@ const FashionPage = () => {
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0">
       <SEOHead
-        title="Fashion Collection & Clothing | Esale Uganda - Trendy Clothes, Shoes & Style"
+        title="Fashion Collection & Clothing | E-Sale Uganda - Trendy Clothes, Shoes & Style"
         description="Shop trendy fashion and clothing in Uganda. Men's and women's fashion, shoes, dresses, shirts, trousers, and style accessories. Latest fashion trends at affordable prices."
         keywords="fashion Uganda, clothing Uganda, men fashion Uganda, women fashion Uganda, shoes Uganda, dresses Uganda, shirts Uganda, style Uganda, fashion Kampala, clothing store Uganda"
         url="https://daxxshop.com/fashion"
