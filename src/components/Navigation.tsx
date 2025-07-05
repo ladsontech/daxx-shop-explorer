@@ -65,12 +65,12 @@ const Navigation = () => {
             </div>
 
             {/* Desktop Navigation Links */}
-            <div className="hidden md:flex items-center space-x-1">
+            <div className="hidden sm:flex items-center space-x-1">
               {navLinks.map(link => (
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="text-white hover:bg-gray-700 px-3 py-2 text-sm font-medium transition-colors rounded"
+                  className="text-white hover:bg-gray-700 px-2 py-2 text-xs sm:text-sm font-medium transition-colors rounded"
                 >
                   {link.name}
                 </Link>
@@ -103,62 +103,43 @@ const Navigation = () => {
               {/* Mobile menu button */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-2 text-white hover:bg-gray-700 rounded"
+                className="sm:hidden p-2 text-white hover:bg-gray-700 rounded"
               >
                 {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
             </div>
           </div>
 
-          {/* Mobile Navigation Overlay */}
-          {isMenuOpen && (
-            <div className="md:hidden border-t border-gray-700">
-              <div className="px-2 pt-2 pb-3 space-y-1">
-                {navLinks.map(link => (
-                  <Link
-                    key={link.name}
-                    to={link.href}
-                    className="block px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-                {/* Mobile Contact Link */}
-                <button
-                  onClick={() => {
-                    handleCallClick();
-                    setIsMenuOpen(false);
-                  }}
-                  className="w-full text-left px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded flex items-center space-x-2"
-                >
-                  <Phone className="h-4 w-4" />
-                  <span>Call +256 751 173504</span>
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
-
-      {/* Mobile Bottom Navigation - Optimized for better responsiveness */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 amazon-dark-blue border-t border-gray-700 z-50">
-        <div className="grid grid-cols-6 gap-0">
-          {navLinks.map(link => {
-            const Icon = link.icon;
-            return (
+      {/* Mobile Navigation Overlay */}
+      {isMenuOpen && (
+        <div className="sm:hidden border-t border-gray-700">
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            {navLinks.map(link => (
               <Link
                 key={link.name}
                 to={link.href}
-                className="flex flex-col items-center justify-center py-1.5 px-1 text-gray-300 hover:text-white transition-colors min-h-[60px]"
+                className="block px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded"
+                onClick={() => setIsMenuOpen(false)}
               >
-                <Icon className="h-3.5 w-3.5 mb-0.5" />
-                <span className="text-[10px] font-medium leading-tight text-center">{link.name}</span>
+                {link.name}
               </Link>
-            );
-          })}
+            ))}
+            {/* Mobile Contact Link */}
+            <button
+              onClick={() => {
+                handleCallClick();
+                setIsMenuOpen(false);
+              }}
+              className="w-full text-left px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded flex items-center space-x-2"
+            >
+              <Phone className="h-4 w-4" />
+              <span>Call +256 751 173504</span>
+            </button>
+          </div>
         </div>
-      </div>
+      )}
+    </div>
+  </nav>
 
       {/* Cart Sidebar */}
       <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
