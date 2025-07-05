@@ -71,7 +71,7 @@ const CosmeticsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-16 md:pb-0">
+    <div className="min-h-screen bg-white pb-16 md:pb-0 mobile-contained">
       <SEOHead
         title="Beauty & Cosmetics | E-Sale Uganda - Makeup, Skincare & Personal Care"
         description="Shop premium beauty products and cosmetics in Uganda. Makeup, skincare, perfumes, hair care, and personal care items. Quality beauty products at affordable prices."

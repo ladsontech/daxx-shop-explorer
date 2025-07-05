@@ -66,7 +66,7 @@ const PropertyDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white pb-16 md:pb-0">
+      <div className="min-h-screen bg-white pb-16 md:pb-0 mobile-contained">
         <Navigation />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16 flex items-center justify-center">
           <div className="text-center">
@@ -81,7 +81,7 @@ const PropertyDetail = () => {
 
   if (error || !property) {
     return (
-      <div className="min-h-screen bg-white pb-16 md:pb-0">
+      <div className="min-h-screen bg-white pb-16 md:pb-0 mobile-contained">
         <Navigation />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16">
           <div className="text-center">
@@ -156,7 +156,7 @@ const PropertyDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white pb-16 md:pb-0">
+    <div className="min-h-screen bg-white pb-16 md:pb-0 mobile-contained">
       <SEOHead
         title={propertyTitle}
         description={propertyDescription}

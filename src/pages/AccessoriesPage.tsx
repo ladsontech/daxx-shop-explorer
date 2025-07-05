@@ -71,7 +71,7 @@ const AccessoriesPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-16 md:pb-0">
+    <div className="min-h-screen bg-white pb-16 md:pb-0 mobile-contained">
       <SEOHead
         title="Premium Accessories & Tech Gadgets | E-Sale Uganda - Cases, Chargers & More"
         description="Shop quality accessories in Uganda. Phone cases, chargers, bags, watches, tech accessories, and gadget add-ons. Enhance your devices with premium accessories."

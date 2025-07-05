@@ -77,7 +77,7 @@ const PropertyPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-16 md:pb-0">
+    <div className="min-h-screen bg-white pb-16 md:pb-0 mobile-contained">
       <SEOHead
         title="Property Listings Uganda | Houses, Apartments & Land for Sale/Rent - E-Sale Uganda"
         description="Find houses, apartments, land, and commercial properties for sale and rent in Uganda. Prime locations in Kampala, Entebbe, Jinja and across Uganda. Best property deals."

@@ -71,7 +71,7 @@ const GadgetsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-16 md:pb-0">
+    <div className="min-h-screen bg-white pb-16 md:pb-0 mobile-contained">
       <SEOHead
         title="Latest Gadgets & Electronics | E-Sale Uganda - Smartphones, Laptops & Tech"
         description="Shop premium gadgets and electronics in Uganda. Find smartphones, laptops, tablets, smartwatches, headphones, and tech accessories at best prices. Fast delivery across Uganda."

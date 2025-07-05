@@ -128,7 +128,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white pb-16 md:pb-0">
+    <div className="min-h-screen bg-white pb-16 md:pb-0 mobile-contained">
       <SEOHead 
         title="E-Sale Uganda - Quality Gadgets, Fashion, Cosmetics & Property | Uganda's Premier Online Store"
         description="Shop premium gadgets, trendy fashion, beauty cosmetics, stylish accessories, and quality properties at E-Sale Uganda. Best prices, fast delivery, and excellent customer service. Your trusted online marketplace."

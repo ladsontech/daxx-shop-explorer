@@ -71,7 +71,7 @@ const FashionPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-16 md:pb-0">
+    <div className="min-h-screen bg-white pb-16 md:pb-0 mobile-contained">
       <SEOHead
         title="Fashion Collection & Clothing | E-Sale Uganda - Trendy Clothes, Shoes & Style"
         description="Shop trendy fashion and clothing in Uganda. Men's and women's fashion, shoes, dresses, shirts, trousers, and style accessories. Latest fashion trends at affordable prices."
