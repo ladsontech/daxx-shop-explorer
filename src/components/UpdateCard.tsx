@@ -11,7 +11,7 @@ const UpdateCard: React.FC<UpdateCardProps> = ({ update }) => {
 
   return (
     <div className="bg-white rounded-lg amazon-shadow hover:shadow-lg transition-all duration-300 overflow-hidden">
-      <div className="aspect-[3/1] md:aspect-[4/1] lg:aspect-[5/1]">
+      <div className="aspect-[2/1] md:aspect-[48/24] lg:aspect-[3/1]">
         <img
           src={update.image_url}
           alt="Update banner"
