@@ -43,7 +43,7 @@ const Hero = () => {
 
   if (isLoading) {
     return (
-      <div className="h-64 md:h-96 bg-gray-100 flex items-center justify-center">
+      <div className="w-full aspect-[2/1] bg-gray-100 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Loading updates...</p>
@@ -54,7 +54,7 @@ const Hero = () => {
 
   if (publishedUpdates.length === 0) {
     return (
-      <div className="h-64 md:h-96 bg-gradient-to-r from-blue-600 to-indigo-700 flex items-center justify-center">
+      <div className="w-full aspect-[2/1] bg-gradient-to-r from-blue-600 to-indigo-700 flex items-center justify-center">
         <div className="text-center text-white">
           <h1 className="text-2xl md:text-4xl font-bold mb-4">
             Welcome to Esale Uganda
@@ -68,7 +68,7 @@ const Hero = () => {
   }
 
   return (
-    <div className="relative h-64 md:h-96 overflow-hidden amazon-shadow">
+    <div className="relative w-full aspect-[2/1] overflow-hidden amazon-shadow">
       {publishedUpdates.map((update, index) => (
         <div
           key={update.id}
