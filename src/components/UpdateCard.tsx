@@ -11,10 +11,10 @@ const UpdateCard: React.FC<UpdateCardProps> = ({ update }) => {
 
   return (
     <div className="bg-white rounded-lg amazon-shadow hover:shadow-lg transition-all duration-300 overflow-hidden">
-      <div className="aspect-video">
+      <div className="aspect-[3/1] md:aspect-[4/1] lg:aspect-[5/1]">
         <img
           src={update.image_url}
-          alt="Update poster"
+          alt="Update banner"
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
