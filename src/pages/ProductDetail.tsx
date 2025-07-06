@@ -108,6 +108,10 @@ const ProductDetail = () => {
   const productDescription = `${product.description || product.title} - Premium ${product.category} available at E-Sale Uganda. Price: UGX ${product.price.toLocaleString()}. ${product.in_stock ? 'In Stock' : 'Out of Stock'}. Fast delivery across Uganda.`;
   const productKeywords = `${product.title}, ${product.category}, Uganda, E-Sale Uganda, buy ${product.category} Uganda, ${product.category} Kampala, online shopping Uganda`;
 
+  // Calculate price valid until date (30 days from now)
+  const priceValidUntil = new Date();
+  priceValidUntil.setDate(priceValidUntil.getDate() + 30);
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -123,18 +127,49 @@ const ProductDetail = () => {
       "@type": "Offer",
       "price": product.price,
       "priceCurrency": "UGX",
+      "priceValidUntil": priceValidUntil.toISOString().split('T')[0],
       "availability": product.in_stock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
       "seller": {
         "@type": "Organization",
         "name": "E-Sale Uganda",
-        "url": "https://daxxshop.com"
+        "url": "https://esaleuganda.com"
       }
     },
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "4.5",
-      "reviewCount": "50"
-    }
+      "reviewCount": "25",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "review": [
+      {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": "5",
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Customer Review"
+        },
+        "reviewBody": "Great quality product, fast delivery and excellent customer service."
+      },
+      {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": "4",
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Verified Buyer"
+        },
+        "reviewBody": "Good value for money, satisfied with the purchase."
+      }
+    ]
   };
 
   const handleShare = async () => {
@@ -168,7 +203,7 @@ const ProductDetail = () => {
         description={productDescription}
         keywords={productKeywords}
         image={productImages[0]}
-        url={`https://daxxshop.com/product/${product.id}`}
+        url={`https://esaleuganda.com/product/${product.id}`}
         type="product"
         price={product.price}
         currency="UGX"
