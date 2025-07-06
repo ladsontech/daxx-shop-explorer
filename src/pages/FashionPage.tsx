@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
@@ -10,12 +11,22 @@ import { Helmet } from 'react-helmet-async';
 
 const FashionPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const { data: fashion, isLoading } = useProducts('fashion');
+  const [activeCategory, setActiveCategory] = useState('all');
+  const { data: fashion, isLoading: fashionLoading } = useProducts('fashion');
+  const { data: cosmetics, isLoading: cosmeticsLoading } = useProducts('cosmetics');
 
-  const filteredFashion = fashion?.filter(product => 
-    product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.description?.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || [];
+  const isLoading = fashionLoading || cosmeticsLoading;
+
+  // Combine fashion and cosmetics
+  const allProducts = [...(fashion || []), ...(cosmetics || [])];
+
+  const filteredProducts = allProducts?.filter(product => {
+    const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    if (activeCategory === 'all') return matchesSearch;
+    return matchesSearch && product.section === activeCategory;
+  }) || [];
 
   const formatProductsForComponent = (products: any[]) => {
     return products?.map(product => ({
@@ -32,18 +43,18 @@ const FashionPage = () => {
     })) || [];
   };
 
-  const formattedFashion = formatProductsForComponent(filteredFashion);
+  const formattedProducts = formatProductsForComponent(filteredProducts);
 
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "CollectionPage", 
-    "name": "Fashion Collection - E-Sale Uganda",
-    "description": "Trendy fashion, clothing, shoes, and style accessories for men and women in Uganda",
+    "name": "Fashion & Beauty Collection - E-Sale Uganda",
+    "description": "Trendy fashion, clothing, shoes, cosmetics and beauty products for men and women in Uganda",
     "url": "https://daxxshop.com/fashion",
     "mainEntity": {
       "@type": "ItemList",
-      "numberOfItems": formattedFashion.length,
-      "itemListElement": formattedFashion.slice(0, 10).map((product, index) => ({
+      "numberOfItems": formattedProducts.length,
+      "itemListElement": formattedProducts.slice(0, 10).map((product, index) => ({
         "@type": "Product",
         "position": index + 1,
         "name": product.title,
@@ -64,7 +75,7 @@ const FashionPage = () => {
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Loading fashion items...</p>
+          <p className="text-gray-600">Loading products...</p>
         </div>
       </div>
     );
@@ -73,9 +84,9 @@ const FashionPage = () => {
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0 mobile-contained">
       <SEOHead
-        title="Fashion Collection & Clothing | E-Sale Uganda - Trendy Clothes, Shoes & Style"
-        description="Shop trendy fashion and clothing in Uganda. Men's and women's fashion, shoes, dresses, shirts, trousers, and style accessories. Latest fashion trends at affordable prices."
-        keywords="fashion Uganda, clothing Uganda, men fashion Uganda, women fashion Uganda, shoes Uganda, dresses Uganda, shirts Uganda, style Uganda, fashion Kampala, clothing store Uganda"
+        title="Fashion & Beauty Collection | E-Sale Uganda - Trendy Clothes, Shoes, Cosmetics & Style"
+        description="Shop trendy fashion, clothing, cosmetics and beauty products in Uganda. Men's and women's fashion, shoes, dresses, shirts, makeup, skincare and style accessories. Latest trends at affordable prices."
+        keywords="fashion Uganda, clothing Uganda, men fashion Uganda, women fashion Uganda, shoes Uganda, dresses Uganda, shirts Uganda, cosmetics Uganda, beauty products Uganda, makeup Uganda, style Uganda, fashion Kampala, clothing store Uganda"
         url="https://daxxshop.com/fashion"
       />
       
@@ -92,18 +103,54 @@ const FashionPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Fashion Collection
+              Fashion & Beauty
             </h1>
             <p className="text-xl text-gray-600 mb-8">
-              Style meets comfort in our curated fashion line - Trendy Clothes, Shoes & Accessories
+              Style meets beauty in our curated collection - Trendy Clothes, Shoes, Cosmetics & Accessories
             </p>
           </div>
           
+          {/* Category Filter Tabs */}
+          <div className="flex justify-center mb-6">
+            <div className="flex bg-white rounded-lg p-1 shadow-sm border">
+              <button
+                onClick={() => setActiveCategory('all')}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                  activeCategory === 'all'
+                    ? 'bg-purple-500 text-white'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                All Products
+              </button>
+              <button
+                onClick={() => setActiveCategory('fashion')}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                  activeCategory === 'fashion'
+                    ? 'bg-purple-500 text-white'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Fashion
+              </button>
+              <button
+                onClick={() => setActiveCategory('cosmetics')}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                  activeCategory === 'cosmetics'
+                    ? 'bg-purple-500 text-white'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Cosmetics
+              </button>
+            </div>
+          </div>
+
           {/* Search Bar */}
           <div className="max-w-2xl mx-auto relative">
             <input
               type="text"
-              placeholder="Search fashion items..."
+              placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-3 border border-gray-300/50 rounded-lg bg-white/90 backdrop-blur-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm text-lg"
@@ -116,16 +163,16 @@ const FashionPage = () => {
       {/* Products Grid */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {formattedFashion.length > 0 ? (
+          {formattedProducts.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {formattedFashion.map((product) => (
+              {formattedProducts.map((product) => (
                 <ProductCard key={product.id} {...product} />
               ))}
             </div>
           ) : (
             <div className="text-center py-12">
               <p className="text-gray-600 text-lg">
-                {searchQuery ? 'No fashion items found matching your search.' : 'No fashion items available at the moment.'}
+                {searchQuery ? 'No products found matching your search.' : 'No products available at the moment.'}
               </p>
             </div>
           )}

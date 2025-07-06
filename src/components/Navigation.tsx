@@ -1,8 +1,17 @@
+
 import React, { useState } from 'react';
-import { ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Palette, Shirt, Building, Phone } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Palette, Shirt, Building, Phone, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import Cart from './Cart';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from './ui/navigation-menu';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,11 +20,20 @@ const Navigation = () => {
 
   const navLinks = [
     { name: 'Home', href: '/', icon: Home },
-    { name: 'Gadgets', href: '/gadgets', icon: Smartphone },
-    { name: 'Accessories', href: '/accessories', icon: Headphones },
-    { name: 'Property', href: '/property', icon: Building },
-    { name: 'Cosmetics', href: '/cosmetics', icon: Palette },
-    { name: 'Fashion', href: '/fashion', icon: Shirt }
+    { name: 'Gadgets', href: '/gadgets', icon: Smartphone, 
+      submenu: [
+        { name: 'All Gadgets', href: '/gadgets' },
+        { name: 'Accessories', href: '/accessories' }
+      ]
+    },
+    {
+      name: 'Fashion', href: '/fashion', icon: Shirt,
+      submenu: [
+        { name: 'All Fashion', href: '/fashion' },
+        { name: 'Cosmetics', href: '/cosmetics' }
+      ]
+    },
+    { name: 'Property', href: '/property', icon: Building }
   ];
 
   const handleCallClick = () => {
@@ -64,17 +82,46 @@ const Navigation = () => {
               </Link>
             </div>
 
-            {/* Desktop Navigation Links */}
+            {/* Desktop Navigation Links with Dropdown Menus */}
             <div className="hidden sm:flex items-center space-x-1">
-              {navLinks.map(link => (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className="text-white hover:bg-gray-700 px-2 py-2 text-xs sm:text-sm font-medium transition-colors rounded"
-                >
-                  {link.name}
-                </Link>
-              ))}
+              <NavigationMenu>
+                <NavigationMenuList>
+                  {navLinks.map(link => (
+                    <NavigationMenuItem key={link.name}>
+                      {link.submenu ? (
+                        <>
+                          <NavigationMenuTrigger className="text-white hover:bg-gray-700 px-2 py-2 text-xs sm:text-sm font-medium transition-colors rounded bg-transparent">
+                            {link.name}
+                          </NavigationMenuTrigger>
+                          <NavigationMenuContent>
+                            <div className="w-48 p-2">
+                              {link.submenu.map(sublink => (
+                                <NavigationMenuLink key={sublink.name} asChild>
+                                  <Link
+                                    to={sublink.href}
+                                    className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded transition-colors"
+                                  >
+                                    {sublink.name}
+                                  </Link>
+                                </NavigationMenuLink>
+                              ))}
+                            </div>
+                          </NavigationMenuContent>
+                        </>
+                      ) : (
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to={link.href}
+                            className="text-white hover:bg-gray-700 px-2 py-2 text-xs sm:text-sm font-medium transition-colors rounded"
+                          >
+                            {link.name}
+                          </Link>
+                        </NavigationMenuLink>
+                      )}
+                    </NavigationMenuItem>
+                  ))}
+                </NavigationMenuList>
+              </NavigationMenu>
             </div>
 
             {/* Right Icons */}
@@ -110,53 +157,117 @@ const Navigation = () => {
             </div>
           </div>
 
-      {/* Mobile Navigation Overlay */}
-      {isMenuOpen && (
-        <div className="sm:hidden border-t border-gray-700">
-          <div className="px-2 pt-2 pb-3 space-y-1">
-            {navLinks.map(link => (
-              <Link
-                key={link.name}
-                to={link.href}
-                className="block px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))}
-            {/* Mobile Contact Link */}
-            <button
-              onClick={() => {
-                handleCallClick();
-                setIsMenuOpen(false);
-              }}
-              className="w-full text-left px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded flex items-center space-x-2"
-            >
-              <Phone className="h-4 w-4" />
-              <span>Call +256 751 173504</span>
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  </nav>
+          {/* Mobile Navigation Overlay */}
+          {isMenuOpen && (
+            <div className="sm:hidden border-t border-gray-700">
+              <div className="px-2 pt-2 pb-3 space-y-1">
+                <Link
+                  to="/"
+                  className="block px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Home
+                </Link>
+                
+                {/* Gadgets with Accessories submenu */}
+                <div>
+                  <Link
+                    to="/gadgets"
+                    className="block px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Gadgets
+                  </Link>
+                  <Link
+                    to="/accessories"
+                    className="block px-6 py-2 text-gray-300 hover:bg-gray-700 transition-colors rounded text-sm"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    → Accessories
+                  </Link>
+                </div>
 
-      {/* Mobile Bottom Navigation */}
+                {/* Fashion with Cosmetics submenu */}
+                <div>
+                  <Link
+                    to="/fashion"
+                    className="block px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Fashion
+                  </Link>
+                  <Link
+                    to="/cosmetics"
+                    className="block px-6 py-2 text-gray-300 hover:bg-gray-700 transition-colors rounded text-sm"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    → Cosmetics
+                  </Link>
+                </div>
+
+                <Link
+                  to="/property"
+                  className="block px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Property
+                </Link>
+
+                {/* Mobile Contact Link */}
+                <button
+                  onClick={() => {
+                    handleCallClick();
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded flex items-center space-x-2"
+                >
+                  <Phone className="h-4 w-4" />
+                  <span>Call +256 751 173504</span>
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </nav>
+
+      {/* Mobile Bottom Navigation - Simplified */}
       <div className="sm:hidden fixed bottom-0 left-0 right-0 amazon-dark-blue border-t border-gray-700 z-50">
-        <div className="grid grid-cols-6 gap-0">
-          {navLinks.map(link => {
-            const Icon = link.icon;
-            return (
-              <Link
-                key={link.name}
-                to={link.href}
-                className="flex flex-col items-center justify-center py-1.5 px-1 text-gray-300 hover:text-white transition-colors min-h-[60px]"
-              >
-                <Icon className="h-3.5 w-3.5 mb-0.5" />
-                <span className="text-[10px] font-medium leading-tight text-center">{link.name}</span>
-              </Link>
-            );
-          })}
+        <div className="grid grid-cols-4 gap-0">
+          {/* Home */}
+          <Link
+            to="/"
+            className="flex flex-col items-center justify-center py-2 px-2 text-gray-300 hover:text-white transition-colors min-h-[60px]"
+          >
+            <Home className="h-4 w-4 mb-1" />
+            <span className="text-[10px] font-medium leading-tight text-center">Home</span>
+          </Link>
+
+          {/* Gadgets (includes Accessories) */}
+          <Link
+            to="/gadgets"
+            className="flex flex-col items-center justify-center py-2 px-2 text-gray-300 hover:text-white transition-colors min-h-[60px]"
+          >
+            <Smartphone className="h-4 w-4 mb-1" />
+            <span className="text-[10px] font-medium leading-tight text-center">Gadgets</span>
+          </Link>
+
+          {/* Fashion (includes Cosmetics) */}
+          <Link
+            to="/fashion"
+            className="flex flex-col items-center justify-center py-2 px-2 text-gray-300 hover:text-white transition-colors min-h-[60px]"
+          >
+            <Shirt className="h-4 w-4 mb-1" />
+            <span className="text-[10px] font-medium leading-tight text-center">Fashion</span>
+          </Link>
+
+          {/* Property */}
+          <Link
+            to="/property"
+            className="flex flex-col items-center justify-center py-2 px-2 text-gray-300 hover:text-white transition-colors min-h-[60px]"
+          >
+            <Building className="h-4 w-4 mb-1" />
+            <span className="text-[10px] font-medium leading-tight text-center">Property</span>
+          </Link>
         </div>
       </div>
 

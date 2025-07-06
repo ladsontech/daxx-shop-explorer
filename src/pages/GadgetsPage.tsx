@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
@@ -7,15 +8,26 @@ import SEOHead from '../components/SEOHead';
 import { useProducts } from '../hooks/useProducts';
 import { Search, Loader2 } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
 
 const GadgetsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const { data: gadgets, isLoading } = useProducts('gadgets');
+  const [activeCategory, setActiveCategory] = useState('all');
+  const { data: gadgets, isLoading: gadgetsLoading } = useProducts('gadgets');
+  const { data: accessories, isLoading: accessoriesLoading } = useProducts('accessories');
 
-  const filteredGadgets = gadgets?.filter(product => 
-    product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.description?.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || [];
+  const isLoading = gadgetsLoading || accessoriesLoading;
+
+  // Combine gadgets and accessories
+  const allProducts = [...(gadgets || []), ...(accessories || [])];
+
+  const filteredProducts = allProducts?.filter(product => {
+    const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    if (activeCategory === 'all') return matchesSearch;
+    return matchesSearch && product.section === activeCategory;
+  }) || [];
 
   const formatProductsForComponent = (products: any[]) => {
     return products?.map(product => ({
@@ -32,18 +44,18 @@ const GadgetsPage = () => {
     })) || [];
   };
 
-  const formattedGadgets = formatProductsForComponent(filteredGadgets);
+  const formattedProducts = formatProductsForComponent(filteredProducts);
 
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "Latest Gadgets - E-Sale Uganda",
-    "description": "Premium gadgets, electronics, smartphones, laptops, and tech accessories in Uganda",
+    "name": "Latest Gadgets & Accessories - E-Sale Uganda",
+    "description": "Premium gadgets, electronics, smartphones, laptops, tech accessories and more in Uganda",
     "url": "https://daxxshop.com/gadgets",
     "mainEntity": {
       "@type": "ItemList",
-      "numberOfItems": formattedGadgets.length,
-      "itemListElement": formattedGadgets.slice(0, 10).map((product, index) => ({
+      "numberOfItems": formattedProducts.length,
+      "itemListElement": formattedProducts.slice(0, 10).map((product, index) => ({
         "@type": "Product",
         "position": index + 1,
         "name": product.title,
@@ -64,7 +76,7 @@ const GadgetsPage = () => {
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Loading gadgets...</p>
+          <p className="text-gray-600">Loading products...</p>
         </div>
       </div>
     );
@@ -73,8 +85,8 @@ const GadgetsPage = () => {
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0 mobile-contained">
       <SEOHead
-        title="Latest Gadgets & Electronics | E-Sale Uganda - Smartphones, Laptops & Tech"
-        description="Shop premium gadgets and electronics in Uganda. Find smartphones, laptops, tablets, smartwatches, headphones, and tech accessories at best prices. Fast delivery across Uganda."
+        title="Latest Gadgets, Electronics & Accessories | E-Sale Uganda - Smartphones, Laptops & Tech"
+        description="Shop premium gadgets, electronics and accessories in Uganda. Find smartphones, laptops, tablets, smartwatches, headphones, and tech accessories at best prices. Fast delivery across Uganda."
         keywords="gadgets Uganda, electronics Uganda, smartphones Uganda, laptops Uganda, tablets Uganda, tech accessories Uganda, mobile phones Kampala, electronics Kampala, gadgets online Uganda"
         url="https://daxxshop.com/gadgets"
       />
@@ -92,18 +104,54 @@ const GadgetsPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Latest Gadgets & Electronics
+              Gadgets & Accessories
             </h1>
             <p className="text-xl text-gray-600 mb-8">
-              Cutting-edge technology at your fingertips - Smartphones, Laptops, Tablets & More
+              Cutting-edge technology and stylish accessories - Smartphones, Laptops, Tablets & More
             </p>
           </div>
           
+          {/* Category Filter Tabs */}
+          <div className="flex justify-center mb-6">
+            <div className="flex bg-white rounded-lg p-1 shadow-sm border">
+              <button
+                onClick={() => setActiveCategory('all')}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                  activeCategory === 'all'
+                    ? 'bg-blue-500 text-white'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                All Products
+              </button>
+              <button
+                onClick={() => setActiveCategory('gadgets')}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                  activeCategory === 'gadgets'
+                    ? 'bg-blue-500 text-white'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Gadgets
+              </button>
+              <button
+                onClick={() => setActiveCategory('accessories')}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                  activeCategory === 'accessories'
+                    ? 'bg-blue-500 text-white'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Accessories
+              </button>
+            </div>
+          </div>
+
           {/* Search Bar */}
           <div className="max-w-2xl mx-auto relative">
             <input
               type="text"
-              placeholder="Search gadgets..."
+              placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-3 border border-gray-300/50 rounded-lg bg-white/90 backdrop-blur-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm text-lg"
@@ -116,16 +164,16 @@ const GadgetsPage = () => {
       {/* Products Grid */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {formattedGadgets.length > 0 ? (
+          {formattedProducts.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {formattedGadgets.map((product) => (
+              {formattedProducts.map((product) => (
                 <ProductCard key={product.id} {...product} />
               ))}
             </div>
           ) : (
             <div className="text-center py-12">
               <p className="text-gray-600 text-lg">
-                {searchQuery ? 'No gadgets found matching your search.' : 'No gadgets available at the moment.'}
+                {searchQuery ? 'No products found matching your search.' : 'No products available at the moment.'}
               </p>
             </div>
           )}

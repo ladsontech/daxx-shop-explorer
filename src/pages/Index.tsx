@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Navigation from '../components/Navigation';
 import Hero from '../components/Hero';
@@ -53,12 +54,12 @@ const Index = () => {
     })) || [];
   };
 
-  // Balance featured products across all categories
+  // Balance featured products across all categories - increased to show more products
   const getBalancedFeaturedProducts = () => {
     if (!allProducts) return [];
     
     const categories = ['gadgets', 'accessories', 'cosmetics', 'fashion'];
-    const maxPerCategory = 2; // Maximum products per category
+    const maxPerCategory = 4; // Increased from 2 to 4 products per category
     const balancedProducts: any[] = [];
     
     // Get featured products from each category
@@ -71,12 +72,12 @@ const Index = () => {
     });
     
     // If we don't have enough featured products, fill with non-featured products
-    if (balancedProducts.length < 8) {
-      const remainingSlots = 8 - balancedProducts.length;
+    if (balancedProducts.length < 16) { // Increased from 8 to 16
+      const remainingSlots = 16 - balancedProducts.length;
       const usedIds = new Set(balancedProducts.map(p => p.id));
       
       categories.forEach(category => {
-        if (balancedProducts.length >= 8) return;
+        if (balancedProducts.length >= 16) return;
         
         const categoryNonFeatured = allProducts
           .filter(product => 
@@ -93,7 +94,7 @@ const Index = () => {
     // Shuffle the array to avoid predictable ordering
     const shuffled = [...balancedProducts].sort(() => Math.random() - 0.5);
     
-    return shuffled.slice(0, 8); // Limit to 8 products total
+    return shuffled.slice(0, 16); // Increased limit to 16 products total
   };
 
   const featuredProducts = formatProductsForComponent(getBalancedFeaturedProducts());
