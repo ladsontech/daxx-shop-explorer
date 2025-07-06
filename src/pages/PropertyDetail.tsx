@@ -8,7 +8,6 @@ import SEOHead from '../components/SEOHead';
 import PropertyCard from '../components/PropertyCard';
 import { useProperties } from '../hooks/useProperties';
 import { Loader2 } from 'lucide-react';
-import { FormattedText } from '../utils/textFormatter';
 
 const PropertyDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -221,10 +220,7 @@ const PropertyDetail = () => {
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center space-x-2">
                   <MapPin className="h-4 w-4 text-gray-500" />
-                  <FormattedText 
-                    text={property.location}
-                    className="text-xs md:text-sm text-gray-600"
-                  />
+                  <span className="text-xs md:text-sm text-gray-600">{property.location}</span>
                 </div>
                 <button
                   onClick={handleShare}
@@ -235,10 +231,9 @@ const PropertyDetail = () => {
                 </button>
               </div>
               
-              <FormattedText 
-                text={property.title}
-                className="font-bold text-gray-900 mb-3 md:mb-4 text-lg md:text-xl lg:text-2xl leading-tight"
-              />
+              <h1 className="font-bold text-gray-900 mb-3 md:mb-4 text-lg md:text-xl lg:text-2xl leading-tight">
+                {property.title}
+              </h1>
               
               <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 mb-3 md:mb-4 space-y-2 sm:space-y-0">
                 <span className="font-bold text-gray-900 text-xl md:text-2xl">
@@ -253,6 +248,7 @@ const PropertyDetail = () => {
               </div>
             </div>
 
+            {/* Property Features */}
             {(property.bedrooms || property.bathrooms || property.area) && (
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Property Features</h3>
@@ -282,6 +278,7 @@ const PropertyDetail = () => {
               </div>
             )}
 
+            {/* Contact Information */}
             <div className="bg-blue-50 p-4 rounded-lg">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Contact Information</h3>
               <div className="space-y-2">
@@ -317,6 +314,7 @@ const PropertyDetail = () => {
           </div>
         </div>
 
+        {/* Related Properties Section */}
         {formattedRelatedProperties.length > 0 && (
           <section className="mt-12 md:mt-16">
             <div className="mb-6 md:mb-8">
