@@ -1,6 +1,8 @@
+
 import React from 'react';
 import { MapPin, Bed, Bath, Square, Phone, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { FormattedText } from '../utils/textFormatter';
 
 interface PropertyCardProps {
   id: string;
@@ -61,13 +63,17 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         </div>
         
         <div className="p-4">
-          <h3 className="text-lg font-semibold text-gray-800 mb-2">
-            {title}
-          </h3>
+          <FormattedText 
+            text={title}
+            className="text-lg font-semibold text-gray-800 mb-2"
+          />
           
           <div className="flex items-center text-gray-600 mb-2">
             <MapPin className="h-4 w-4 mr-1" />
-            <span className="text-sm">{location}</span>
+            <FormattedText 
+              text={location}
+              className="text-sm"
+            />
           </div>
           
           <div className="text-2xl font-bold text-blue-600 mb-3">
