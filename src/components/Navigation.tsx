@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import Cart from './Cart';
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from './ui/navigation-menu';
+
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const {
     getTotalItems
   } = useCart();
+
   const navLinks = [{
     name: 'Home',
     href: '/',
@@ -44,6 +46,7 @@ const Navigation = () => {
   const handleCallClick = () => {
     window.location.href = 'tel:+256751173504';
   };
+
   return <>
       {/* Top Contact Bar - Desktop Only */}
       <div className="hidden md:block bg-gray-100 border-b border-border">
@@ -72,7 +75,7 @@ const Navigation = () => {
             <div className="flex-shrink-0">
               <Link to="/" className="flex items-center space-x-3">
                 <img src="/images/logo.png" alt="E-Sale Uganda Logo" className="h-8 w-auto max-w-[120px] object-contain" />
-                <h1 className="text-2xl md:text-3xl font-bold font-playfair amazon-orange tracking-wide text-black">
+                <h1 className="text-2xl md:text-3xl font-bold font-playfair tracking-wide text-black">
                   E-Sale Uganda
                 </h1>
               </Link>
@@ -205,4 +208,5 @@ const Navigation = () => {
       <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>;
 };
+
 export default Navigation;
