@@ -1,4 +1,5 @@
 
+
 import React, { useEffect, useState } from 'react';
 
 interface SplashScreenProps {
@@ -25,7 +26,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
             <img 
               src="/images/logo.png" 
               alt="E-Sale Uganda Logo"
-              className="h-16 w-auto max-w-[250px] object-contain"
+              className="h-32 w-auto object-contain"
             />
           </div>
           <p className="text-muted-foreground text-lg">Your trusted marketplace</p>
@@ -41,7 +42,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
           <img 
             src="/images/logo.png" 
             alt="E-Sale Uganda Logo" 
-            className="h-16 w-auto max-w-[250px] object-contain animate-fade-in"
+            className="h-32 w-auto object-contain animate-fade-in"
           />
         </div>
         <p className="text-muted-foreground text-lg animate-fade-in">Your trusted marketplace</p>
@@ -56,3 +57,4 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
 };
 
 export default SplashScreen;
+

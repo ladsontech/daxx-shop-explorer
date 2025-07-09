@@ -77,7 +77,7 @@ const Navigation = () => {
             {/* Logo */}
             <div className="flex-shrink-0">
               <Link to="/" className="flex items-center space-x-3">
-                <img src="/images/logo.png" alt="E-Sale Uganda Logo" className="h-8 w-auto max-w-[120px] object-contain" />
+                <img src="/images/logo.png" alt="E-Sale Uganda Logo" className="h-14 w-auto object-contain" />
                 <h1 className="text-2xl md:text-3xl font-bold font-playfair tracking-wide text-black">
                   E-Sale Uganda
                 </h1>
