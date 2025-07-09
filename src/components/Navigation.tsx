@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Palette, Shirt, Building, Phone, ChevronDown } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Palette, Shirt, Building, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import Cart from './Cart';
@@ -8,7 +8,6 @@ import Cart from './Cart';
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const {
     getTotalItems
   } = useCart();
@@ -20,25 +19,11 @@ const Navigation = () => {
   }, {
     name: 'Gadgets',
     href: '/gadgets',
-    icon: Smartphone,
-    submenu: [{
-      name: 'All Gadgets',
-      href: '/gadgets'
-    }, {
-      name: 'Accessories',
-      href: '/accessories'
-    }]
+    icon: Smartphone
   }, {
     name: 'Fashion',
     href: '/fashion',
-    icon: Shirt,
-    submenu: [{
-      name: 'All Fashion',
-      href: '/fashion'
-    }, {
-      name: 'Cosmetics',
-      href: '/cosmetics'
-    }]
+    icon: Shirt
   }, {
     name: 'Property',
     href: '/property',
@@ -47,14 +32,6 @@ const Navigation = () => {
   
   const handleCallClick = () => {
     window.location.href = 'tel:+256751173504';
-  };
-
-  const toggleDropdown = (linkName: string) => {
-    setActiveDropdown(activeDropdown === linkName ? null : linkName);
-  };
-
-  const closeDropdown = () => {
-    setActiveDropdown(null);
   };
 
   return <>
@@ -91,43 +68,16 @@ const Navigation = () => {
               </Link>
             </div>
 
-            {/* Desktop Navigation Links with Custom Dropdown */}
-            <div className="hidden sm:flex items-center space-x-1 relative">
+            {/* Desktop Navigation Links - Simple Links */}
+            <div className="hidden sm:flex items-center space-x-1">
               {navLinks.map(link => (
-                <div key={link.name} className="relative">
-                  {link.submenu ? (
-                    <div className="relative">
-                      <button
-                        onClick={() => toggleDropdown(link.name)}
-                        className="flex items-center space-x-1 text-foreground hover:bg-muted/20 px-3 py-2 text-sm font-medium transition-colors rounded"
-                      >
-                        <span>{link.name}</span>
-                        <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${activeDropdown === link.name ? 'rotate-180' : ''}`} />
-                      </button>
-                      {activeDropdown === link.name && (
-                        <div className="absolute top-full left-0 mt-1 w-48 bg-white border border-border shadow-lg rounded-md z-[99999] overflow-hidden">
-                          {link.submenu.map(sublink => (
-                            <Link
-                              key={sublink.name}
-                              to={sublink.href}
-                              onClick={closeDropdown}
-                              className="block px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors"
-                            >
-                              {sublink.name}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <Link
-                      to={link.href}
-                      className="text-foreground hover:bg-muted/20 px-3 py-2 text-sm font-medium transition-colors rounded"
-                    >
-                      {link.name}
-                    </Link>
-                  )}
-                </div>
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className="text-foreground hover:bg-muted/20 px-3 py-2 text-sm font-medium transition-colors rounded"
+                >
+                  {link.name}
+                </Link>
               ))}
             </div>
 
@@ -195,14 +145,6 @@ const Navigation = () => {
               </div>
             </div>}
         </div>
-
-        {/* Overlay to close dropdown when clicking outside */}
-        {activeDropdown && (
-          <div 
-            className="fixed inset-0 z-[99998]" 
-            onClick={closeDropdown}
-          />
-        )}
       </nav>
 
       {/* Mobile Bottom Navigation - Simplified */}

@@ -1,9 +1,10 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import Navigation from '../components/Navigation';
 import Hero from '../components/Hero';
 import SearchBar from '../components/SearchBar';
 import CategorySection from '../components/CategorySection';
+import FilterSection from '../components/FilterSection';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
 import SEOHead from '../components/SEOHead';
@@ -14,6 +15,7 @@ import { Loader2, Star } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
 const Index = () => {
+  const [activeFilter, setActiveFilter] = useState('all');
   
   const {
     data: allProducts,
@@ -97,8 +99,27 @@ const Index = () => {
     return shuffled.slice(0, 16); // Increased limit to 16 products total
   };
 
-  const featuredProducts = formatProductsForComponent(getBalancedFeaturedProducts());
+  // Filter products based on active filter
+  const getFilteredProducts = () => {
+    const allFeatured = getBalancedFeaturedProducts();
+    
+    if (activeFilter === 'all') {
+      return allFeatured;
+    }
+    
+    return allFeatured.filter(product => product.section === activeFilter);
+  };
+
+  const featuredProducts = formatProductsForComponent(getFilteredProducts());
   const formattedProperties = formatPropertiesForComponent(properties || []);
+
+  const productFilters = [
+    { label: 'All Products', value: 'all' },
+    { label: 'Gadgets', value: 'gadgets' },
+    { label: 'Accessories', value: 'accessories' },
+    { label: 'Fashion', value: 'fashion' },
+    { label: 'Cosmetics', value: 'cosmetics' }
+  ];
 
   if (productsLoading || propertiesLoading) {
     return (
@@ -158,6 +179,13 @@ const Index = () => {
         </div>
         <SearchBar />
       </section>
+
+      {/* Filter Section for Products */}
+      <FilterSection
+        activeFilter={activeFilter}
+        onFilterChange={setActiveFilter}
+        filters={productFilters}
+      />
       
       {/* Featured Products Section - Enhanced Mobile Responsiveness */}
       {featuredProducts.length > 0 && (
@@ -168,27 +196,10 @@ const Index = () => {
                 Featured Products
               </h2>
               <p className="text-base md:text-xl text-gray-600 mb-3 md:mb-0">
-                Discover our handpicked selection from all categories
+                {activeFilter === 'all' 
+                  ? 'Discover our handpicked selection from all categories'
+                  : `Browse our ${activeFilter} collection`}
               </p>
-              {/* Category Legend - Hidden on mobile, shown on larger screens */}
-              <div className="hidden md:flex justify-center flex-wrap gap-3 lg:gap-4 mt-4 text-sm text-gray-500">
-                <span className="flex items-center">
-                  <span className="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
-                  Gadgets
-                </span>
-                <span className="flex items-center">
-                  <span className="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
-                  Accessories
-                </span>
-                <span className="flex items-center">
-                  <span className="w-3 h-3 bg-pink-500 rounded-full mr-2"></span>
-                  Cosmetics
-                </span>
-                <span className="flex items-center">
-                  <span className="w-3 h-3 bg-purple-500 rounded-full mr-2"></span>
-                  Fashion
-                </span>
-              </div>
             </div>
             
             {/* Mobile-optimized grid */}
@@ -203,7 +214,7 @@ const Index = () => {
                         className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300" 
                       />
                       {/* Featured star badge */}
-                      <div className="absolute top-1 md:top-2 left-1 md:left-2 amazon-orange text-white p-1 md:p-2 rounded-full shadow-lg">
+                      <div className="absolute top-1 md:top-2 left-1 md:left-2	-orange text-white p-1 md:p-2 rounded-full shadow-lg">
                         <Star className="h-3 w-3 md:h-4 md:w-4 fill-current" />
                       </div>
                       {/* Condition badge for gadgets only */}
