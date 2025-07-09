@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 
 interface SplashScreenProps {
@@ -18,32 +19,36 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
 
   if (!isVisible) {
     return (
-      <div className="fixed inset-0 bg-white flex items-center justify-center z-50 animate-fade-out">
+      <div className="fixed inset-0 bg-background flex items-center justify-center z-50 animate-fade-out">
         <div className="text-center">
-          <img 
-            src="/images/logo.png" 
-            alt="E-Sale Uganda Logo"
-            className="h-24 w-24 mx-auto mb-6"
-          />
-          <h1 className="text-4xl font-bold text-gray-900 mb-2 font-playfair">E-Sale Uganda</h1>
-          <p className="text-gray-600">Your trusted marketplace</p>
+          <div className="mb-6 flex justify-center">
+            <img 
+              src="/images/logo.png" 
+              alt="E-Sale Uganda Logo"
+              className="h-20 w-auto max-w-[200px] object-contain"
+            />
+          </div>
+          <h1 className="text-4xl font-bold text-foreground mb-2 font-playfair amazon-orange">E-Sale Uganda</h1>
+          <p className="text-muted-foreground">Your trusted marketplace</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="fixed inset-0 bg-white flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-background flex items-center justify-center z-50">
       <div className="text-center">
-        <img 
-          src="/images/logo.png" 
-          alt="E-Sale Uganda Logo" 
-          className="h-24 w-24 mx-auto mb-6"
-        />
-        <h1 className="text-4xl font-bold text-gray-900 mb-2 animate-fade-in font-playfair">E-Sale Uganda</h1>
-        <p className="text-gray-600 animate-fade-in">Your trusted marketplace</p>
+        <div className="mb-6 flex justify-center">
+          <img 
+            src="/images/logo.png" 
+            alt="E-Sale Uganda Logo" 
+            className="h-20 w-auto max-w-[200px] object-contain animate-fade-in"
+          />
+        </div>
+        <h1 className="text-4xl font-bold text-foreground mb-2 animate-fade-in font-playfair amazon-orange">E-Sale Uganda</h1>
+        <p className="text-muted-foreground animate-fade-in">Your trusted marketplace</p>
         <div className="mt-8">
-          <div className="inline-block h-2 w-16 bg-gray-200 rounded-full overflow-hidden">
+          <div className="inline-block h-2 w-16 bg-muted rounded-full overflow-hidden">
             <div className="h-full amazon-orange rounded-full animate-[loading_2s_ease-in-out_infinite]"></div>
           </div>
         </div>

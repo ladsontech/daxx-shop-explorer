@@ -43,29 +43,29 @@ const Navigation = () => {
   return (
     <>
       {/* Top Contact Bar - Desktop Only */}
-      <div className="hidden md:block amazon-dark-blue border-b border-gray-700">
+      <div className="hidden md:block amazon-dark-blue border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-2 text-sm">
-            <div className="text-gray-300">
+            <div className="text-muted-foreground">
               Welcome to E-Sale Uganda - Your trusted marketplace
             </div>
             <div className="flex items-center space-x-4">
               <button
                 onClick={handleCallClick}
-                className="flex items-center space-x-2 text-white hover:text-orange-400 transition-colors"
+                className="flex items-center space-x-2 text-primary-foreground hover:text-primary transition-colors"
               >
                 <Phone className="h-4 w-4" />
                 <span className="font-medium">+256 751 173504</span>
               </button>
-              <div className="text-gray-300">|</div>
-              <span className="text-gray-300">support@daxxshop.com</span>
+              <div className="text-muted-foreground">|</div>
+              <span className="text-muted-foreground">support@daxxshop.com</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Main Navigation */}
-      <nav className="amazon-dark-blue shadow-md sticky top-0 z-50 border-b border-gray-700">
+      <nav className="amazon-dark-blue shadow-md sticky top-0 z-50 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -74,9 +74,9 @@ const Navigation = () => {
                 <img 
                   src="/images/logo.png" 
                   alt="E-Sale Uganda Logo" 
-                  className="h-10 w-10"
+                  className="h-8 w-auto max-w-[120px] object-contain"
                 />
-                <h1 className="text-3xl md:text-4xl font-bold text-white font-playfair bg-gradient-to-r from-white to-orange-200 bg-clip-text text-transparent tracking-wide">
+                <h1 className="text-2xl md:text-3xl font-bold text-primary-foreground font-playfair amazon-orange tracking-wide">
                   E-Sale Uganda
                 </h1>
               </Link>
@@ -90,7 +90,7 @@ const Navigation = () => {
                     <NavigationMenuItem key={link.name}>
                       {link.submenu ? (
                         <>
-                          <NavigationMenuTrigger className="text-white hover:bg-gray-700 px-2 py-2 text-xs sm:text-sm font-medium transition-colors rounded bg-transparent">
+                          <NavigationMenuTrigger className="text-primary-foreground hover:bg-muted/20 px-2 py-2 text-xs sm:text-sm font-medium transition-colors rounded bg-transparent">
                             {link.name}
                           </NavigationMenuTrigger>
                           <NavigationMenuContent>
@@ -99,7 +99,7 @@ const Navigation = () => {
                                 <NavigationMenuLink key={sublink.name} asChild>
                                   <Link
                                     to={sublink.href}
-                                    className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded transition-colors"
+                                    className="block px-3 py-2 text-sm text-foreground hover:bg-muted rounded transition-colors"
                                   >
                                     {sublink.name}
                                   </Link>
@@ -112,7 +112,7 @@ const Navigation = () => {
                         <NavigationMenuLink asChild>
                           <Link
                             to={link.href}
-                            className="text-white hover:bg-gray-700 px-2 py-2 text-xs sm:text-sm font-medium transition-colors rounded"
+                            className="text-primary-foreground hover:bg-muted/20 px-2 py-2 text-xs sm:text-sm font-medium transition-colors rounded"
                           >
                             {link.name}
                           </Link>
@@ -129,7 +129,7 @@ const Navigation = () => {
               {/* Desktop Contact Button */}
               <button
                 onClick={handleCallClick}
-                className="hidden md:flex items-center space-x-2 text-white hover:bg-gray-700 px-3 py-2 rounded transition-colors"
+                className="hidden md:flex items-center space-x-2 text-primary-foreground hover:bg-muted/20 px-3 py-2 rounded transition-colors"
               >
                 <Phone className="h-4 w-4" />
                 <span className="text-sm font-medium">Call Us</span>
@@ -137,11 +137,11 @@ const Navigation = () => {
 
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2 text-white hover:bg-gray-700 transition-colors rounded"
+                className="relative p-2 text-primary-foreground hover:bg-muted/20 transition-colors rounded"
               >
                 <ShoppingCart className="h-6 w-6" />
                 {getTotalItems() > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 amazon-orange text-white text-xs rounded-full flex items-center justify-center font-bold">
+                  <span className="absolute -top-1 -right-1 h-5 w-5 amazon-orange text-primary-foreground text-xs rounded-full flex items-center justify-center font-bold">
                     {getTotalItems()}
                   </span>
                 )}
@@ -150,7 +150,7 @@ const Navigation = () => {
               {/* Mobile menu button */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="sm:hidden p-2 text-white hover:bg-gray-700 rounded"
+                className="sm:hidden p-2 text-primary-foreground hover:bg-muted/20 rounded"
               >
                 {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
@@ -159,11 +159,11 @@ const Navigation = () => {
 
           {/* Mobile Navigation Overlay */}
           {isMenuOpen && (
-            <div className="sm:hidden border-t border-gray-700">
+            <div className="sm:hidden border-t border-border">
               <div className="px-2 pt-2 pb-3 space-y-1">
                 <Link
                   to="/"
-                  className="block px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded"
+                  className="block px-3 py-2 text-primary-foreground hover:bg-muted/20 transition-colors rounded"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Home
@@ -173,14 +173,14 @@ const Navigation = () => {
                 <div>
                   <Link
                     to="/gadgets"
-                    className="block px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded"
+                    className="block px-3 py-2 text-primary-foreground hover:bg-muted/20 transition-colors rounded"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Gadgets
                   </Link>
                   <Link
                     to="/accessories"
-                    className="block px-6 py-2 text-gray-300 hover:bg-gray-700 transition-colors rounded text-sm"
+                    className="block px-6 py-2 text-muted-foreground hover:bg-muted/20 transition-colors rounded text-sm"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     → Accessories
@@ -191,14 +191,14 @@ const Navigation = () => {
                 <div>
                   <Link
                     to="/fashion"
-                    className="block px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded"
+                    className="block px-3 py-2 text-primary-foreground hover:bg-muted/20 transition-colors rounded"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Fashion
                   </Link>
                   <Link
                     to="/cosmetics"
-                    className="block px-6 py-2 text-gray-300 hover:bg-gray-700 transition-colors rounded text-sm"
+                    className="block px-6 py-2 text-muted-foreground hover:bg-muted/20 transition-colors rounded text-sm"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     → Cosmetics
@@ -207,7 +207,7 @@ const Navigation = () => {
 
                 <Link
                   to="/property"
-                  className="block px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded"
+                  className="block px-3 py-2 text-primary-foreground hover:bg-muted/20 transition-colors rounded"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Property
@@ -219,7 +219,7 @@ const Navigation = () => {
                     handleCallClick();
                     setIsMenuOpen(false);
                   }}
-                  className="w-full text-left px-3 py-2 text-white hover:bg-gray-700 transition-colors rounded flex items-center space-x-2"
+                  className="w-full text-left px-3 py-2 text-primary-foreground hover:bg-muted/20 transition-colors rounded flex items-center space-x-2"
                 >
                   <Phone className="h-4 w-4" />
                   <span>Call +256 751 173504</span>
@@ -231,12 +231,12 @@ const Navigation = () => {
       </nav>
 
       {/* Mobile Bottom Navigation - Simplified */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 amazon-dark-blue border-t border-gray-700 z-50">
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 amazon-dark-blue border-t border-border z-50">
         <div className="grid grid-cols-4 gap-0">
           {/* Home */}
           <Link
             to="/"
-            className="flex flex-col items-center justify-center py-2 px-2 text-gray-300 hover:text-white transition-colors min-h-[60px]"
+            className="flex flex-col items-center justify-center py-2 px-2 text-muted-foreground hover:text-primary-foreground transition-colors min-h-[60px]"
           >
             <Home className="h-4 w-4 mb-1" />
             <span className="text-[10px] font-medium leading-tight text-center">Home</span>
@@ -245,7 +245,7 @@ const Navigation = () => {
           {/* Gadgets (includes Accessories) */}
           <Link
             to="/gadgets"
-            className="flex flex-col items-center justify-center py-2 px-2 text-gray-300 hover:text-white transition-colors min-h-[60px]"
+            className="flex flex-col items-center justify-center py-2 px-2 text-muted-foreground hover:text-primary-foreground transition-colors min-h-[60px]"
           >
             <Smartphone className="h-4 w-4 mb-1" />
             <span className="text-[10px] font-medium leading-tight text-center">Gadgets</span>
@@ -254,7 +254,7 @@ const Navigation = () => {
           {/* Fashion (includes Cosmetics) */}
           <Link
             to="/fashion"
-            className="flex flex-col items-center justify-center py-2 px-2 text-gray-300 hover:text-white transition-colors min-h-[60px]"
+            className="flex flex-col items-center justify-center py-2 px-2 text-muted-foreground hover:text-primary-foreground transition-colors min-h-[60px]"
           >
             <Shirt className="h-4 w-4 mb-1" />
             <span className="text-[10px] font-medium leading-tight text-center">Fashion</span>
@@ -263,7 +263,7 @@ const Navigation = () => {
           {/* Property */}
           <Link
             to="/property"
-            className="flex flex-col items-center justify-center py-2 px-2 text-gray-300 hover:text-white transition-colors min-h-[60px]"
+            className="flex flex-col items-center justify-center py-2 px-2 text-muted-foreground hover:text-primary-foreground transition-colors min-h-[60px]"
           >
             <Building className="h-4 w-4 mb-1" />
             <span className="text-[10px] font-medium leading-tight text-center">Property</span>
