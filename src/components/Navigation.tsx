@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Palette, Shirt, Building, Phone, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -85,15 +86,15 @@ const Navigation = () => {
 
             {/* Desktop Navigation Links with Dropdown Menus */}
             <div className="hidden sm:flex items-center space-x-1">
-              <NavigationMenu className="z-50">
+              <NavigationMenu className="z-[9999]">
                 <NavigationMenuList>
                   {navLinks.map(link => <NavigationMenuItem key={link.name}>
                       {link.submenu ? <>
                           <NavigationMenuTrigger className="text-foreground hover:bg-muted/20 px-3 py-2 text-sm font-medium transition-colors rounded bg-transparent data-[state=open]:bg-muted/20">
                             {link.name}
                           </NavigationMenuTrigger>
-                          <NavigationMenuContent className="z-50">
-                            <div className="w-48 p-2 bg-white border border-border shadow-lg rounded-md">
+                          <NavigationMenuContent className="z-[9999]">
+                            <div className="w-48 p-2 bg-white border border-border shadow-lg rounded-md z-[9999]">
                               {link.submenu.map(sublink => <NavigationMenuLink key={sublink.name} asChild>
                                   <Link to={sublink.href} className="block px-3 py-2 text-sm text-foreground hover:bg-muted rounded transition-colors">
                                     {sublink.name}
@@ -212,3 +213,4 @@ const Navigation = () => {
 };
 
 export default Navigation;
+
