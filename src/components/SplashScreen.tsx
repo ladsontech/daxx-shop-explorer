@@ -25,11 +25,10 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
             <img 
               src="/images/logo.png" 
               alt="E-Sale Uganda Logo"
-              className="h-20 w-auto max-w-[200px] object-contain"
+              className="h-16 w-auto max-w-[250px] object-contain"
             />
           </div>
-          <h1 className="text-4xl font-bold text-foreground mb-2 font-playfair amazon-orange">E-Sale Uganda</h1>
-          <p className="text-muted-foreground">Your trusted marketplace</p>
+          <p className="text-muted-foreground text-lg">Your trusted marketplace</p>
         </div>
       </div>
     );
@@ -42,11 +41,10 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
           <img 
             src="/images/logo.png" 
             alt="E-Sale Uganda Logo" 
-            className="h-20 w-auto max-w-[200px] object-contain animate-fade-in"
+            className="h-16 w-auto max-w-[250px] object-contain animate-fade-in"
           />
         </div>
-        <h1 className="text-4xl font-bold text-foreground mb-2 animate-fade-in font-playfair amazon-orange">E-Sale Uganda</h1>
-        <p className="text-muted-foreground animate-fade-in">Your trusted marketplace</p>
+        <p className="text-muted-foreground text-lg animate-fade-in">Your trusted marketplace</p>
         <div className="mt-8">
           <div className="inline-block h-2 w-16 bg-muted rounded-full overflow-hidden">
             <div className="h-full amazon-orange rounded-full animate-[loading_2s_ease-in-out_infinite]"></div>
