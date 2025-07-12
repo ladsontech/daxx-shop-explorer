@@ -10,6 +10,15 @@
   "theme_color": "#2563eb",
   "orientation": "portrait-primary",
   "categories": ["shopping", "business", "lifestyle"],
+  "iarc_rating_id": "e84b072d-71de-4d25-b5aa-cb41a3c26c6d",
+  "scope_extensions": [
+    {
+      "origin": "https://esaleuganda.com"
+    },
+    {
+      "origin": "https://www.esaleuganda.com"
+    }
+  ],
   "icons": [
     {
       "src": "/images/icon.png",
@@ -67,10 +76,70 @@
       "icons": [{ "src": "/images/icon.png", "sizes": "96x96" }]
     }
   ],
+  "widgets": [
+    {
+      "name": "Quick Browse",
+      "description": "Quickly browse products and properties",
+      "tag": "quick-browse",
+      "template": "quick-browse-template",
+      "ms_ac_template": "/widgets/quick-browse-template.html",
+      "data": "/widgets/quick-browse-data.json",
+      "type": "application/json",
+      "screenshots": [
+        {
+          "src": "/images/icon.png",
+          "sizes": "512x512",
+          "label": "Quick browse widget showing product categories"
+        }
+      ],
+      "icons": [
+        {
+          "src": "/images/icon.png",
+          "sizes": "72x72"
+        }
+      ],
+      "auth": false,
+      "update": 3600000
+    }
+  ],
   "related_applications": [],
   "prefer_related_applications": false,
+  "protocol_handlers": [
+    {
+      "protocol": "web+esale",
+      "url": "/product?id=%s"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/admin",
+      "accept": {
+        "text/csv": [".csv"],
+        "application/json": [".json"]
+      },
+      "name": "Import products"
+    }
+  ],
+  "share_target": {
+    "action": "/share-target/",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "capture_links": "existing-client-navigate",
   "scope": "/",
   "id": "esale-uganda-marketplace-pwa",
   "lang": "en",
-  "dir": "ltr"
+  "dir": "ltr",
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "handle_links": "auto",
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  }
 }
