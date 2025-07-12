@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { X, Upload, Loader2, Plus } from 'lucide-react';
+import { compressImage } from '@/utils/imageCompression';
 
 interface ImageUploadProps {
   bucket: 'product-images' | 'property-images';
@@ -26,12 +27,16 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     try {
       setUploading(true);
       
-      const fileExt = file.name.split('.').pop();
+      // Compress image before upload
+      const compressedFile = await compressImage(file);
+      console.log(`Original size: ${(file.size / 1024 / 1024).toFixed(2)}MB, Compressed size: ${(compressedFile.size / 1024 / 1024).toFixed(2)}MB`);
+      
+      const fileExt = compressedFile.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
       
       const { data, error } = await supabase.storage
         .from(bucket)
-        .upload(fileName, file);
+        .upload(fileName, compressedFile);
 
       if (error) throw error;
 
@@ -42,7 +47,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       const newImages = [...images, publicUrl];
       onImagesChange(newImages);
       
-      toast.success('Image uploaded successfully!');
+      toast.success('Image uploaded and compressed successfully!');
     } catch (error) {
       console.error('Error uploading image:', error);
       toast.error('Error uploading image');
@@ -86,7 +91,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     }
   };
 
-  const handleFiles = (files: FileList) => {
+  const handleFiles = async (files: FileList) => {
     const remainingSlots = maxImages - images.length;
     const filesToProcess = Math.min(files.length, remainingSlots);
     
@@ -94,18 +99,19 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       toast.error(`Can only upload ${filesToProcess} more image(s). Maximum ${maxImages} images allowed.`);
     }
     
-    Array.from(files).slice(0, filesToProcess).forEach(file => {
+    for (let i = 0; i < filesToProcess; i++) {
+      const file = files[i];
       if (file.type.startsWith('image/')) {
-        // Check file size (max 10MB)
+        // Check file size (max 10MB before compression)
         if (file.size > 10 * 1024 * 1024) {
           toast.error(`File ${file.name} is too large. Maximum size is 10MB.`);
-          return;
+          continue;
         }
-        uploadImage(file);
+        await uploadImage(file);
       } else {
         toast.error(`File ${file.name} is not an image. Please select only image files.`);
       }
-    });
+    }
   };
 
   const handleDrag = (e: React.DragEvent) => {
@@ -174,7 +180,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           {uploading ? (
             <div className="flex flex-col items-center space-y-2">
               <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-              <p className="text-sm text-gray-600">Uploading...</p>
+              <p className="text-sm text-gray-600">Compressing and uploading...</p>
             </div>
           ) : (
             <div className="flex flex-col items-center space-y-2">
@@ -182,7 +188,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               <p className="text-sm text-gray-600">
                 <span className="font-medium text-blue-600">Click to upload</span> or drag and drop
               </p>
-              <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+              <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB (auto-compressed)</p>
               <p className="text-xs text-gray-500">
                 {maxImages - images.length} slot{maxImages - images.length !== 1 ? 's' : ''} remaining
               </p>

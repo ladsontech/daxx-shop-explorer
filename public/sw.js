@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'esale-uganda-v2';
+const CACHE_NAME = 'esale-uganda-v3'; // Updated version
 const urlsToCache = [
   '/',
   '/static/js/bundle.js',
@@ -24,13 +24,56 @@ self.addEventListener('install', function(event) {
   self.skipWaiting();
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - serve from cache with network-first strategy for dynamic content
 self.addEventListener('fetch', function(event) {
+  const url = new URL(event.request.url);
+  
+  // Network-first strategy for API calls and dynamic content
+  if (event.request.url.includes('/api/') || 
+      event.request.url.includes('supabase') ||
+      event.request.method !== 'GET') {
+    event.respondWith(
+      fetch(event.request)
+        .then(function(response) {
+          // Cache successful responses
+          if (response && response.status === 200 && response.type === 'basic') {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then(function(cache) {
+              cache.put(event.request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(function() {
+          // Fallback to cache if network fails
+          return caches.match(event.request);
+        })
+    );
+    return;
+  }
+  
+  // Cache-first strategy for static assets
   event.respondWith(
     caches.match(event.request)
       .then(function(response) {
-        // Return cached version or fetch from network
-        return response || fetch(event.request).then(function(fetchResponse) {
+        // Return cached version if available
+        if (response) {
+          // Still fetch from network to update cache in background
+          fetch(event.request).then(function(fetchResponse) {
+            if (fetchResponse && fetchResponse.status === 200) {
+              const responseClone = fetchResponse.clone();
+              caches.open(CACHE_NAME).then(function(cache) {
+                cache.put(event.request, responseClone);
+              });
+            }
+          }).catch(() => {
+            // Ignore network errors for background updates
+          });
+          return response;
+        }
+        
+        // If not in cache, fetch from network
+        return fetch(event.request).then(function(fetchResponse) {
           // Cache successful responses
           if (fetchResponse && fetchResponse.status === 200) {
             const responseClone = fetchResponse.clone();
@@ -65,17 +108,10 @@ self.addEventListener('activate', function(event) {
   self.clients.claim();
 });
 
-// Background sync for offline actions
+// Background sync for offline actions - Fixed with proper error handling
 self.addEventListener('sync', function(event) {
   if (event.tag === 'background-sync') {
     event.waitUntil(doBackgroundSync());
-  }
-});
-
-// Periodic background sync
-self.addEventListener('periodicsync', function(event) {
-  if (event.tag === 'content-sync') {
-    event.waitUntil(syncContent());
   }
 });
 
@@ -129,6 +165,7 @@ function doBackgroundSync() {
     })
     .catch(error => {
       console.log('Background sync failed:', error);
+      // Don't throw error to prevent unhandled rejection
     });
 }
 
@@ -142,6 +179,7 @@ function syncContent() {
     })
     .catch(error => {
       console.log('Content sync failed:', error);
+      // Don't throw error to prevent unhandled rejection
     });
 }
 

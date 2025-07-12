@@ -1,10 +1,10 @@
-
 import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { X, Upload, Loader2, Image } from 'lucide-react';
+import { compressImage } from '@/utils/imageCompression';
 
 interface UpdateImageUploadProps {
   imageUrl: string | null;
@@ -34,13 +34,17 @@ const UpdateImageUpload: React.FC<UpdateImageUploadProps> = ({
         toast.error('File is too large. Maximum size is 10MB.');
         return;
       }
+
+      // Compress image before upload
+      const compressedFile = await compressImage(file, 1920, 0.85); // Higher quality for landscape images
+      console.log(`Original size: ${(file.size / 1024 / 1024).toFixed(2)}MB, Compressed size: ${(compressedFile.size / 1024 / 1024).toFixed(2)}MB`);
       
-      const fileExt = file.name.split('.').pop();
+      const fileExt = compressedFile.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
       
       const { data, error } = await supabase.storage
         .from('update-images')
-        .upload(fileName, file);
+        .upload(fileName, compressedFile);
 
       if (error) throw error;
 
@@ -49,7 +53,7 @@ const UpdateImageUpload: React.FC<UpdateImageUploadProps> = ({
         .getPublicUrl(data.path);
 
       onImageChange(publicUrl);
-      toast.success('Poster uploaded successfully!');
+      toast.success('Poster uploaded and compressed successfully!');
     } catch (error) {
       console.error('Error uploading image:', error);
       toast.error('Error uploading poster');
@@ -177,7 +181,7 @@ const UpdateImageUpload: React.FC<UpdateImageUploadProps> = ({
         {uploading ? (
           <div className="flex flex-col items-center space-y-3">
             <Loader2 className="h-12 w-12 animate-spin text-blue-500" />
-            <p className="text-lg text-gray-600">Uploading poster...</p>
+            <p className="text-lg text-gray-600">Compressing and uploading poster...</p>
           </div>
         ) : (
           <div className="flex flex-col items-center space-y-3">
@@ -186,7 +190,7 @@ const UpdateImageUpload: React.FC<UpdateImageUploadProps> = ({
               <p className="text-lg text-gray-600">
                 <span className="font-medium text-blue-600">Click to upload</span> or drag and drop
               </p>
-              <p className="text-sm text-gray-500 mt-1">PNG, JPG, GIF up to 10MB</p>
+              <p className="text-sm text-gray-500 mt-1">PNG, JPG, GIF up to 10MB (auto-compressed)</p>
               <p className="text-sm font-medium text-orange-600 mt-2">
                 📐 Landscape format (16:9 ratio) required for best display
               </p>
