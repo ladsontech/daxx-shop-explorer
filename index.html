@@ -165,21 +165,123 @@
         e.preventDefault();
         deferredPrompt = e;
         
-        // Show install button or banner
-        const installButton = document.createElement('button');
-        installButton.textContent = 'Install App';
-        installButton.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:1000;padding:10px 20px;background:#2563eb;color:white;border:none;border-radius:5px;cursor:pointer;';
-        installButton.onclick = function() {
+        // Create install banner that slides down from top
+        const installBanner = document.createElement('div');
+        installBanner.id = 'install-banner';
+        installBanner.innerHTML = `
+          <div style="
+            position: fixed;
+            top: -100px;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            padding: 12px 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: system-ui, -apple-system, sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease-out;
+            border-bottom: 3px solid #047857;
+          " class="install-banner">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span><strong>Install Esale Uganda App</strong> for faster access and offline browsing!</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button id="install-btn" style="
+                background: rgba(255, 255, 255, 0.2);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                color: white;
+                padding: 8px 16px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: 500;
+                font-size: 13px;
+                transition: all 0.2s ease;
+              " onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'">
+                Install
+              </button>
+              <button id="dismiss-btn" style="
+                background: transparent;
+                border: none;
+                color: white;
+                padding: 8px;
+                cursor: pointer;
+                font-size: 18px;
+                line-height: 1;
+                opacity: 0.8;
+                transition: opacity 0.2s ease;
+              " onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">
+                ×
+              </button>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(installBanner);
+        
+        // Animate banner sliding down
+        setTimeout(() => {
+          const banner = document.querySelector('.install-banner');
+          if (banner) {
+            banner.style.top = '0px';
+          }
+        }, 100);
+        
+        // Install button handler
+        document.getElementById('install-btn').onclick = function() {
           deferredPrompt.prompt();
           deferredPrompt.userChoice.then(function(choiceResult) {
             if (choiceResult.outcome === 'accepted') {
               console.log('User accepted the A2HS prompt');
             }
             deferredPrompt = null;
-            document.body.removeChild(installButton);
+            // Animate banner sliding up and remove
+            const banner = document.querySelector('.install-banner');
+            if (banner) {
+              banner.style.top = '-100px';
+              setTimeout(() => {
+                if (document.body.contains(installBanner)) {
+                  document.body.removeChild(installBanner);
+                }
+              }, 300);
+            }
           });
         };
-        document.body.appendChild(installButton);
+        
+        // Dismiss button handler
+        document.getElementById('dismiss-btn').onclick = function() {
+          const banner = document.querySelector('.install-banner');
+          if (banner) {
+            banner.style.top = '-100px';
+            setTimeout(() => {
+              if (document.body.contains(installBanner)) {
+                document.body.removeChild(installBanner);
+              }
+            }, 300);
+          }
+        };
+        
+        // Auto-hide after 10 seconds
+        setTimeout(() => {
+          const banner = document.querySelector('.install-banner');
+          if (banner) {
+            banner.style.top = '-100px';
+            setTimeout(() => {
+              if (document.body.contains(installBanner)) {
+                document.body.removeChild(installBanner);
+              }
+            }, 300);
+          }
+        }, 10000);
       });
 
       // Handle app installation
