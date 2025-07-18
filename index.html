@@ -119,15 +119,19 @@
                 });
               });
 
-              // Register for background sync
-              if ('sync' in window.ServiceWorkerRegistration.prototype) {
-                registration.sync.register('background-sync');
+              // Register for background sync (only if service worker is active)
+              if ('sync' in window.ServiceWorkerRegistration.prototype && registration.active) {
+                registration.sync.register('background-sync').catch(() => {
+                  console.log('Background sync registration failed');
+                });
               }
 
-              // Register for periodic background sync
-              if ('periodicSync' in window.ServiceWorkerRegistration.prototype) {
+              // Register for periodic background sync (only if service worker is active)  
+              if ('periodicSync' in window.ServiceWorkerRegistration.prototype && registration.active) {
                 registration.periodicSync.register('content-sync', {
                   minInterval: 24 * 60 * 60 * 1000 // 24 hours
+                }).catch(() => {
+                  console.log('Periodic sync registration failed');
                 });
               }
 
