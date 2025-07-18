@@ -288,9 +288,40 @@
         }, 10000);
       });
 
+      // Show install banner after page loads if not already installed
+      window.addEventListener('load', function() {
+        // Check if app is already installed
+        if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+          return; // Already installed
+        }
+        
+        // Check if running as PWA
+        if (window.navigator.standalone) {
+          return; // Already installed on iOS
+        }
+        
+        // Show banner after 2 seconds if beforeinstallprompt hasn't fired
+        setTimeout(() => {
+          if (!document.getElementById('install-banner')) {
+            // Trigger install prompt manually
+            const event = new Event('beforeinstallprompt');
+            window.dispatchEvent(event);
+          }
+        }, 2000);
+      });
+
       // Handle app installation
       window.addEventListener('appinstalled', function(evt) {
         console.log('App was installed');
+        const banner = document.querySelector('.install-banner');
+        if (banner) {
+          banner.style.top = '-100px';
+          setTimeout(() => {
+            if (document.body.contains(banner)) {
+              document.body.removeChild(banner);
+            }
+          }, 300);
+        }
       });
     </script>
   </body>
