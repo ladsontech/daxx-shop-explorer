@@ -1,17 +1,14 @@
-
 import React, { useState } from 'react';
 import { ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Palette, Shirt, Building, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import Cart from './Cart';
-
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const {
     getTotalItems
   } = useCart();
-
   const navLinks = [{
     name: 'Home',
     href: '/',
@@ -29,11 +26,9 @@ const Navigation = () => {
     href: '/property',
     icon: Building
   }];
-  
   const handleCallClick = () => {
     window.location.href = 'tel:+256751173504';
   };
-
   return <>
       {/* Top Contact Bar - Desktop Only */}
       <div className="hidden md:block bg-gray-100 border-b border-border">
@@ -62,23 +57,15 @@ const Navigation = () => {
             <div className="flex-shrink-0">
               <Link to="/" className="flex items-center space-x-3">
                 <img src="/images/logo.png" alt="E-Sale Uganda Logo" className="h-14 w-auto object-contain" />
-                <h1 className="text-2xl md:text-3xl font-bold font-playfair tracking-wide text-black">
-                  E-Sale Uganda
-                </h1>
+                
               </Link>
             </div>
 
             {/* Desktop Navigation Links - Simple Links */}
             <div className="hidden sm:flex items-center space-x-1">
-              {navLinks.map(link => (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className="text-foreground hover:bg-muted/20 px-3 py-2 text-sm font-medium transition-colors rounded"
-                >
+              {navLinks.map(link => <Link key={link.name} to={link.href} className="text-foreground hover:bg-muted/20 px-3 py-2 text-sm font-medium transition-colors rounded">
                   {link.name}
-                </Link>
-              ))}
+                </Link>)}
             </div>
 
             {/* Right Icons */}
@@ -180,5 +167,4 @@ const Navigation = () => {
       <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>;
 };
-
 export default Navigation;
