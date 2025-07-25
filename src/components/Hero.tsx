@@ -43,7 +43,7 @@ const Hero = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full aspect-[2/1] bg-gray-100 flex items-center justify-center">
+      <div className="w-full aspect-[3/2] max-w-4xl mx-auto bg-gray-100 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Loading updates...</p>
@@ -54,7 +54,7 @@ const Hero = () => {
 
   if (publishedUpdates.length === 0) {
     return (
-      <div className="w-full aspect-[2/1] bg-gradient-to-r from-blue-600 to-indigo-700 flex items-center justify-center">
+      <div className="w-full aspect-[3/2] max-w-4xl mx-auto bg-gradient-to-r from-blue-600 to-indigo-700 flex items-center justify-center">
         <div className="text-center text-white">
           <h1 className="text-2xl md:text-4xl font-bold mb-4">
             Welcome to E-Sale Uganda
@@ -68,62 +68,64 @@ const Hero = () => {
   }
 
   return (
-    <div className="relative w-full aspect-[2/1] overflow-hidden amazon-shadow">
-      {publishedUpdates.map((update, index) => (
-        <div
-          key={update.id}
-          className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
-            index === currentSlide ? 'translate-x-0' : 
-            index < currentSlide ? '-translate-x-full' : 'translate-x-full'
-          }`}
-        >
-          <div className="h-full relative">
-            <img
-              src={update.image_url}
-              alt="Update poster"
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = '/placeholder.svg';
-              }}
-            />
-            {/* Optional overlay for better text visibility */}
-            <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-          </div>
-        </div>
-      ))}
-
-      {/* Navigation Buttons - only show if there are multiple slides */}
-      {publishedUpdates.length > 1 && (
-        <>
-          <button
-            onClick={prevSlide}
-            className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-2 rounded-full transition-all amazon-shadow"
+    <div className="w-full max-w-4xl mx-auto px-4 py-8">
+      <div className="relative w-full aspect-[3/2] overflow-hidden amazon-shadow rounded-lg">
+        {publishedUpdates.map((update, index) => (
+          <div
+            key={update.id}
+            className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
+              index === currentSlide ? 'translate-x-0' : 
+              index < currentSlide ? '-translate-x-full' : 'translate-x-full'
+            }`}
           >
-            <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
-          </button>
-          
-          <button
-            onClick={nextSlide}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-2 rounded-full transition-all amazon-shadow"
-          >
-            <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
-          </button>
-
-          {/* Dots Indicator */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-            {publishedUpdates.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all ${
-                  index === currentSlide ? 'bg-white' : 'bg-white bg-opacity-50'
-                }`}
+            <div className="h-full relative">
+              <img
+                src={update.image_url}
+                alt="Update poster"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = '/placeholder.svg';
+                }}
               />
-            ))}
+              {/* Optional overlay for better text visibility */}
+              <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+            </div>
           </div>
-        </>
-      )}
+        ))}
+
+        {/* Navigation Buttons - only show if there are multiple slides */}
+        {publishedUpdates.length > 1 && (
+          <>
+            <button
+              onClick={prevSlide}
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-2 rounded-full transition-all amazon-shadow"
+            >
+              <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
+            </button>
+            
+            <button
+              onClick={nextSlide}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-2 rounded-full transition-all amazon-shadow"
+            >
+              <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
+            </button>
+
+            {/* Dots Indicator */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+              {publishedUpdates.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all ${
+                    index === currentSlide ? 'bg-white' : 'bg-white bg-opacity-50'
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };
