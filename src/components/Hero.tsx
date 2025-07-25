@@ -68,51 +68,82 @@ const Hero = () => {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-8">
-      <div className="relative w-full aspect-[3/2] overflow-hidden amazon-shadow rounded-lg">
-        {publishedUpdates.map((update, index) => (
-          <div
-            key={update.id}
-            className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
-              index === currentSlide ? 'translate-x-0' : 
-              index < currentSlide ? '-translate-x-full' : 'translate-x-full'
-            }`}
-          >
-            <div className="h-full relative">
-              <img
-                src={update.image_url}
-                alt="Update poster"
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = '/placeholder.svg';
-                }}
-              />
-              {/* Optional overlay for better text visibility */}
-              <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+    <div className="w-full max-w-7xl mx-auto px-4 py-8">
+      <div className="relative overflow-hidden">
+        {/* Mobile view - full width single image */}
+        <div className="block md:hidden">
+          <div className="relative w-full aspect-[3/2] overflow-hidden amazon-shadow rounded-lg">
+            {publishedUpdates.map((update, index) => (
+              <div
+                key={update.id}
+                className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
+                  index === currentSlide ? 'translate-x-0' : 
+                  index < currentSlide ? '-translate-x-full' : 'translate-x-full'
+                }`}
+              >
+                <div className="h-full relative">
+                  <img
+                    src={update.image_url}
+                    alt="Update poster"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/placeholder.svg';
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop view - carousel with partial next image */}
+        <div className="hidden md:block">
+          <div className="relative">
+            <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentSlide * 70}%)` }}>
+              {publishedUpdates.map((update, index) => (
+                <div
+                  key={update.id}
+                  className="flex-shrink-0 w-[70%] pr-4"
+                >
+                  <div className="relative aspect-[3/2] overflow-hidden amazon-shadow rounded-lg">
+                    <img
+                      src={update.image_url}
+                      alt="Update poster"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/placeholder.svg';
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        ))}
+        </div>
 
         {/* Navigation Buttons - only show if there are multiple slides */}
         {publishedUpdates.length > 1 && (
           <>
             <button
               onClick={prevSlide}
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-2 rounded-full transition-all amazon-shadow"
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-2 rounded-full transition-all amazon-shadow z-10"
             >
               <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
             </button>
             
             <button
               onClick={nextSlide}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-2 rounded-full transition-all amazon-shadow"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-2 rounded-full transition-all amazon-shadow z-10"
             >
               <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
             </button>
 
             {/* Dots Indicator */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
               {publishedUpdates.map((_, index) => (
                 <button
                   key={index}
