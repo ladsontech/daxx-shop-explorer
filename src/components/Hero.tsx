@@ -91,21 +91,21 @@ const Hero = () => {
                       target.src = '/placeholder.svg';
                     }}
                   />
-                  <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                  <div className="absolute inset-0 bg-black bg-opacity-10"></div>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Desktop view - carousel with partial next image */}
+        {/* Desktop view - carousel with two images and fraction of third */}
         <div className="hidden md:block">
           <div className="relative">
-            <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentSlide * 70}%)` }}>
+            <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentSlide * 45}%)` }}>
               {publishedUpdates.map((update, index) => (
                 <div
                   key={update.id}
-                  className="flex-shrink-0 w-[70%] pr-4"
+                  className="flex-shrink-0 w-[45%] pr-4"
                 >
                   <div className="relative aspect-[3/2] overflow-hidden amazon-shadow rounded-lg">
                     <img
@@ -117,7 +117,7 @@ const Hero = () => {
                         target.src = '/placeholder.svg';
                       }}
                     />
-                    <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+                    <div className="absolute inset-0 bg-black bg-opacity-10"></div>
                   </div>
                 </div>
               ))}
