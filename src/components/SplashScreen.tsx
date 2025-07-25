@@ -1,5 +1,4 @@
 
-
 import React, { useEffect, useState } from 'react';
 
 interface SplashScreenProps {
@@ -57,4 +56,3 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
 };
 
 export default SplashScreen;
-
