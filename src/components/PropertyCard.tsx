@@ -43,10 +43,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         </div>
         
         <div className="p-4">
-          <h3 className="text-lg font-semibold text-gray-800 mb-2">
-            {title}
-          </h3>
-          
           <div className="flex items-center text-gray-600 mb-3">
             <MapPin className="h-4 w-4 mr-1" />
             <span className="text-sm">{location}</span>
