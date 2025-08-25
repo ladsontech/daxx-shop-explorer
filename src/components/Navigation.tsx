@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { ShoppingCart, User, Menu, X, Home, Smartphone, Headphones, Palette, Shirt, Building, Phone } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import Cart from './Cart';
+
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const {
-    getTotalItems
-  } = useCart();
+  const { getTotalItems } = useCart();
+  const location = useLocation();
+
   const navLinks = [{
     name: 'Home',
     href: '/',
@@ -26,10 +27,20 @@ const Navigation = () => {
     href: '/property',
     icon: Building
   }];
+
   const handleCallClick = () => {
     window.location.href = 'tel:+256751173504';
   };
-  return <>
+
+  const isActiveRoute = (href: string) => {
+    if (href === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname.startsWith(href);
+  };
+
+  return (
+    <>
       {/* Top Contact Bar - Desktop Only */}
       <div className="hidden md:block bg-gray-100 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -57,15 +68,24 @@ const Navigation = () => {
             <div className="flex-shrink-0">
               <Link to="/" className="flex items-center space-x-3">
                 <img src="/images/logo.png" alt="E-Sale Uganda Logo" className="h-14 w-auto object-contain" />
-                
               </Link>
             </div>
 
-            {/* Desktop Navigation Links - Simple Links */}
+            {/* Desktop Navigation Links */}
             <div className="hidden sm:flex items-center space-x-1">
-              {navLinks.map(link => <Link key={link.name} to={link.href} className="text-foreground hover:bg-muted/20 px-3 py-2 text-sm font-medium transition-colors rounded">
+              {navLinks.map(link => (
+                <Link 
+                  key={link.name} 
+                  to={link.href} 
+                  className={`px-3 py-2 text-sm font-medium transition-colors rounded ${
+                    isActiveRoute(link.href)
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-foreground hover:bg-muted/20'
+                  }`}
+                >
                   {link.name}
-                </Link>)}
+                </Link>
+              ))}
             </div>
 
             {/* Right Icons */}
@@ -78,9 +98,11 @@ const Navigation = () => {
 
               <button onClick={() => setIsCartOpen(true)} className="relative p-2 text-foreground hover:bg-muted/20 transition-colors rounded">
                 <ShoppingCart className="h-6 w-6" />
-                {getTotalItems() > 0 && <span className="absolute -top-1 -right-1 h-5 w-5 amazon-orange text-primary-foreground text-xs rounded-full flex items-center justify-center font-bold">
+                {getTotalItems() > 0 && (
+                  <span className="absolute -top-1 -right-1 h-5 w-5 amazon-orange text-primary-foreground text-xs rounded-full flex items-center justify-center font-bold">
                     {getTotalItems()}
-                  </span>}
+                  </span>
+                )}
               </button>
 
               {/* Mobile menu button */}
@@ -91,7 +113,8 @@ const Navigation = () => {
           </div>
 
           {/* Mobile Navigation Overlay */}
-          {isMenuOpen && <div className="sm:hidden border-t border-border">
+          {isMenuOpen && (
+            <div className="sm:hidden border-t border-border">
               <div className="px-2 pt-2 pb-3 space-y-1">
                 <Link to="/" className="block px-3 py-2 text-foreground hover:bg-muted/20 transition-colors rounded" onClick={() => setIsMenuOpen(false)}>
                   Home
@@ -123,48 +146,66 @@ const Navigation = () => {
 
                 {/* Mobile Contact Link */}
                 <button onClick={() => {
-              handleCallClick();
-              setIsMenuOpen(false);
-            }} className="w-full text-left px-3 py-2 text-foreground hover:bg-muted/20 transition-colors rounded flex items-center space-x-2">
+                  handleCallClick();
+                  setIsMenuOpen(false);
+                }} className="w-full text-left px-3 py-2 text-foreground hover:bg-muted/20 transition-colors rounded flex items-center space-x-2">
                   <Phone className="h-4 w-4" />
                   <span>Call +256 751 173504</span>
                 </button>
               </div>
-            </div>}
+            </div>
+          )}
         </div>
       </nav>
 
-      {/* Mobile Bottom Navigation - Simplified */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-border z-50">
+      {/* Enhanced Mobile Bottom Navigation */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-border/50 z-50 shadow-lg">
         <div className="grid grid-cols-4 gap-0">
-          {/* Home */}
-          <Link to="/" className="flex flex-col items-center justify-center py-2 px-2 text-muted-foreground hover:text-foreground transition-colors min-h-[60px]">
-            <Home className="h-4 w-4 mb-1" />
-            <span className="text-[10px] font-medium leading-tight text-center">Home</span>
-          </Link>
-
-          {/* Gadgets (includes Accessories) */}
-          <Link to="/gadgets" className="flex flex-col items-center justify-center py-2 px-2 text-muted-foreground hover:text-foreground transition-colors min-h-[60px]">
-            <Smartphone className="h-4 w-4 mb-1" />
-            <span className="text-[10px] font-medium leading-tight text-center">Gadgets</span>
-          </Link>
-
-          {/* Fashion (includes Cosmetics) */}
-          <Link to="/fashion" className="flex flex-col items-center justify-center py-2 px-2 text-muted-foreground hover:text-foreground transition-colors min-h-[60px]">
-            <Shirt className="h-4 w-4 mb-1" />
-            <span className="text-[10px] font-medium leading-tight text-center">Fashion</span>
-          </Link>
-
-          {/* Property */}
-          <Link to="/property" className="flex flex-col items-center justify-center py-2 px-2 text-muted-foreground hover:text-foreground transition-colors min-h-[60px]">
-            <Building className="h-4 w-4 mb-1" />
-            <span className="text-[10px] font-medium leading-tight text-center">Property</span>
-          </Link>
+          {navLinks.map((link) => {
+            const Icon = link.icon;
+            const active = isActiveRoute(link.href);
+            
+            return (
+              <Link
+                key={link.name}
+                to={link.href}
+                className={`flex flex-col items-center justify-center py-2 px-2 transition-all duration-300 min-h-[64px] relative ${
+                  active
+                    ? 'text-primary'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {/* Active indicator */}
+                {active && (
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-primary rounded-b-full animate-fade-in" />
+                )}
+                
+                {/* Icon with scaling animation */}
+                <div className={`transform transition-transform duration-200 ${active ? 'scale-110' : 'scale-100'}`}>
+                  <Icon className={`h-5 w-5 mb-1 ${active ? 'animate-pulse' : ''}`} />
+                </div>
+                
+                {/* Label */}
+                <span className={`text-[10px] font-medium leading-tight text-center transition-all duration-200 ${
+                  active ? 'font-semibold' : 'font-normal'
+                }`}>
+                  {link.name}
+                </span>
+                
+                {/* Subtle glow effect for active state */}
+                {active && (
+                  <div className="absolute inset-0 bg-primary/5 rounded-lg animate-pulse" />
+                )}
+              </Link>
+            );
+          })}
         </div>
       </div>
 
       {/* Cart Sidebar */}
       <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-    </>;
+    </>
+  );
 };
+
 export default Navigation;

@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import Navigation from '../components/Navigation';
 import Hero from '../components/Hero';
 import SearchBar from '../components/SearchBar';
 import CategorySection from '../components/CategorySection';
 import FilterSection from '../components/FilterSection';
+import HorizontalProductScroll from '../components/HorizontalProductScroll';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
 import SEOHead from '../components/SEOHead';
@@ -54,6 +54,14 @@ const Index = () => {
       area: property.area,
       phone: "+256 123 456 789"
     })) || [];
+  };
+
+  // Get products by category for horizontal scrolling
+  const getProductsBySection = (section: string, limit: number = 8) => {
+    if (!allProducts) return [];
+    return allProducts
+      .filter(product => product.section === section)
+      .slice(0, limit);
   };
 
   // Balance featured products across all categories - increased to show more products
@@ -150,7 +158,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white pb-16 md:pb-0 mobile-contained">
+    <div className="min-h-screen bg-white pb-20 md:pb-0 mobile-contained">
       <SEOHead 
         title="E-Sale Uganda - Quality Gadgets, Fashion, Cosmetics & Property | Uganda's Premier Online Store"
         description="Shop premium gadgets, trendy fashion, beauty cosmetics, stylish accessories, and quality properties at E-Sale Uganda. Best prices, fast delivery, and excellent customer service. Your trusted online marketplace."
@@ -180,98 +188,38 @@ const Index = () => {
         <SearchBar />
       </section>
 
-      {/* Filter Section for Products */}
-      <FilterSection
-        activeFilter={activeFilter}
-        onFilterChange={setActiveFilter}
-        filters={productFilters}
+      {/* Category Horizontal Scrolls */}
+      <HorizontalProductScroll
+        title="Latest Gadgets"
+        subtitle="Discover cutting-edge technology and electronics"
+        products={formatProductsForComponent(getProductsBySection('gadgets'))}
+        viewAllLink="/gadgets"
+        accentColor="bg-blue-600"
       />
-      
-      {/* Featured Products Section - Enhanced Mobile Responsiveness */}
-      {featuredProducts.length > 0 && (
-        <section className="py-8 md:py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
-            <div className="text-center mb-6 md:mb-12">
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 md:mb-4">
-                Featured Products
-              </h2>
-              <p className="text-base md:text-xl text-gray-600 mb-3 md:mb-0">
-                {activeFilter === 'all' 
-                  ? 'Discover our handpicked selection from all categories'
-                  : `Browse our ${activeFilter} collection`}
-              </p>
-            </div>
-            
-            {/* Mobile-optimized grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
-              {featuredProducts.map(item => (
-                <Link key={item.id} to={`/product/${item.id}`} className="block">
-                  <div className="bg-white rounded amazon-border border amazon-shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">
-                    <div className="relative">
-                      <img 
-                        src={item.images && item.images.length > 0 ? item.images[0] : '/placeholder.svg'} 
-                        alt={item.title} 
-                        className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300" 
-                      />
-                      {/* Featured star badge */}
-                      <div className="absolute top-1 md:top-2 left-1 md:left-2	-orange text-white p-1 md:p-2 rounded-full shadow-lg">
-                        <Star className="h-3 w-3 md:h-4 md:w-4 fill-current" />
-                      </div>
-                      {/* Condition badge for gadgets only */}
-                      {item.section === 'gadgets' && item.condition && (
-                        <div className={`absolute top-1 md:top-2 right-1 md:right-2 px-1 md:px-2 py-0.5 md:py-1 rounded text-xs font-semibold text-white ${
-                          item.condition === 'new' ? 'bg-green-500' : 'bg-blue-500'
-                        }`}>
-                          {item.condition === 'new' ? 'NEW' : 'USED'}
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-2 md:p-4">
-                      <h3 className="font-semibold text-gray-800 mb-1 md:mb-2 group-hover:text-blue-600 transition-colors text-xs md:text-sm line-clamp-2">
-                        {item.title}
-                      </h3>
-                      {/* Description hidden on mobile for better space utilization */}
-                      <p className="hidden md:block text-sm text-gray-600 mb-2 line-clamp-2">
-                        {item.description}
-                      </p>
-                      <div className="flex flex-col md:flex-row md:items-center md:space-x-2 mb-1 md:mb-2">
-                        <span className="text-xs md:text-sm font-bold text-gray-900">
-                          UGX {item.price.toLocaleString()}
-                        </span>
-                        {item.originalPrice && (
-                          <span className="text-xs text-gray-500 line-through">
-                            UGX {item.originalPrice.toLocaleString()}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-            
-            {/* View All Categories Links - Mobile optimized */}
-            <div className="mt-8 md:mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-              <Link to="/gadgets" className="text-center p-3 md:p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-                <div className="text-blue-600 font-semibold text-sm md:text-base">View All Gadgets</div>
-                <div className="text-xs md:text-sm text-gray-600">Electronics & Tech</div>
-              </Link>
-              <Link to="/accessories" className="text-center p-3 md:p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
-                <div className="text-green-600 font-semibold text-sm md:text-base">View All Accessories</div>
-                <div className="text-xs md:text-sm text-gray-600">Style & Function</div>
-              </Link>
-              <Link to="/cosmetics" className="text-center p-3 md:p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors">
-                <div className="text-pink-600 font-semibold text-sm md:text-base">View All Cosmetics</div>
-                <div className="text-xs md:text-sm text-gray-600">Beauty & Care</div>
-              </Link>
-              <Link to="/fashion" className="text-center p-3 md:p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
-                <div className="text-purple-600 font-semibold text-sm md:text-base">View All Fashion</div>
-                <div className="text-xs md:text-sm text-gray-600">Clothing & Style</div>
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
+
+      <HorizontalProductScroll
+        title="Fashion Collection"
+        subtitle="Trendy clothing and stylish accessories"
+        products={formatProductsForComponent(getProductsBySection('fashion'))}
+        viewAllLink="/fashion"
+        accentColor="bg-purple-600"
+      />
+
+      <HorizontalProductScroll
+        title="Tech Accessories"
+        subtitle="Essential accessories for your devices"
+        products={formatProductsForComponent(getProductsBySection('accessories'))}
+        viewAllLink="/accessories"
+        accentColor="bg-green-600"
+      />
+
+      <HorizontalProductScroll
+        title="Beauty & Cosmetics"
+        subtitle="Premium beauty products and skincare"
+        products={formatProductsForComponent(getProductsBySection('cosmetics'))}
+        viewAllLink="/cosmetics"
+        accentColor="bg-pink-600"
+      />
 
       {/* Property Listings Section */}
       <CategorySection 
