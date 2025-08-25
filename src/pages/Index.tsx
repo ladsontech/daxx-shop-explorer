@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Navigation from '../components/Navigation';
 import Hero from '../components/Hero';
@@ -57,8 +58,8 @@ const Index = () => {
     })) || [];
   };
 
-  // Get products by category for horizontal scrolling
-  const getProductsBySection = (section: string, limit: number = 8) => {
+  // Get products by category for horizontal scrolling - increased limit for two rows
+  const getProductsBySection = (section: string, limit: number = 16) => {
     if (!allProducts) return [];
     return allProducts
       .filter(product => product.section === section)

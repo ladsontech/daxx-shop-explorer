@@ -46,6 +46,61 @@ const HorizontalProductScroll: React.FC<HorizontalProductScrollProps> = ({
 
   if (products.length === 0) return null;
 
+  // Split products into two rows for display
+  const firstRow = products.slice(0, Math.ceil(products.length / 2));
+  const secondRow = products.slice(Math.ceil(products.length / 2));
+
+  const ProductCard = ({ product }: { product: Product }) => (
+    <Link
+      key={product.id}
+      to={`/product/${product.id}`}
+      className="flex-shrink-0 w-48 sm:w-56 md:w-64 lg:w-72"
+    >
+      <div className="bg-white rounded-lg amazon-border border amazon-shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">
+        <div className="relative">
+          <img
+            src={product.images && product.images.length > 0 ? product.images[0] : '/placeholder.svg'}
+            alt={product.title}
+            className="w-full h-36 sm:h-40 md:h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+          
+          {/* Featured badge */}
+          <div className="absolute top-2 left-2 amazon-orange text-white p-1.5 md:p-2 rounded-full shadow-lg">
+            <Star className="h-3 w-3 md:h-4 md:w-4 fill-current" />
+          </div>
+          
+          {/* Condition badge for gadgets */}
+          {product.section === 'gadgets' && product.condition && (
+            <div className={`absolute top-2 right-2 px-1.5 py-0.5 md:px-2 md:py-1 rounded text-xs font-semibold text-white ${
+              product.condition === 'new' ? 'bg-green-500' : 'bg-blue-500'
+            }`}>
+              {product.condition === 'new' ? 'NEW' : 'USED'}
+            </div>
+          )}
+        </div>
+        
+        <div className="p-3 md:p-4">
+          <h3 className="font-semibold text-gray-800 mb-1.5 md:mb-2 group-hover:text-blue-600 transition-colors text-xs md:text-sm line-clamp-2">
+            {product.title}
+          </h3>
+          <p className="text-xs md:text-sm text-gray-600 mb-1.5 md:mb-2 line-clamp-2">
+            {product.description}
+          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 mb-2">
+            <span className="text-sm md:text-lg font-bold text-gray-900">
+              UGX {product.price.toLocaleString()}
+            </span>
+            {product.originalPrice && (
+              <span className="text-xs md:text-sm text-gray-500 line-through">
+                UGX {product.originalPrice.toLocaleString()}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+
   return (
     <section className="py-6 md:py-8 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -79,70 +134,36 @@ const HorizontalProductScroll: React.FC<HorizontalProductScrollProps> = ({
             
             <Link
               to={viewAllLink}
-              className={`${accentColor} text-white px-3 py-2 md:px-4 rounded-lg text-xs md:text-sm font-medium hover:opacity-90 transition-opacity whitespace-nowrap`}
+              className={`${accentColor} text-white px-2 py-1.5 sm:px-3 sm:py-2 md:px-4 md:py-2 rounded-lg text-xs sm:text-sm md:text-sm font-medium hover:opacity-90 transition-opacity flex items-center space-x-1 whitespace-nowrap`}
             >
-              View All
+              <span className="hidden xs:inline">View</span>
+              <span>All</span>
             </Link>
           </div>
         </div>
 
-        {/* Horizontal Scroll Container */}
+        {/* First Row */}
         <div
           ref={scrollRef}
-          className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide pb-4"
+          className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide pb-2 mb-3"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {products.map(product => (
-            <Link
-              key={product.id}
-              to={`/product/${product.id}`}
-              className="flex-shrink-0 w-48 sm:w-56 md:w-64 lg:w-72"
-            >
-              <div className="bg-white rounded-lg amazon-border border amazon-shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">
-                <div className="relative">
-                  <img
-                    src={product.images && product.images.length > 0 ? product.images[0] : '/placeholder.svg'}
-                    alt={product.title}
-                    className="w-full h-36 sm:h-40 md:h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  
-                  {/* Featured badge */}
-                  <div className="absolute top-2 left-2 amazon-orange text-white p-1.5 md:p-2 rounded-full shadow-lg">
-                    <Star className="h-3 w-3 md:h-4 md:w-4 fill-current" />
-                  </div>
-                  
-                  {/* Condition badge for gadgets */}
-                  {product.section === 'gadgets' && product.condition && (
-                    <div className={`absolute top-2 right-2 px-1.5 py-0.5 md:px-2 md:py-1 rounded text-xs font-semibold text-white ${
-                      product.condition === 'new' ? 'bg-green-500' : 'bg-blue-500'
-                    }`}>
-                      {product.condition === 'new' ? 'NEW' : 'USED'}
-                    </div>
-                  )}
-                </div>
-                
-                <div className="p-3 md:p-4">
-                  <h3 className="font-semibold text-gray-800 mb-1.5 md:mb-2 group-hover:text-blue-600 transition-colors text-xs md:text-sm line-clamp-2">
-                    {product.title}
-                  </h3>
-                  <p className="text-xs md:text-sm text-gray-600 mb-1.5 md:mb-2 line-clamp-2">
-                    {product.description}
-                  </p>
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 mb-2">
-                    <span className="text-sm md:text-lg font-bold text-gray-900">
-                      UGX {product.price.toLocaleString()}
-                    </span>
-                    {product.originalPrice && (
-                      <span className="text-xs md:text-sm text-gray-500 line-through">
-                        UGX {product.originalPrice.toLocaleString()}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Link>
+          {firstRow.map(product => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
+
+        {/* Second Row */}
+        {secondRow.length > 0 && (
+          <div
+            className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide pb-4"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {secondRow.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
