@@ -5,6 +5,7 @@ import SearchBar from '../components/SearchBar';
 import CategorySection from '../components/CategorySection';
 import FilterSection from '../components/FilterSection';
 import HorizontalProductScroll from '../components/HorizontalProductScroll';
+import PropertyPreviewSection from '../components/PropertyPreviewSection';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
 import SEOHead from '../components/SEOHead';
@@ -176,12 +177,12 @@ const Index = () => {
       <Hero />
       
       {/* Search Section */}
-      <section className="py-8 amazon-gray">
-        <div className="text-center mb-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+      <section className="py-6 md:py-8 amazon-gray">
+        <div className="text-center mb-4 md:mb-6 px-4">
+          <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
             Find What You're Looking For
           </h2>
-          <p className="text-gray-600">
+          <p className="text-sm md:text-base text-gray-600">
             Search through our products and properties
           </p>
         </div>
@@ -221,14 +222,8 @@ const Index = () => {
         accentColor="bg-pink-600"
       />
 
-      {/* Property Listings Section */}
-      <CategorySection 
-        id="property" 
-        title="Property Listings" 
-        subtitle="Find your perfect home or investment opportunity" 
-        type="property" 
-        items={formattedProperties} 
-      />
+      {/* Property Preview Section */}
+      <PropertyPreviewSection properties={formattedProperties} />
 
       <Footer />
       <WhatsAppButton />
