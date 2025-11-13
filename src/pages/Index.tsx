@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navigation from '../components/Navigation';
 import Hero from '../components/Hero';
 import SearchBar from '../components/SearchBar';
@@ -12,6 +12,7 @@ import WhatsAppButton from '../components/WhatsAppButton';
 import SEOHead from '../components/SEOHead';
 import { useProducts } from '../hooks/useProducts';
 import { useProperties } from '../hooks/useProperties';
+import { usePrefetch } from '../hooks/usePrefetch';
 import { Link } from 'react-router-dom';
 import { Loader2, Star } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
@@ -27,6 +28,20 @@ const Index = () => {
     data: properties,
     isLoading: propertiesLoading
   } = useProperties();
+
+  // Prefetch all data in background for smooth navigation
+  const { prefetchImages } = usePrefetch();
+
+  // Prefetch visible product images
+  useEffect(() => {
+    if (allProducts && allProducts.length > 0) {
+      const imagesToPrefetch = allProducts
+        .slice(0, 20) // Prefetch first 20 products
+        .flatMap(product => product.images)
+        .filter(Boolean);
+      prefetchImages(imagesToPrefetch);
+    }
+  }, [allProducts, prefetchImages]);
 
   const formatProductsForComponent = (products: any[]) => {
     return products?.map(product => ({
