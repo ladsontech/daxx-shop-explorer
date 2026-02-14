@@ -23,9 +23,9 @@ const SearchBar = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsSearchFocused(true)}
-            className="w-full pl-12 pr-4 py-3 amazon-border border rounded bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent amazon-shadow text-lg"
+            className="w-full pl-10 pr-4 py-2.5 border border-border rounded-xl bg-card text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all text-sm"
           />
-          <Search className="absolute left-4 top-3.5 h-6 w-6 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           {isSearchFocused && (
             <SearchResults
               results={searchResults}
@@ -37,7 +37,6 @@ const SearchBar = () => {
         </div>
       </div>
 
-      {/* Overlay to close search when clicking outside */}
       {isSearchFocused && (
         <div 
           className="fixed inset-0 z-40" 

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Product } from './useProducts';
@@ -8,7 +8,6 @@ export const usePrefetch = () => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    // Prefetch all product sections
     const sections = ['gadgets', 'accessories', 'cosmetics', 'fashion'];
     
     sections.forEach((section) => {
@@ -20,14 +19,12 @@ export const usePrefetch = () => {
             .select('*')
             .eq('section', section)
             .order('created_at', { ascending: false });
-          
           if (error) throw error;
           return data as Product[];
         },
       });
     });
 
-    // Prefetch all products (for general queries)
     queryClient.prefetchQuery({
       queryKey: ['products'],
       queryFn: async () => {
@@ -35,13 +32,11 @@ export const usePrefetch = () => {
           .from('products')
           .select('*')
           .order('created_at', { ascending: false });
-        
         if (error) throw error;
         return data as Product[];
       },
     });
 
-    // Prefetch properties
     queryClient.prefetchQuery({
       queryKey: ['properties'],
       queryFn: async () => {
@@ -49,23 +44,31 @@ export const usePrefetch = () => {
           .from('properties')
           .select('*')
           .order('created_at', { ascending: false });
-        
         if (error) throw error;
         return data as Property[];
       },
     });
   }, [queryClient]);
 
-  // Prefetch images
-  const prefetchImage = (src: string) => {
-    if (!src) return;
-    const img = new Image();
-    img.src = src;
-  };
+  const prefetchImages = useCallback((images: string[]) => {
+    // Use requestIdleCallback for non-blocking image prefetch
+    const loadImages = () => {
+      images.forEach(src => {
+        if (!src) return;
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.as = 'image';
+        link.href = src;
+        document.head.appendChild(link);
+      });
+    };
 
-  const prefetchImages = (images: string[]) => {
-    images.forEach(prefetchImage);
-  };
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(loadImages);
+    } else {
+      setTimeout(loadImages, 200);
+    }
+  }, []);
 
   return { prefetchImages };
 };

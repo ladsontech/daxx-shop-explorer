@@ -1,8 +1,7 @@
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useRef } from 'react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
 interface Product {
   id: string;
@@ -32,138 +31,103 @@ const HorizontalProductScroll: React.FC<HorizontalProductScrollProps> = ({
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const scrollLeft = () => {
+  const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -280, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 280, behavior: 'smooth' });
+      const amount = direction === 'left' ? -240 : 240;
+      scrollRef.current.scrollBy({ left: amount, behavior: 'smooth' });
     }
   };
 
   if (products.length === 0) return null;
 
-  // Split products into two rows for display
-  const firstRow = products.slice(0, Math.ceil(products.length / 2));
-  const secondRow = products.slice(Math.ceil(products.length / 2));
-
-  const ProductCard = ({ product }: { product: Product }) => (
-    <Link
-      key={product.id}
-      to={`/product/${product.id}`}
-      className="flex-shrink-0 w-48 sm:w-56 md:w-64 lg:w-72"
-    >
-      <div className="bg-white rounded-lg amazon-border border amazon-shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">
-        <div className="relative">
-          <img
-            src={product.images && product.images.length > 0 ? product.images[0] : '/placeholder.svg'}
-            alt={product.title}
-            className="w-full h-36 sm:h-40 md:h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-          
-          {/* Featured badge */}
-          <div className="absolute top-2 left-2 amazon-orange text-white p-1.5 md:p-2 rounded-full shadow-lg">
-            <Star className="h-3 w-3 md:h-4 md:w-4 fill-current" />
-          </div>
-          
-          {/* Condition badge for gadgets */}
-          {product.section === 'gadgets' && product.condition && (
-            <div className={`absolute top-2 right-2 px-1.5 py-0.5 md:px-2 md:py-1 rounded text-xs font-semibold text-white ${
-              product.condition === 'new' ? 'bg-green-500' : 'bg-blue-500'
-            }`}>
-              {product.condition === 'new' ? 'NEW' : 'USED'}
-            </div>
-          )}
-        </div>
-        
-        <div className="p-3 md:p-4">
-          <h3 className="font-semibold text-gray-800 mb-1.5 md:mb-2 group-hover:text-blue-600 transition-colors text-xs md:text-sm line-clamp-2">
-            {product.title}
-          </h3>
-          <p className="text-xs md:text-sm text-gray-600 mb-1.5 md:mb-2 line-clamp-2">
-            {product.description}
-          </p>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 mb-2">
-            <span className="text-sm md:text-lg font-bold text-gray-900">
-              UGX {product.price.toLocaleString()}
-            </span>
-            {product.originalPrice && (
-              <span className="text-xs md:text-sm text-gray-500 line-through">
-                UGX {product.originalPrice.toLocaleString()}
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
-
   return (
-    <section className="py-6 md:py-8 bg-white">
+    <section className="py-5 md:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 md:mb-6 gap-4">
-          <div className="flex-1">
-            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 md:mb-2">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-foreground">
               {title}
             </h2>
-            <p className="text-sm md:text-base text-gray-600">{subtitle}</p>
+            <p className="text-xs md:text-sm text-muted-foreground mt-0.5">{subtitle}</p>
           </div>
           
-          <div className="flex items-center justify-between sm:justify-end space-x-3">
-            {/* Scroll Controls */}
-            <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-1">
               <button
-                onClick={scrollLeft}
-                className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                onClick={() => scroll('left')}
+                className="p-1.5 rounded-full border border-border hover:bg-muted transition-colors"
                 aria-label="Scroll left"
               >
-                <ChevronLeft className="h-4 w-4 md:h-5 md:w-5" />
+                <ChevronLeft className="h-4 w-4 text-foreground" />
               </button>
               <button
-                onClick={scrollRight}
-                className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                onClick={() => scroll('right')}
+                className="p-1.5 rounded-full border border-border hover:bg-muted transition-colors"
                 aria-label="Scroll right"
               >
-                <ChevronRight className="h-4 w-4 md:h-5 md:w-5" />
+                <ChevronRight className="h-4 w-4 text-foreground" />
               </button>
             </div>
             
             <Link
               to={viewAllLink}
-              className={`${accentColor} text-white px-2 py-1.5 sm:px-3 sm:py-2 md:px-4 md:py-2 rounded-lg text-xs sm:text-sm md:text-sm font-medium hover:opacity-90 transition-opacity flex items-center space-x-1 whitespace-nowrap`}
+              className="flex items-center gap-1 text-xs md:text-sm font-medium text-primary hover:underline"
             >
-              <span className="hidden xs:inline">View</span>
-              <span>All</span>
+              <span>View All</span>
+              <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
         </div>
 
-        {/* First Row */}
+        {/* Scrollable Row */}
         <div
           ref={scrollRef}
-          className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide pb-2 mb-3"
+          className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {firstRow.map(product => (
-            <ProductCard key={product.id} product={product} />
+          {products.map(product => (
+            <Link
+              key={product.id}
+              to={`/product/${product.id}`}
+              className="flex-shrink-0 w-[140px] sm:w-[170px] md:w-[200px] lg:w-[220px] snap-start group"
+            >
+              <div className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-md transition-shadow duration-200">
+                <div className="relative aspect-square overflow-hidden bg-muted">
+                  <img
+                    src={product.images?.[0] || '/placeholder.svg'}
+                    alt={product.title}
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  {product.section === 'gadgets' && product.condition && (
+                    <span className={`absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded text-[10px] font-semibold text-white ${
+                      product.condition === 'new' ? 'bg-green-500' : 'bg-blue-500'
+                    }`}>
+                      {product.condition === 'new' ? 'NEW' : 'USED'}
+                    </span>
+                  )}
+                </div>
+                
+                <div className="p-2.5 md:p-3">
+                  <h3 className="font-medium text-foreground text-xs md:text-sm line-clamp-2 leading-tight mb-1.5">
+                    {product.title}
+                  </h3>
+                  <div className="flex flex-col">
+                    <span className="text-sm md:text-base font-bold text-foreground">
+                      UGX {product.price.toLocaleString()}
+                    </span>
+                    {product.originalPrice && (
+                      <span className="text-[10px] md:text-xs text-muted-foreground line-through">
+                        UGX {product.originalPrice.toLocaleString()}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Link>
           ))}
         </div>
-
-        {/* Second Row */}
-        {secondRow.length > 0 && (
-          <div
-            className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide pb-4"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {secondRow.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        )}
       </div>
     </section>
   );
