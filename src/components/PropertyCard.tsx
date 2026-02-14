@@ -19,7 +19,6 @@ interface PropertyCardProps {
 const PropertyCard: React.FC<PropertyCardProps> = ({
   id,
   images,
-  title,
   price,
   location,
   type
@@ -27,29 +26,30 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   const displayImage = images && images.length > 0 ? images[0] : '/placeholder.svg';
 
   return (
-    <Link to={`/property/${id}`} className="block">
-      <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
-        <div className="relative">
+    <Link to={`/property/${id}`} className="block group">
+      <div className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-md transition-shadow duration-200">
+        <div className="relative aspect-[4/3] overflow-hidden bg-muted">
           <img
             src={displayImage}
-            alt={title}
-            className="w-full aspect-square object-cover"
+            alt="Property"
+            loading="lazy"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
-          <div className={`absolute top-2 left-2 px-3 py-1 rounded-full text-white text-sm font-semibold ${
+          <span className={`absolute top-2 left-2 px-2.5 py-1 rounded-full text-white text-xs font-medium ${
             type === 'sale' ? 'bg-green-500' : 'bg-blue-500'
           }`}>
             For {type === 'sale' ? 'Sale' : 'Rent'}
-          </div>
+          </span>
         </div>
         
-        <div className="p-4">
-          <div className="flex items-center text-gray-600 mb-3">
-            <MapPin className="h-4 w-4 mr-1" />
-            <span className="text-sm">{location}</span>
+        <div className="p-3">
+          <div className="flex items-center text-muted-foreground mb-2">
+            <MapPin className="h-3.5 w-3.5 mr-1 flex-shrink-0" />
+            <span className="text-xs truncate">{location}</span>
           </div>
           
-          <div className="text-2xl font-bold text-blue-600">
-            UGX {price.toLocaleString()}{type === 'rent' && '/month'}
+          <div className="text-base md:text-lg font-bold text-foreground">
+            UGX {price.toLocaleString()}{type === 'rent' && <span className="text-xs font-normal text-muted-foreground">/mo</span>}
           </div>
         </div>
       </div>

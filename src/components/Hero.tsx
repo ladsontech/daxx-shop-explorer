@@ -8,59 +8,43 @@ const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { data: updates, isLoading } = useUpdates();
   
-  // Filter only published updates with images
   const publishedUpdates = updates?.filter(update => update.published && update.image_url) || [];
 
   const nextSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1) % publishedUpdates.length);
+    setCurrentSlide((prev) => (prev + 1) % publishedUpdates.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide - 1 + publishedUpdates.length) % publishedUpdates.length);
+    setCurrentSlide((prev) => (prev - 1 + publishedUpdates.length) % publishedUpdates.length);
   };
 
-  const goToSlide = (index: number) => {
-    setCurrentSlide(index);
-  };
-
-  // Auto-scroll functionality
   useEffect(() => {
     if (publishedUpdates.length === 0) return;
-    
-    const interval = setInterval(() => {
-      nextSlide();
-    }, 5000); // Change slide every 5 seconds
-
+    const interval = setInterval(nextSlide, 5000);
     return () => clearInterval(interval);
   }, [publishedUpdates.length]);
 
-  // Reset current slide if it's out of bounds
   useEffect(() => {
-    if (currentSlide >= publishedUpdates.length) {
-      setCurrentSlide(0);
-    }
+    if (currentSlide >= publishedUpdates.length) setCurrentSlide(0);
   }, [publishedUpdates.length, currentSlide]);
 
   if (isLoading) {
     return (
-      <div className="w-full aspect-[3/2] max-w-4xl mx-auto bg-gray-100 flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Loading updates...</p>
-        </div>
+      <div className="w-full aspect-[2/1] md:aspect-[3/1] bg-muted flex items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     );
   }
 
   if (publishedUpdates.length === 0) {
     return (
-      <div className="w-full aspect-[3/2] max-w-4xl mx-auto bg-gradient-to-r from-blue-600 to-indigo-700 flex items-center justify-center">
-        <div className="text-center text-white">
-          <h1 className="text-2xl md:text-4xl font-bold mb-4">
+      <div className="w-full aspect-[2/1] md:aspect-[3/1] bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+        <div className="text-center px-4">
+          <h1 className="text-xl md:text-3xl font-bold text-foreground mb-2">
             Welcome to E-Sale Uganda
           </h1>
-          <p className="text-lg md:text-xl opacity-90">
-            Your premier online marketplace for quality products
+          <p className="text-sm md:text-base text-muted-foreground">
+            Your premier online marketplace
           </p>
         </div>
       </div>
@@ -68,56 +52,45 @@ const Hero = () => {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-8">
-      <div className="relative overflow-hidden">
-        {/* Mobile view - full width single image */}
+    <div className="w-full max-w-7xl mx-auto px-4 pt-4 pb-2">
+      <div className="relative overflow-hidden rounded-xl">
+        {/* Mobile - single image */}
         <div className="block md:hidden">
-          <div className="relative w-full aspect-[3/2] overflow-hidden amazon-shadow rounded-lg">
+          <div className="relative w-full aspect-[16/9] overflow-hidden rounded-xl">
             {publishedUpdates.map((update, index) => (
               <div
                 key={update.id}
-                className={`absolute inset-0 transition-transform duration-500 ease-in-out ${
+                className={`absolute inset-0 transition-transform duration-500 ease-out ${
                   index === currentSlide ? 'translate-x-0' : 
                   index < currentSlide ? '-translate-x-full' : 'translate-x-full'
                 }`}
               >
-                <div className="h-full relative">
-                  <img
-                    src={update.image_url}
-                    alt="Update poster"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = '/placeholder.svg';
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-10"></div>
-                </div>
+                <img
+                  src={update.image_url}
+                  alt="Promotion"
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  className="w-full h-full object-cover"
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.svg'; }}
+                />
               </div>
             ))}
           </div>
         </div>
 
-        {/* Desktop view - carousel with two images and fraction of third */}
+        {/* Desktop - multi image carousel */}
         <div className="hidden md:block">
           <div className="relative">
-            <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentSlide * 45}%)` }}>
+            <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${currentSlide * 45}%)` }}>
               {publishedUpdates.map((update, index) => (
-                <div
-                  key={update.id}
-                  className="flex-shrink-0 w-[45%] pr-4"
-                >
-                  <div className="relative aspect-[3/2] overflow-hidden amazon-shadow rounded-lg">
+                <div key={update.id} className="flex-shrink-0 w-[45%] pr-4">
+                  <div className="relative aspect-[16/9] overflow-hidden rounded-xl">
                     <img
                       src={update.image_url}
-                      alt="Update poster"
+                      alt="Promotion"
+                      loading={index < 3 ? 'eager' : 'lazy'}
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = '/placeholder.svg';
-                      }}
+                      onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.svg'; }}
                     />
-                    <div className="absolute inset-0 bg-black bg-opacity-10"></div>
                   </div>
                 </div>
               ))}
@@ -125,31 +98,23 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Navigation Buttons - only show if there are multiple slides */}
+        {/* Nav buttons */}
         {publishedUpdates.length > 1 && (
           <>
-            <button
-              onClick={prevSlide}
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-2 rounded-full transition-all amazon-shadow z-10"
-            >
-              <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
+            <button onClick={prevSlide} className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm hover:bg-white p-1.5 rounded-full shadow-sm z-10 transition-colors">
+              <ChevronLeft className="h-4 w-4 md:h-5 md:w-5 text-foreground" />
             </button>
-            
-            <button
-              onClick={nextSlide}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-2 rounded-full transition-all amazon-shadow z-10"
-            >
-              <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
+            <button onClick={nextSlide} className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm hover:bg-white p-1.5 rounded-full shadow-sm z-10 transition-colors">
+              <ChevronRight className="h-4 w-4 md:h-5 md:w-5 text-foreground" />
             </button>
 
-            {/* Dots Indicator */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
               {publishedUpdates.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => goToSlide(index)}
-                  className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all ${
-                    index === currentSlide ? 'bg-white' : 'bg-white bg-opacity-50'
+                  onClick={() => setCurrentSlide(index)}
+                  className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-all ${
+                    index === currentSlide ? 'bg-white w-4 md:w-6' : 'bg-white/50'
                   }`}
                 />
               ))}
