@@ -36,15 +36,20 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 35 100% 50%; /* Amazon Orange for focus rings */
 
-    --radius: 0.375rem; /* Slightly smaller radius for more professional look */
+    --radius: 0.75rem;
 
-    /* Amazon-inspired custom colors */
+    /* Brand colors */
     --amazon-orange: 35 100% 50%;
     --amazon-dark-blue: 220 39% 11%;
     --amazon-light-blue: 203 89% 53%;
     --amazon-yellow: 45 100% 51%;
-    --amazon-gray: 0 0% 95%;
+    --amazon-gray: 0 0% 97%;
     --amazon-dark-gray: 0 0% 20%;
+
+    /* Card design tokens */
+    --card-shadow: 0 1px 3px 0 hsl(0 0% 0% / 0.06), 0 1px 2px -1px hsl(0 0% 0% / 0.06);
+    --card-shadow-hover: 0 10px 25px -5px hsl(0 0% 0% / 0.08), 0 8px 10px -6px hsl(0 0% 0% / 0.04);
+    --card-shadow-lg: 0 20px 40px -12px hsl(0 0% 0% / 0.12);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -187,6 +192,33 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+}
+
+/* Product card styles */
+.product-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--card-shadow);
+}
+
+.product-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-4px);
+}
+
+.product-card .product-image {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.08);
+}
+
+/* Price tag styling */
+.price-tag {
+  background: linear-gradient(135deg, hsl(35 100% 50%), hsl(25 100% 48%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* Custom animations */
