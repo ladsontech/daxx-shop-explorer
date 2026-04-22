@@ -73,6 +73,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <img
             src={displayImage}
             alt={title}
+            loading="lazy"
+            decoding="async"
+            width={400}
+            height={400}
             className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300"
           />
           {/* Only show condition badge for gadgets */}
