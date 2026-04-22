@@ -69,6 +69,8 @@ const Hero = () => {
                   src={update.image_url}
                   alt="Promotion"
                   loading={index === 0 ? 'eager' : 'lazy'}
+                  decoding={index === 0 ? 'sync' : 'async'}
+                  fetchPriority={index === 0 ? 'high' : 'auto'}
                   className="w-full h-full object-cover"
                   onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.svg'; }}
                 />
@@ -88,6 +90,8 @@ const Hero = () => {
                       src={update.image_url}
                       alt="Promotion"
                       loading={index < 3 ? 'eager' : 'lazy'}
+                      decoding={index < 2 ? 'sync' : 'async'}
+                      fetchPriority={index === 0 ? 'high' : 'auto'}
                       className="w-full h-full object-cover"
                       onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.svg'; }}
                     />

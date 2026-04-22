@@ -8,6 +8,19 @@ export const usePrefetch = () => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
+    // Prefetch hero/updates data first (critical for LCP)
+    queryClient.prefetchQuery({
+      queryKey: ['updates'],
+      queryFn: async () => {
+        const { data, error } = await supabase
+          .from('updates')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        return data;
+      },
+    });
+
     const sections = ['gadgets', 'accessories', 'cosmetics', 'fashion'];
     
     sections.forEach((section) => {
@@ -51,9 +64,21 @@ export const usePrefetch = () => {
   }, [queryClient]);
 
   const prefetchImages = useCallback((images: string[]) => {
-    // Use requestIdleCallback for non-blocking image prefetch
-    const loadImages = () => {
-      images.forEach(src => {
+    // Preload first 4 images eagerly (visible above fold)
+    const eager = images.slice(0, 4);
+    const rest = images.slice(4);
+
+    eager.forEach(src => {
+      if (!src) return;
+      const img = new Image();
+      img.src = src;
+    });
+
+    // Use requestIdleCallback for remaining images
+    if (rest.length === 0) return;
+    
+    const loadRest = () => {
+      rest.forEach(src => {
         if (!src) return;
         const link = document.createElement('link');
         link.rel = 'prefetch';
@@ -64,9 +89,9 @@ export const usePrefetch = () => {
     };
 
     if ('requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(loadImages);
+      (window as any).requestIdleCallback(loadRest);
     } else {
-      setTimeout(loadImages, 200);
+      setTimeout(loadRest, 200);
     }
   }, []);
 
