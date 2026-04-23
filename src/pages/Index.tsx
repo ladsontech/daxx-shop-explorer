@@ -54,6 +54,17 @@ const Index = () => {
     );
   }
 
+  // Mix of featured products from different categories for the hero overlay
+  const featuredProducts = [
+    ...getBySection('gadgets', 3),
+    ...getBySection('fashion', 3),
+    ...getBySection('accessories', 2),
+    ...getBySection('cosmetics', 2),
+  ].map(p => ({
+    id: p.id, images: p.images || [], title: p.title, price: p.price,
+    originalPrice: p.original_price, category: p.category, section: p.section,
+  }));
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Store",
@@ -81,10 +92,12 @@ const Index = () => {
       </Helmet>
 
       <Navigation />
-      <Hero />
+      
+      {/* Hero with featured products overlaid on bottom */}
+      <Hero featuredProducts={featuredProducts} />
       
       {/* Search */}
-      <section className="py-5 md:py-6">
+      <section className="py-4 md:py-5">
         <div className="text-center mb-3 px-4">
           <h2 className="text-base md:text-lg font-semibold text-foreground">
             Find What You Need
@@ -92,9 +105,6 @@ const Index = () => {
         </div>
         <SearchBar />
       </section>
-
-      {/* Divider */}
-      <div className="max-w-7xl mx-auto px-4"><div className="border-t border-border/50" /></div>
 
       <HorizontalProductScroll
         title="Latest Gadgets"
@@ -104,8 +114,6 @@ const Index = () => {
         accentColor="bg-blue-500"
       />
 
-      <div className="max-w-7xl mx-auto px-4"><div className="border-t border-border/50" /></div>
-
       <HorizontalProductScroll
         title="Fashion Collection"
         subtitle="Trendy clothing & style"
@@ -113,8 +121,6 @@ const Index = () => {
         viewAllLink="/fashion"
         accentColor="bg-purple-500"
       />
-
-      <div className="max-w-7xl mx-auto px-4"><div className="border-t border-border/50" /></div>
 
       <HorizontalProductScroll
         title="Tech Accessories"
@@ -124,8 +130,6 @@ const Index = () => {
         accentColor="bg-emerald-500"
       />
 
-      <div className="max-w-7xl mx-auto px-4"><div className="border-t border-border/50" /></div>
-
       <HorizontalProductScroll
         title="Beauty & Cosmetics"
         subtitle="Premium beauty & skincare"
@@ -133,8 +137,6 @@ const Index = () => {
         viewAllLink="/cosmetics"
         accentColor="bg-pink-500"
       />
-
-      <div className="max-w-7xl mx-auto px-4"><div className="border-t border-border/50" /></div>
 
       <PropertyPreviewSection properties={formatProperties(properties || [])} />
 
