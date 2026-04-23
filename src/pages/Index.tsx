@@ -19,43 +19,25 @@ const Index = () => {
   const { data: properties, isLoading: propertiesLoading } = useProperties();
   const { prefetchImages } = usePrefetch();
 
-  // Prefetch visible product images
   useEffect(() => {
     if (allProducts?.length) {
-      const images = allProducts
-        .slice(0, 20)
-        .flatMap(p => p.images)
-        .filter(Boolean);
+      const images = allProducts.slice(0, 20).flatMap(p => p.images).filter(Boolean);
       prefetchImages(images);
     }
   }, [allProducts, prefetchImages]);
 
   const formatProducts = (products: any[]) =>
     products?.map(p => ({
-      id: p.id,
-      images: p.images || [],
-      title: p.title,
-      price: p.price,
-      originalPrice: p.original_price,
-      category: p.category,
-      section: p.section,
-      description: p.description || '',
-      inStock: p.in_stock,
-      condition: p.condition
+      id: p.id, images: p.images || [], title: p.title, price: p.price,
+      originalPrice: p.original_price, category: p.category, section: p.section,
+      description: p.description || '', inStock: p.in_stock, condition: p.condition
     })) || [];
 
   const formatProperties = (props: any[]) =>
     props?.map(p => ({
-      id: p.id,
-      images: p.images || [],
-      title: p.title,
-      price: p.price,
-      location: p.location,
-      type: p.type,
-      bedrooms: p.bedrooms,
-      bathrooms: p.bathrooms,
-      area: p.area,
-      phone: "+256 123 456 789"
+      id: p.id, images: p.images || [], title: p.title, price: p.price,
+      location: p.location, type: p.type, bedrooms: p.bedrooms,
+      bathrooms: p.bathrooms, area: p.area, phone: "+256 123 456 789"
     })) || [];
 
   const getBySection = (section: string, limit = 12) =>
@@ -102,7 +84,7 @@ const Index = () => {
       <Hero />
       
       {/* Search */}
-      <section className="py-4 md:py-6">
+      <section className="py-5 md:py-6">
         <div className="text-center mb-3 px-4">
           <h2 className="text-base md:text-lg font-semibold text-foreground">
             Find What You Need
@@ -111,38 +93,48 @@ const Index = () => {
         <SearchBar />
       </section>
 
-      {/* Category Sections */}
+      {/* Divider */}
+      <div className="max-w-7xl mx-auto px-4"><div className="border-t border-border/50" /></div>
+
       <HorizontalProductScroll
         title="Latest Gadgets"
         subtitle="Cutting-edge technology & electronics"
         products={formatProducts(getBySection('gadgets'))}
         viewAllLink="/gadgets"
-        accentColor="bg-blue-600"
+        accentColor="bg-blue-500"
       />
+
+      <div className="max-w-7xl mx-auto px-4"><div className="border-t border-border/50" /></div>
 
       <HorizontalProductScroll
         title="Fashion Collection"
         subtitle="Trendy clothing & style"
         products={formatProducts(getBySection('fashion'))}
         viewAllLink="/fashion"
-        accentColor="bg-purple-600"
+        accentColor="bg-purple-500"
       />
+
+      <div className="max-w-7xl mx-auto px-4"><div className="border-t border-border/50" /></div>
 
       <HorizontalProductScroll
         title="Tech Accessories"
         subtitle="Essential device accessories"
         products={formatProducts(getBySection('accessories'))}
         viewAllLink="/accessories"
-        accentColor="bg-green-600"
+        accentColor="bg-emerald-500"
       />
+
+      <div className="max-w-7xl mx-auto px-4"><div className="border-t border-border/50" /></div>
 
       <HorizontalProductScroll
         title="Beauty & Cosmetics"
         subtitle="Premium beauty & skincare"
         products={formatProducts(getBySection('cosmetics'))}
         viewAllLink="/cosmetics"
-        accentColor="bg-pink-600"
+        accentColor="bg-pink-500"
       />
+
+      <div className="max-w-7xl mx-auto px-4"><div className="border-t border-border/50" /></div>
 
       <PropertyPreviewSection properties={formatProperties(properties || [])} />
 
