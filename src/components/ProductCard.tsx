@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 
@@ -18,102 +18,88 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
-  id,
-  images,
-  title,
-  price,
-  originalPrice,
-  category,
-  section,
-  description,
-  inStock = true,
-  condition
+  id, images, title, price, originalPrice, category, section, description, inStock = true, condition
 }) => {
   const { addToCart } = useCart();
-  const displayImage = images && images.length > 0 ? images[0] : '/placeholder.svg';
-
+  const displayImage = images?.[0] || '/placeholder.svg';
   const discount = originalPrice ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (inStock) {
-      addToCart({ id, title, price, images, category });
-    }
+    if (inStock) addToCart({ id, title, price, images, category });
   };
 
   const handleWhatsAppOrder = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (inStock) {
-      const phoneNumber = category === 'fashion' ? "+256740657694" : "+256751173504";
-      const baseUrl = window.location.origin;
-      const productUrl = `${baseUrl}/product/${id}`;
-      const message = `Hello! I'd like to order this product:\n\n${title}\nPrice: UGX ${price.toLocaleString()}\nCategory: ${category}\nLink: ${productUrl}\n\nPlease confirm availability and delivery details. Thank you!`;
-      const whatsappUrl = `https://wa.me/${phoneNumber.replace('+', '')}?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
-    }
+    if (!inStock) return;
+    const phoneNumber = category === 'fashion' ? "+256740657694" : "+256751173504";
+    const productUrl = `${window.location.origin}/product/${id}`;
+    const message = `Hello! I'd like to order:\n\n${title}\nPrice: UGX ${price.toLocaleString()}\nLink: ${productUrl}`;
+    window.open(`https://wa.me/${phoneNumber.replace('+', '')}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (
     <Link to={`/product/${id}`} className="block group">
-      <div className="product-card bg-card rounded-xl border border-border overflow-hidden relative">
-        {/* Image */}
-        <div className="relative overflow-hidden bg-muted">
-          <div className="aspect-square">
+      <div className="bg-card rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-border/50">
+        {/* Image container */}
+        <div className="relative overflow-hidden bg-secondary/30">
+          <div className="aspect-[4/5]">
             <img
               src={displayImage}
               alt={title}
               loading="lazy"
               decoding="async"
               width={400}
-              height={400}
-              className="product-image w-full h-full object-cover"
+              height={500}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           </div>
 
-          {/* Badges */}
-          <div className="absolute top-2 left-2 flex flex-col gap-1">
-            {discount > 0 && (
-              <span className="px-2 py-0.5 rounded-full bg-destructive text-destructive-foreground text-[10px] md:text-xs font-bold">
-                -{discount}%
-              </span>
-            )}
-            {section === 'gadgets' && condition && (
-              <span className={`px-2 py-0.5 rounded-full text-[10px] md:text-xs font-bold text-white ${
-                condition === 'new' ? 'bg-emerald-500' : 'bg-sky-500'
-              }`}>
-                {condition === 'new' ? 'NEW' : 'USED'}
-              </span>
-            )}
-          </div>
+          {/* Top badges */}
+          {(discount > 0 || (section === 'gadgets' && condition)) && (
+            <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+              {discount > 0 && (
+                <span className="px-2.5 py-1 rounded-lg bg-destructive text-destructive-foreground text-[11px] font-bold shadow-sm">
+                  -{discount}%
+                </span>
+              )}
+              {section === 'gadgets' && condition && (
+                <span className={`px-2.5 py-1 rounded-lg text-[11px] font-bold text-white shadow-sm ${
+                  condition === 'new' ? 'bg-emerald-500' : 'bg-sky-500'
+                }`}>
+                  {condition === 'new' ? 'NEW' : 'USED'}
+                </span>
+              )}
+            </div>
+          )}
 
+          {/* Out of stock overlay */}
           {!inStock && (
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-              <span className="bg-white/90 text-foreground text-xs font-bold px-3 py-1 rounded-full">
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center">
+              <span className="bg-card text-foreground text-xs font-bold px-4 py-2 rounded-full shadow-lg">
                 Out of Stock
               </span>
             </div>
           )}
 
-          {/* Quick action overlay */}
+          {/* Hover action - desktop only */}
           {inStock && (
-            <div className="absolute bottom-0 left-0 right-0 p-2 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-gradient-to-t from-black/60 to-transparent">
-              <div className="flex gap-1.5">
+            <div className="absolute bottom-0 left-0 right-0 p-3 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300 hidden md:block">
+              <div className="flex gap-2">
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold flex items-center justify-center gap-1 hover:opacity-90 transition-opacity"
+                  className="flex-1 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-semibold flex items-center justify-center gap-1.5 hover:brightness-110 transition-all shadow-lg"
                 >
-                  <ShoppingCart className="h-3 w-3" />
+                  <ShoppingCart className="h-3.5 w-3.5" />
                   Add to Cart
                 </button>
                 <button
                   onClick={handleWhatsAppOrder}
-                  className="px-3 py-1.5 rounded-lg bg-emerald-500 text-white flex items-center justify-center hover:bg-emerald-600 transition-colors"
+                  className="px-3 py-2.5 rounded-xl bg-emerald-500 text-white flex items-center justify-center hover:bg-emerald-600 transition-colors shadow-lg"
                 >
-                  <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.89 3.787"/>
-                  </svg>
+                  <MessageCircle className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
@@ -121,39 +107,39 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-3 md:p-4">
-          <h3 className="text-xs md:text-sm font-semibold text-foreground line-clamp-2 leading-snug mb-2 group-hover:text-primary transition-colors">
+        <div className="p-3.5">
+          <h3 className="text-[13px] md:text-sm font-medium text-foreground line-clamp-2 leading-snug mb-2 min-h-[2.5em]">
             {title}
           </h3>
 
-          <div className="flex items-baseline gap-2">
-            <span className="text-sm md:text-base font-bold price-tag">
-              UGX {price.toLocaleString()}
-            </span>
-            {originalPrice && (
-              <span className="text-[10px] md:text-xs text-muted-foreground line-through">
-                UGX {originalPrice.toLocaleString()}
+          <div className="flex items-end justify-between gap-2">
+            <div>
+              <span className="text-base md:text-lg font-bold text-primary">
+                UGX {price.toLocaleString()}
               </span>
-            )}
+              {originalPrice && (
+                <div className="text-[11px] text-muted-foreground line-through mt-0.5">
+                  UGX {originalPrice.toLocaleString()}
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Mobile-only action buttons (since hover doesn't work on mobile) */}
+          {/* Mobile actions */}
           {inStock && (
-            <div className="flex gap-1.5 mt-2.5 md:hidden">
+            <div className="flex gap-2 mt-3 md:hidden">
               <button
                 onClick={handleAddToCart}
-                className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-semibold flex items-center justify-center gap-1"
+                className="flex-1 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-semibold flex items-center justify-center gap-1"
               >
                 <ShoppingCart className="h-3 w-3" />
                 Cart
               </button>
               <button
                 onClick={handleWhatsAppOrder}
-                className="px-3 py-2 rounded-lg bg-emerald-500 text-white flex items-center justify-center"
+                className="px-3 py-2 rounded-xl bg-emerald-500 text-white flex items-center justify-center"
               >
-                <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.89 3.787"/>
-                </svg>
+                <MessageCircle className="h-3.5 w-3.5" />
               </button>
             </div>
           )}
